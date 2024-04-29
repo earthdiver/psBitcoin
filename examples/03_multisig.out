@@ -1,0 +1,42 @@
+mnemonic1        : abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about
+seed1            : 5eb00bbddcf069084889a8ab9155568165f5c453ccb85e70811aaed6f6da5fc19a5ac40b389cd370d086206dec8aa6c43daea6690f20ad3d8d48b2d2ce9e38e4
+mnemonic2        : zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo wrong
+seed2            : b6a6d8921942dd9806607ebc2750416b289adea669198769f2e15ed926c3aa92bf88ece232317b4ea463e84b0fcd3b53577812ee449ccc448eb45e6f544e25b6
+
+P2WSH (Native Segwit)
+ derivation path : m/48'/0'/0'/2'
+   xprv1         : xprv9zktm1yWCFjfcYr7nqM9UqDK3Vhyf15f3iGgoGfuchETardTk1tPmdh1iKBs86XJiatoijkrXoxcKM2pwZwozGuyEkvectBcwU6RKRafo4D
+   Zprv1         : ZprvAqKWVb3n4aNzjiPjQDPNj5k87E38kbkFCCxoHKjDkUpdKEpq1jbo6ssDZS4WgM43mLCQ6Gx6LM4DD5sigBvnjEPqouRuC7HbNeVagXvJcnz
+   Zpub1         : Zpub74Jru6aftwwHxCUCWEvP6DgrfFsdA4U6ZRtQ5i8qJpMcC39yZGv3egBhQfV3MS9pZtH5z8iV5qWkJsK6ESs6mSzt4qvGhzJxPeeVS2e1zUG
+   Zpub2         : Zpub75rAwNSrvDKNvAomunzgBvnBJs6VXV8LAmNrjAqPzjaygZtqWLxuuNoBQYAVY8hjNJpThXKKpei18636Q34ExQPyYg9wQwxo7PsgR4puq6J
+   output desc.  : wsh(sortedmulti(2,[73c5da0a/48h/0h/0h/2h]xpub6DkFAXWQ2dHxq2vatrt9qyA3bXYU4ToWQwCHbf5XB2mSTexcHZCeKS1VZYcPoBd5X8yVcbXFHJR9R8UCVpt82VX1VhR28mCyxUFL4r6KFrf/<0;1>/*,[3f635a63/48h/0h/0h/2h]xpub6FHZCoNb3tg3o1GAJQxSwgFNF8mLRtTk2GgkF7n5rwzoxBhUEdFWa8cyZRHqytAzKZWsKz8627cQEMCCfR5GDSv6yXegqirpgDUX41Pxybr/<0;1>/*))#h5gmmm94
+ derivation path : m/48'/0'/0'/2'/0/0
+   privatekey1   : 070abb37477a5c4d8b19fb51193391b9dccff485e083926cb17e24500b77bfe1
+   publickey1    : 03dc1953c2756c7c58d4f48ca1bbba767f414fd236bf4d662b67721ac626c514e0
+   publickey2    : 0254689c4a585b8f3d9ddea8e9e68d0e8f49f75709fa6e7d075657573815958a81
+   address       : bc1qkpcfs6lhqh3rx63we7435nf3hqpghkdtmmmvln0yrssv0ulhmngs92dens
+
+P2SH-P2WSH (Nested Segwit)
+ derivation path : m/48'/0'/0'/1'
+   xprv1         : xprv9zktm1yWCFjfZsFLLAGfvizHJeXouxM4QQgBa6xqzJfHjqaoyF4DjsxM3Z2fjqeapN3s7MnFsbyxKUv6tdx8rkyuzsQ1QQwhhHFERbKagvT
+   Yprv1         : YprvAWVFBvNrutqWqjbq7BXGxtRbCQiX4w29dnr5Gm8Gk5saR7xwzJc4T4UQsTwjJBXQTUEejRNwDUj1Kw9RuZX6oUnBhgCqPjEBrjakQ7n377y
+   Ypub1         : Ypub6jUbbRukkGPp4DgJDD4HL2NKkSZ1UPk111mg59XtJRQZHvJ6XqvJzrntik9U4jCFQkgrBqevdKLPMdYZXU9KAGhKpMhW5XujwqiQ7Csmm4Z
+   Ypub2         : Ypub6m1udhmwmXmu3q67JtfZ47n8GXzLFvUKS3CYsiwqMRMfCtJqb6TTXQLr6WNJoS197Tfddky5V6pnVhA9TxKShDZXC2f8aFu5qzKjnp1svff
+   output desc.  : sh(wsh(sortedmulti(2,[73c5da0a/48h/0h/0h/1h]xpub6DkFAXWQ2dHxnMKoSBogHrw1rgNJKR4umdbnNVNTYeCGcduxWnNUHgGptqEQWPKRmeW4Zn4FHSbLMBKEWYaMDYu47Ytg6DdFnPNt8hwn5mE/<0;1>/*,[3f635a63/48h/0h/0h/1h]xpub6FHZCoNb3tg3mxjcXsQx1xLpNmod6woECf2fB4nQbe9NXbvha2ucpDpnGbTFF68KUMUr1hNQ9E5jVEvpT2kUkVmFVDrJawcbgXzDpJc2hkF/<0;1>/*)))#qjhtfzps
+ derivation path : m/48'/0'/0'/1'/0/0
+   privatekey1   : 19ac8a44091e75114e7d19a9c3865714d0eb25addacae7cb66b124ff5d8bb3ed
+   publickey1    : 03abe5ccc0a6ddf20e02e27ca4829a4bcf288849f5d137db19559dd2ab23236dbe
+   publickey2    : 02cb377cd72240ed59a548aa1c60d1103327f1812148296ccafbe9fe4b77c4dbe0
+   address       : 377ZxuoEGhULpY6guCr44cojfMLsVKwyRC
+
+P2SH (Legacy)
+ derivation path : m/45'
+   xprv1         : xprv9ukW2Usuz4v9W8vSjhtwZMqJeE3wq6pFCpozehginiMx1DXPM18rvqPenZdKsthKwqiXexB4Hcp1S1j4tJrFLhsgZdgvfSUtFK8XyS5BtWK
+   xpub1         : xpub68jrRzQopSUSiczuqjRwvVn3CFtSEZY6a3jbT66LM3tvt1rXtYT7Udi8dt3m1qj3q8pKZjt7tqrSt7bRN4LD2vSVq1167PSA5AyM31FUHwU
+   xpub2         : xpub68MXAZN5xcN3naSp29rp7gtiW8Srp3u1MegfWpt8aV7UuypzE4jxR3RDtr5DzHK9a2tDtDb7vfftKLfuX2Fi2E9PoHT1XxV6QQKKBPaPi23
+   output desc.  : sh(sortedmulti(2,[73c5da0a/45h]xpub68jrRzQopSUSiczuqjRwvVn3CFtSEZY6a3jbT66LM3tvt1rXtYT7Udi8dt3m1qj3q8pKZjt7tqrSt7bRN4LD2vSVq1167PSA5AyM31FUHwU/<0;1>/*,[3f635a63/45h]xpub68MXAZN5xcN3naSp29rp7gtiW8Srp3u1MegfWpt8aV7UuypzE4jxR3RDtr5DzHK9a2tDtDb7vfftKLfuX2Fi2E9PoHT1XxV6QQKKBPaPi23/<0;1>/*))#3vxpfp4v
+ derivation path : m/45'/0/0
+   privatekey1   : 7b8b83e3e856dc692cffb134551e81f5f7274b34fb5e8a9dbd8997d88602f078
+   publickey1    : 02928ce56c258522767df7385d9a5f4beaf599d310f52b510a4cf01c762749bb7a
+   publickey2    : 03edb9dd0fa07a8ac85c9be2a27db8497768435f911bed34555ca1d62962a4a5de
+   address       : 3Q6xNscq5ukuyYEBY2wiGATs6HrsWGmEnw
