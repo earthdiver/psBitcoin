@@ -54,6 +54,8 @@ Execute the following command to load function/class definitions:
 . ./BitcoinWallet.ps1
 ```
 
+Please place the wordlists in the same folder.
+
 ## Running Examples
 
 ```powershell:
