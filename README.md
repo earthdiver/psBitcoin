@@ -1,7 +1,7 @@
 # psBitcoin
 
 ## Overview
-This tool aims to help users understand bitcoin wallets in various forms, including entropy, mnemonic, seed, extended keys, and more.
+This tool aims to help users understand bitcoin wallets in various forms, including entropy, mnemonic phrase, seed, extended keys, and more.
 
 ### Pros
 - **No external libraries required**: It leverages the pre-installed PowerShell in Windows, making it compatible with any PC running Windows 10. (The RIPEMD160 NuGet package is required for PowerShell 7.X, though.)
