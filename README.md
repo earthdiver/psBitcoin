@@ -69,7 +69,7 @@ Please place the wordlists in the same folder.
 
 ## Other Tools
 
-- Functions (`RawTXfromLegacyAddress`,`RawTXfromSegwitAddress`,`RawTXfromTaprootAddress`, etc.) to generate TX data (experimental)
+- Functions (`RawTXfromLegacyAddress`,`RawTXfromSegwitAddress`,`RawTXfromTaprootAddress`, etc.) to generate TX data (experimental; use these on Testnet only.)
 - Functions (`Mnemonic2QRcode`, `Mnemonic2CompactQRcode`) to generate SeedQR images
 
 ```
