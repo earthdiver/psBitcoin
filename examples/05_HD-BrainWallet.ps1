@@ -12,7 +12,7 @@ $entropy_b  = i2b $entropy
 $entropy_h  = i2h $entropy
 
 $mnemonic   = GetMnemonic $entropy
-if ( -not ( ValidateMnemonic $mnemonic ) ) { throw "invalid mnemonic code" }
+if ( -not ( ValidateMnemonic $mnemonic ) ) { throw "invalid mnemonic phrase" }
 
 $passphrase = $BWPassphrase             # to enhance security, set the passphrase as a BIP39 passphrase
 
