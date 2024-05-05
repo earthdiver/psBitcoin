@@ -47,7 +47,7 @@ $mnemonic  = GetMnemonic $entropy
 # Directly set the mnemonic as needed.
 #$mnemonic = "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about"
 
-if ( -not ( ValidateMnemonic $mnemonic ) ) { throw "invalid mnemonic" }
+if ( -not ( ValidateMnemonic $mnemonic ) ) { throw "invalid mnemonic phrase" }
 
 $HMACSHA512 = New-Object Security.Cryptography.HMACSHA512
 $seed = PBKDF2 $mnemonic "mnemonic$passphrase" 2048 64 $HMACSHA512    # for Electrum, specify "electrum$passphrase" as the salt
