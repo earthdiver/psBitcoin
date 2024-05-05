@@ -2,7 +2,7 @@
 #
 # Loading a library
 # 
-#  Please insert "Write-Host $il" at line 817 of BitcoinWallet.ps1.
+#  Please insert "Write-Host $il" at line 808 of BitcoinWallet.ps1.
 . ./BitcoinWallet.ps1
 #
 # Settin up the problem

@@ -342,7 +342,7 @@ class ECDSA {
 
 function GetPublicKey {
     param( [Parameter(ValueFromPipeline=$True)][string]$privateKey,
-           [Alias("uc")][Switch]$unCompressed
+           [Alias("uc")][Switch]$UnCompressed
     )
     if ( $privateKey.Length -ne 64 ) { throw "invalid length" }
     $secretKey = [bigint]::Parse( "0" + $privateKey, "AllowHexSpecifier" )
@@ -353,7 +353,7 @@ function GetPublicKey {
     $pubkey    = $G * $secretKey        # multiplication order is noncommutative here
     $pubkeyX   = $pubkey.X.ToString( "x64" ) -replace '^0(?=[0-9a-f]{64}$)'
     $pubkeyY   = $pubkey.Y.ToString( "x64" ) -replace '^0(?=[0-9a-f]{64}$)'
-    if ( -not $unCompressed ) {
+    if ( -not $UnCompressed ) {
         if ( $pubkey.Y.IsEven ) {
             return "02" + $pubkeyX
         } else {
@@ -523,71 +523,68 @@ function Bech32_Decode {
     return $h_string
 }
 
-function GetAddressP2PKH( [string]$publicKey, [int]$network ) {
-    $pubkeyHash = Hash160 $publicKey 
-    if ( $network -eq 0 ) {
-        return ( Base58Check_Encode ( "00" + $pubkeyHash ) )
-    } else {
-        return ( Base58Check_Encode ( "6f" + $pubkeyHash ) )
-    }
+function GetWIF {
+    param( [Parameter(ValueFromPipeline=$True)][string]$privateKey,
+           [Alias("uc")][switch]$UnCompressed,
+           [Alias("t") ][switch]$Testnet
+         )
+    $prefix = if ( -not $Testnet ) { "80" } else { "ef" }
+    $suffix = if ( $UnCompressed ) { ""   } else { "01" }
+    return ( Base58Check_Encode ( $prefix + $privateKey + $suffix ) )
 }
 
-function GetAddressP2WPKH( [string]$publicKey, [int]$network ) {
+function GetAddressP2PKH {
+    param( [Parameter(ValueFromPipeline=$True)][string]$publicKey, [Alias("t")][switch]$Testnet )
+    $pubkeyHash = Hash160 $publicKey 
+    $prefix = if ( -not $Testnet ) { "00" } else { "6f" }
+    return ( Base58Check_Encode ( $prefix + $pubkeyHash ) )
+}
+
+function GetAddressP2WPKH {
+    param( [Parameter(ValueFromPipeline=$True)][string]$publicKey, [Alias("t")][switch]$Testnet )
     $pubkeyHash = Hash160 $publicKey
-    if ( $network -eq 0 ) {
-        $hrp = "bc"
-    } else {
-        $hrp = "tb"
-    }
+    $hrp = if ( -not $Testnet ) { "bc" } else { "tb" }
     return ( Bech32_Encode $pubkeyHash $hrp $false 0 )
 }
 
-function GetAddressP2SH-P2WPKH( [string]$publicKey, [int]$network ) { # P2SH-P2WPKH
-    $redeemScript = "0014" + ( Hash160 $publicKey )                   # 0014: witnessversion(0) + push20bytes
-    $scriptHash = Hash160 $redeemScript
-    if ( $network -eq 0 ) {
-        return ( Base58Check_Encode ( "05" + $scriptHash ) )
-    } else {
-        return ( Base58Check_Encode ( "c4" + $scriptHash ) )
-    }
-}
-
-function GetAddressP2SH( [string]$publicKey, [int]$network ) {
+function GetAddressP2SH {
+    param( [Parameter(ValueFromPipeline=$True)][string]$publicKey, [Alias("t")][switch]$Testnet )
+    $prefix = if ( -not $Testnet ) { "05" } else { "c4" }
     $redeemScript = "21" + $publicKey + "ac"                          # PUSH(publickey) + OP_CHECKSIG
     $scriptHash = Hash160 $redeemScript
-    if ( $network -eq 0 ) {
-        return ( Base58Check_Encode ( "05" + $scriptHash ) )
-    } else {
-        return ( Base58Check_Encode ( "c4" + $scriptHash ) )
-    }
+    return ( Base58Check_Encode ( $prefix + $scriptHash ) )
 }
 
-function GetAddressP2WSH( [string]$publicKey, [int]$network ) {
-    $SHA256 = New-Object Cryptography.SHA256CryptoServiceProvider
-    $witnessScript = "21" + $publicKey + "ac"                         # PUSH(publickey) + OP_CHECKSIG
-    $scriptHash    = i2h $SHA256.ComputeHash( ( h2i $witnessScript ) )
-    if ( $network -eq 0 ) {
-        $hrp = "bc"
-    } else {
-        $hrp = "tb"
-    }
-    return ( Bech32_Encode $scriptHash $hrp $false 0 )
+function GetAddressP2SH-P2WPKH {
+    param( [Parameter(ValueFromPipeline=$True)][string]$publicKey, [Alias("t")][switch]$Testnet )
+    $prefix = if ( -not $Testnet ) { "05" } else { "c4" }
+    $redeemScript = "0014" + ( Hash160 $publicKey )                   # 0014: witnessversion(0) + push20bytes
+    $scriptHash = Hash160 $redeemScript
+    return ( Base58Check_Encode ( $prefix + $scriptHash ) )
 }
 
-function GetAddressP2SH-P2WSH( [string]$publicKey, [int]$network ) {  # P2SH-P2WSH
+function GetAddressP2SH-P2WSH {
+    param( [Parameter(ValueFromPipeline=$True)][string]$publicKey, [Alias("t")][switch]$Testnet )
+    $prefix = if ( -not $Testnet ) { "05" } else { "c4" }
     $SHA256 = New-Object Cryptography.SHA256CryptoServiceProvider
     $witnessScript = "21" + $publicKey + "ac"                         # PUSH(publickey) + OP_CHECKSIG
     $redeemScript  = "0020" + ( i2h $SHA256.ComputeHash( ( h2i $witnessScript ) ) )  # 0020: witnessversion(0) + push32bytes
     $scriptHash    = Hash160 $redeemScript
-    if ( $network -eq 0 ) {
-        return ( Base58Check_Encode ( "05" + $scriptHash ) )
-    } else {
-        return ( Base58Check_Encode ( "c4" + $scriptHash ) )
-    }
+    return ( Base58Check_Encode ( $prefix + $scriptHash ) )
 }
 
-function GetTweak( [string]$publicKey ) {
+function GetAddressP2WSH {
+    param( [Parameter(ValueFromPipeline=$True)][string]$publicKey, [Alias("t")][switch]$Testnet )
+    $SHA256 = New-Object Cryptography.SHA256CryptoServiceProvider
+    $witnessScript = "21" + $publicKey + "ac"                         # PUSH(publickey) + OP_CHECKSIG
+    $scriptHash    = i2h $SHA256.ComputeHash( ( h2i $witnessScript ) )
+    $hrp = if ( -not $Testnet ) { "bc" } else { "tb" }
+    return ( Bech32_Encode $scriptHash $hrp $false 0 )
+}
+
+function GetTweak {
 # Tweak for an unspendable script path (BIP-0086)
+    param( [Parameter(ValueFromPipeline=$True)][string]$publicKey )
     $SHA256 = New-Object Cryptography.SHA256CryptoServiceProvider
     $publicKeyX = $publicKey.Substring( 2 )
     $tag = [Text.Encoding]::UTF8.GetBytes( "TapTweak" )
@@ -599,9 +596,10 @@ function GetTweak( [string]$publicKey ) {
     return $tweak
 }
 
-function GetTweakedWIF( [string]$WIF ) {
+function GetTweakedWIF {
 # Tweaked secret key ( in WIF ) for an unspendable script path (BIP-0086)
-    $privateKey  = ( Base58Check_Decode $WIF ).Substring( 2 )
+    param( [Parameter(ValueFromPipeline=$True)][string]$wif )
+    $privateKey  = ( Base58Check_Decode $wif ).Substring( 2 )
     if ( $privateKey.Length -ne 66 -or $privateKey.Substring( 64, 2 ) -ne "01" ) {
         throw "invalid WIF"
     }
@@ -615,16 +613,13 @@ function GetTweakedWIF( [string]$WIF ) {
     $t           = GetTweak $publicKey
     $td          = ( $d + $t ) % [ECDSA]::Order
     $td_hex      = $td.ToString( "x64" ) -replace '^0(?=[0-9a-f]{64}$)'
-    if ( $WIF -cmatch '^[KL]' ) {
-        $tWIF    = Base58Check_Encode ( "80" + $td_hex + "01" )
-    } else {
-        $tWIF    = Base58Check_Encode ( "ef" + $td_hex + "01" )
-    }
-    return $tWIF
+    $prefix      = if ( $wif -cmatch '^[KL]' ) { "80" } else { "ef" }
+    return Base58Check_Encode ( $prefix + $td_hex + "01" )
 }
 
-function GetAddressP2TR( [string]$publicKey, [int]$network ) {
+function GetAddressP2TR {
 # Taproot address for a single key (BIP-0086)
+    param( [Parameter(ValueFromPipeline=$True)][string]$publicKey, [Alias("t")][switch]$Testnet )
     $prefix = $publicKey.Substring( 0, 2 )
     $publicKeyX = $publicKey.Substring( 2 )
     $publicKeyY = ( DecompressPublicKey $publicKey ).Substring( 66 )
@@ -637,11 +632,7 @@ function GetAddressP2TR( [string]$publicKey, [int]$network ) {
     $Kq = $internalKey + $G * $tweak
     if ( $Kq -eq $null ) { throw "The resulting address is invalid." }
     $outputKey  = $Kq.X.ToString( "x64" ) -replace '^0(?=[0-9a-f]{64}$)'
-    if ( $network -eq 0 ) {
-        $hrp = "bc"
-    } else {
-        $hrp = "tb"
-    }
+    $hrp = if ( -not $Testnet ) { "bc" } else { "tb" }
     return ( Bech32_Encode $outputKey $hrp $true 1 )
 }
 
@@ -672,7 +663,7 @@ class HDWallet {
     [string]   $PublicKeyUC
     [string]   $Path
     [bool]     $Hardened
-    [int]      $Network        # 0:Mainnet, 1:Testnet
+    [bool]     $Testnet
     [HDWallet] $Parent
     [string]   $FingerPrint
 
@@ -688,21 +679,21 @@ class HDWallet {
         $this.PublicKey   = $null
         $this.Path        = $null
         $this.Hardened    = $null
-        $this.Network     = $null
+        $this.Testnet     = $null
         $this.Parent      = $null
         $this.FingerPrint = $null
         $this.Dict        = $null
     }
 
     HDWallet ( [string]$seed ) {
-        $this.Init( $seed, 0 )
+        $this.Init( $seed, $false )
     }
 
-    HDWallet ( [string]$seed, [int]$network ) {
-        $this.Init( $seed, $network )
+    HDWallet ( [string]$seed, [bool]$testnet ) {
+        $this.Init( $seed, $testnet )
     }
 
-    hidden [void] Init ( [string]$seed, [int]$network ) {
+    hidden [void] Init ( [string]$seed, [bool]$testnet ) {
         Add-Type -AssemblyName System.Security
 
         $HMACSHA512      = New-Object Cryptography.HMACSHA512
@@ -728,7 +719,7 @@ class HDWallet {
         }
         $this.Path        = "m"
         $this.Hardened    = $false
-        $this.Network     = $network
+        $this.Testnet     = $testnet
         $this.Parent      = $null
         $this.FingerPrint = ( Hash160 $this.PublicKey ).SubString( 0, 8 )
 
@@ -740,16 +731,16 @@ class HDWallet {
         $child_path  = $this.Path + "/" + $index.ToString( "d" )
         if ( $hardened ) {  $child_path  += "'" }
         if (       $child_path -match "^m/(?!0')\d+'/0'" ) {
-            $child_Network = 0                                        # Mainnet Bitcoin
+            $child_Testnet = $false                                   # Mainnet Bitcoin
         } elseif ( $child_path -match "^m/(?!0')\d+'/1'" ) {
-            $child_Network = 1                                        # Testnet Bitcoin
+            $child_Testnet = $true                                    # Testnet Bitcoin
         } else {
-            $child_Network = $this.Network                            # inherit from the parent object
+            $child_Testnet = $this.Testnet                            # inherit from the parent object
         }
-        return $this.Derive( $index, $hardened, $child_Network )
+        return $this.Derive( $index, $hardened, $child_Testnet )
     }
 
-    [HDWallet] Derive ( [int]$index, [bool]$hardened, [int]$network ) {
+    [HDWallet] Derive ( [int]$index, [bool]$hardened, [bool]$testnet ) {
         if ( $index -lt 0 ) {
             Write-Host "Index must be between 0 and 2^31 - 1." -Fore Red
             return $null
@@ -764,8 +755,8 @@ class HDWallet {
 
         if ( $hardened ) {  $child_path  += "'" }
 
-        if (( $child_path -match "^m/(?!0')\d+'/0'" -and $network -ne 0 ) -or `
-            ( $child_path -match "^m/(?!0')\d+'/1'" -and $network -eq 0 )     ) {
+        if (( $child_path -match "^m/(?!0')\d+'/0'" -and $testnet -eq $true  ) -or `
+            ( $child_path -match "^m/(?!0')\d+'/1'" -and $testnet -eq $false )     ) {
             Write-Host "Coin type is inconsistent." -Fore Red
             return $null
         }
@@ -775,7 +766,7 @@ class HDWallet {
         $child_index     = [UInt32]$index
         if ( $hardened ) { $child_index += [UInt32]"0x80000000" }
         $child_depth     = $this.Depth + 1
-        $child_Network   = $network
+        $child_Testnet   = $testnet
 
         $HMACSHA512      = New-Object Cryptography.HMACSHA512
         $HMACSHA512.Key  = h2i $this.ChainCode
@@ -841,10 +832,10 @@ class HDWallet {
 
         $child_chainCode = i2h $extendedKey[32..63]
 
-        return [HDWallet]::new($child_depth, $child_index, $child_privateKey, $child_chainCode, $child_publicKeyUC, $child_publicKey, $child_path, $child_Network, $this)
+        return [HDWallet]::new($child_depth, $child_index, $child_privateKey, $child_chainCode, $child_publicKeyUC, $child_publicKey, $child_path, $child_Testnet, $this)
     }
 
-    hidden HDWallet ([int]$depth, [UInt32]$index, [string]$privateKey, [string]$chainCode, [string]$publicKeyUC, [string]$publicKey, [string]$path, [int]$network, [HDWallet]$parent) {
+    hidden HDWallet ([int]$depth, [UInt32]$index, [string]$privateKey, [string]$chainCode, [string]$publicKeyUC, [string]$publicKey, [string]$path, [bool]$testnet, [HDWallet]$parent) {
         $this.Seed        = $parent.Seed
         $this.Depth       = $depth
         $this.Index       = $index
@@ -854,7 +845,7 @@ class HDWallet {
         $this.PublicKey   = $publicKey
         $this.Path        = $path
         $this.Hardened    = $index -ge [UInt32]"0x80000000"
-        $this.Network     = $network
+        $this.Testnet     = $testnet
         $this.Parent      = $parent
         $this.FingerPrint = ( Hash160 $publicKey ).SubString( 0, 8 )
         $this.Dict        = $parent.Dict
@@ -878,18 +869,11 @@ class HDWallet {
         $this.PublicKey   = $null
         $this.Path        = $null
         $this.Hardened    = $null
-        $this.Network     = $null
+        $this.Testnet     = $null
         $this.Parent      = $null
         $this.FingerPrint = $null
         $this.Dict        = $null
         $this             = $null
-    }
-
-    [string] GetPublicKeyHash() {
-        return ( Hash160 $this.PublicKey )
-    }
-    [string] GetPublicKeyHashUC() {
-        return ( Hash160 $this.PublicKeyUC )
     }
 
 #
@@ -907,10 +891,10 @@ class HDWallet {
 #
 
     [void] ImportExtendedKey( [string]$extendedKey, [string]$path ) {
-        $this.ImportExtendedKey( $extendedKey, $path, 0 )
+        $this.ImportExtendedKey( $extendedKey, $path, $false )
     }
 
-    [void] ImportExtendedKey( [string]$extendedKey, [string]$path, [int]$network ) {
+    [void] ImportExtendedKey( [string]$extendedKey, [string]$path, [bool]$testnet ) {
 
         $serialized = Base58Check_Decode $extendedKey
 
@@ -949,7 +933,7 @@ class HDWallet {
         $this.ChainCode   = $chainCode_e
         $this.Path        = $path
         $this.Hardened    = $this.Index -ge [UInt32]"0x80000000"
-        $this.Network     = $network
+        $this.Testnet     = $testnet
 
         if ( $this.Depth -ne ( $path -replace '[^/]' ).Length ) {
              Write-Host "The depths in the extended key and the path are inconsistent." -Fore Red
@@ -984,16 +968,16 @@ class HDWallet {
 
     }
 
-    [string] GetExtendedPrivateKey( [int]$network ) {
-        return $this.GetExtendedPrivateKey( $network, $false )
+    [string] GetExtendedPrivateKey( [bool]$testnet ) {
+        return $this.GetExtendedPrivateKey( $testnet, $false )
     }
-    [string] GetExtendedPrivateKey( [int]$network, [bool]$forceXpub ) {
+    [string] GetExtendedPrivateKey( [bool]$testnet, [bool]$forceXpub ) {
         if ( -not $this.PrivateKey ) {
             Write-Host "PrivateKey is unknown." -Fore Red
             return $null
         }
         $version_e = ""
-        if ( $network -eq 0 ) {
+        if ( -not $testnet ) {
             switch -Regex ( $this.Path ) {
                 "^m/48'/0'/0'/1'" { $version_e = "0295b005" } # P2SH-P2WSH multisig (SLIP-0132)
                 "^m/48'/0'/0'/2'" { $version_e = "02aa7a99" } # P2WSH multisig (SLIP-0132)
@@ -1011,7 +995,7 @@ class HDWallet {
             }
         }
         if ( $forceXpub ) {
-            if ( $network -eq 0 ) {
+            if ( -not $testnet ) {
                 $version_e = "0488ade4"
             } else {
                 $version_e = "04358394"
@@ -1030,12 +1014,12 @@ class HDWallet {
         return ( Base58Check_Encode $serialized )
     }
 
-    [string] GetExtendedPublicKey( [int]$network ) {
-        return $this.GetExtendedPublicKey( $network, $false )
+    [string] GetExtendedPublicKey( [bool]$testnet ) {
+        return $this.GetExtendedPublicKey( $testnet, $false )
     }
-    [string] GetExtendedPublicKey( [int]$network, [bool]$forceXpub ) {
+    [string] GetExtendedPublicKey( [bool]$testnet, [bool]$forceXpub ) {
         $version_e = ""
-        if ( $network -eq 0 ) {
+        if ( -not $testnet ) {
             switch -Regex ( $this.Path ) {
                 "^m/48'/0'/0'/1'" { $version_e = "0295b43f" } # P2SH-P2WSH multisig (SLIP-0132)
                 "^m/48'/0'/0'/2'" { $version_e = "02aa7ed3" } # P2WSH multisig (SLIP-0132)
@@ -1053,7 +1037,7 @@ class HDWallet {
             }
         }
         if ( $forceXpub ) {
-            if ( $network -eq 0 ) {
+            if ( -not $testnet ) {
                 $version_e = "0488b21e"
             } else {
                 $version_e = "043587cf"
@@ -1072,61 +1056,58 @@ class HDWallet {
         return ( Base58Check_Encode $serialized )
     }
 
-    [string] GetPrivateKey_WIF( [int]$network ) {
+    [string] GetPublicKeyHash() {
+        return ( Hash160 $this.PublicKey )
+    }
+    [string] GetPublicKeyHash_UC() {
+        return ( Hash160 $this.PublicKeyUC )
+    }
+
+    [string] GetWIF( [bool]$testnet ) {
         if ( $this.PrivateKey ) {
-            if ( $network -eq 0 ) {
-                return ( Base58Check_Encode ( "80" + $this.PrivateKey + "01" ) )
-            } else {
-                return ( Base58Check_Encode ( "ef" + $this.PrivateKey + "01" ) )
-            }
+            return GetWIF $this.PrivateKey -Testnet:$testnet
+        } else {
+            Write-Host "PrivateKey is unknown." -Fore Red
+            return $null
+        }
+    }
+    [string] GetWIF_UC( [bool]$testnet ) {
+        if ( $this.PrivateKey ) {
+            return GetWIF $this.PrivateKey -UnCompressed -Testnet:$testnet
         } else {
             Write-Host "PrivateKey is unknown." -Fore Red
             return $null
         }
     }
 
-    [string] GetPrivateKeyUC_WIF( [int]$network ) {
-        if ( $this.PrivateKey ) {
-            if ( $network -eq 0 ) {
-                return ( Base58Check_Encode ( "80" + $this.PrivateKey        ) )
-            } else {
-                return ( Base58Check_Encode ( "ef" + $this.PrivateKey        ) )
-            }
-        } else {
-            Write-Host "PrivateKey is unknown." -Fore Red
-            return $null
-        }
+    [string] GetAddressP2PKH( [bool]$testnet ) {
+        return GetAddressP2PKH $this.PublicKey -Testnet:$testnet
+    }
+    [string] GetAddressP2PKH_UC( [bool]$testnet ) {
+        return GetAddressP2PKH $this.PublicKeyUC -Testnet:$testnet
     }
 
-    [string] GetAddressP2PKH( [int]$network ) {
-        return GetAddressP2PKH $this.PublicKey $network
-    }
-    [string] GetAddressP2SHP2WPKH( [int]$network ) {
-        return GetAddressP2SH-P2WPKH $this.PublicKey $network
-    }
-    [string] GetAddressP2WPKH( [int]$network ) {
-        return GetAddressP2WPKH $this.PublicKey $network
-    }
-    [string] GetAddressP2TR( [int]$network ) {
-        return GetAddressP2TR $this.PublicKey $network
-    }
-    [string] GetAddressUC( [int]$network ) {
-        if ( $network -eq 0 ) {
-            return ( Base58Check_Encode ( "00" + $this.GetPublicKeyHashUC()) )
-        } else {
-            return ( Base58Check_Encode ( "6f" + $this.GetPublicKeyHashUC()) )
-        }
+    [string] GetAddressP2SHP2WPKH( [bool]$testnet ) {
+        return GetAddressP2SH-P2WPKH $this.PublicKey -Testnet:$testnet
     }
 
-    [string] GetExtendedPrivateKey() { return $this.GetExtendedPrivateKey( $this.Network ) }
-    [string] GetExtendedPublicKey()  { return $this.GetExtendedPublicKey( $this.Network )  }
-    [string] GetPrivateKey_WIF()     { return $this.GetPrivateKey_WIF( $this.Network )     }
-    [string] GetPrivateKeyUC_WIF()   { return $this.GetPrivateKeyUC_WIF( $this.Network )   }
-    [string] GetAddressP2PKH()       { return $this.GetAddressP2PKH( $this.Network )       }
-    [string] GetAddressP2WPKH()      { return $this.GetAddressP2WPKH( $this.Network )      }
-    [string] GetAddressP2SHP2WPKH()  { return $this.GetAddressP2SHP2WPKH( $this.Network )  }
-    [string] GetAddressP2TR()        { return $this.GetAddressP2TR( $this.Network )        }
-    [string] GetAddressUC()          { return $this.GetAddressUC( $this.Network )          }
+    [string] GetAddressP2WPKH( [bool]$testnet ) {
+        return GetAddressP2WPKH $this.PublicKey -Testnet:$testnet
+    }
+
+    [string] GetAddressP2TR( [bool]$testnet ) {
+        return GetAddressP2TR $this.PublicKey -Testnet:$testnet
+    }
+
+    [string] GetExtendedPrivateKey() { return $this.GetExtendedPrivateKey( $this.Testnet ) }
+    [string] GetExtendedPublicKey()  { return $this.GetExtendedPublicKey( $this.Testnet )  }
+    [string] GetWIF()                { return $this.GetWIF( $this.Testnet )                }
+    [string] GetWIF_UC()             { return $this.GetWIF_UC( $this.Testnet )             }
+    [string] GetAddressP2PKH()       { return $this.GetAddressP2PKH( $this.Testnet )       }
+    [string] GetAddressP2PKH_UC()    { return $this.GetAddressP2PKH_UC( $this.Testnet )    }
+    [string] GetAddressP2WPKH()      { return $this.GetAddressP2WPKH( $this.Testnet )      }
+    [string] GetAddressP2SHP2WPKH()  { return $this.GetAddressP2SHP2WPKH( $this.Testnet )  }
+    [string] GetAddressP2TR()        { return $this.GetAddressP2TR( $this.Testnet )        }
 }
 
 
@@ -1167,7 +1148,8 @@ function descsum_expand( [string]$s ) {
     return $symbols.ToArray()
 }
 
-function descsum_check( [string]$s ) {
+function descsum_check {
+    param( [Parameter(ValueFromPipeline=$True)][string]$s )
     # Verify that the checksum is correct in a descriptor
     $CHECKSUM_CHARSET = "qpzry9x8gf2tvdw0s3jn54khce6mua7l"
     if ( $s[-9] -ne "#" ) { return $false }
@@ -1179,7 +1161,8 @@ function descsum_check( [string]$s ) {
     return ( descsum_polymod  $symbols ) -eq 1
 }
 
-function descsum_create ( [string]$s ) {
+function descsum_create {
+    param( [Parameter(ValueFromPipeline=$True)][string]$s )
     # Add a checksum to a descriptor without
     $CHECKSUM_CHARSET = "qpzry9x8gf2tvdw0s3jn54khce6mua7l"
     $symbols  = ( descsum_expand $s ) + @( 0, 0, 0, 0, 0, 0, 0, 0 )
