@@ -458,7 +458,8 @@ function SchnorrSig ( [string]$privateKey, [string]$serializedTX, [byte]$sighash
     return $sig
 }
 
-function GetAddressP2TR-SP( [string]$publicKey, [int]$network ) {
+function GetAddressP2TR-SP {
+    param( [Parameter(ValueFromPipeline=$True)][string]$publicKey, [Alias("t")][switch]$Testnet )
 # Taproot address for a single-key script path spend.
 # Internal key 0x50929b74c1a04954b78b4b6035e97a5e078a5a0f28ec96d547bfee9ace803ac0 is used as an unspendable key path.
     $script      = "20" + $publicKey.Substring( 2 ) + "ac"            # PUSH(32byte publickey) + OP_CHECKSIG
@@ -479,22 +480,17 @@ function GetAddressP2TR-SP( [string]$publicKey, [int]$network ) {
     $Q           = $H + $G * $t
     if ( $Q -eq $null ) { throw "The resulting address is invalid." }
     $outputKey   = $Q.X.ToString( "x64" ) -replace '^0(?=[0-9a-f]{64}$)'
-    if ( $network -eq 0 ) {
-        $hrp = "bc"
-    } else {
-        $hrp = "tb"
-    }
+    $hrp = if ( -not $Testnet ) { "bc" } else { "tb" }
     return ( Bech32_Encode $outputKey $hrp $true 1 )
 }
 
-function GetBalance( [string]$addr ) {
+function GetBalance {
+    param( [Parameter(ValueFromPipeline=$True)][string]$addr )
     if ( $addr -cmatch '^[xyzYZ]prv' ) { return }
     if ( $addr -cmatch '^([13]|bc1|[xyzYZ]p(rv|ub))' ) {
         $chain   = "main"
-        $network = ""
     } elseif ( $addr -cmatch '^([2mn]|tb1|[tuvUV]p(rv|ub))' ) {
-        $chain   = "test"
-        $network = "testnet"
+        $chain   = "test3"
     } else {
         throw "invalid address"
     }
@@ -505,7 +501,8 @@ function GetBalance( [string]$addr ) {
     throw "failed to get the balance"
 }
 
-function GetUTXO ( [string]$addr ) {
+function GetUTXO {
+    param ( [Parameter(ValueFromPipeline=$True)][string]$addr )
     if ( $addr -cmatch '^([13]|bc1)' ) {
         $chain   = "main"
         $network = ""
@@ -596,7 +593,7 @@ function RawTXfromLegacyAddress {
         $addressChange = $addressFrom
     }
 
-    $utxo  = GetUTXO $addressFrom
+    $utxo = @( GetUTXO $addressFrom )
 
     $privateKey_in = ( Base58Check_Decode $WIF ).Substring( 2, 64 )
     $publicKey_in  = GetPublicKeyFromWIF $WIF
@@ -765,7 +762,7 @@ function RawTXfromSegwitAddress {
         $addressChange = $addressFrom
     }
 
-    $utxo  = GetUTXO $addressFrom
+    $utxo = @( GetUTXO $addressFrom )
 
     $privateKey_in = ( Base58Check_Decode $WIF ).Substring( 2, 64 )
     $publicKey_in  = GetPublicKey $privateKey_in
@@ -958,7 +955,7 @@ function RawTXfromTaprootAddress {
         $addressChange = $addressFrom
     }
 
-    $utxo  = GetUTXO $addressFrom
+    $utxo = @( GetUTXO $addressFrom )
 
     [UInt64]$sum = 0
     $txins = @(
@@ -1107,7 +1104,7 @@ function NulldataTX {
         $addressChange = $addressFrom
     }
 
-    $utxo  = GetUTXO $addressFrom
+    $utxo = @( GetUTXO $addressFrom )
 
     $privateKey_in = ( Base58Check_Decode $WIF ).Substring( 2, 64 )
     $publicKey_in  = GetPublicKey $privateKey_in
@@ -1201,7 +1198,8 @@ function NulldataTX {
 }
 
 #===================================================================================================================================
-function CLTVScript ( [string]$datetime, [string]$publicKey, [int]$network = 0 ) {
+function CLTVScript {
+    param( [string]$datetime, [string]$publicKey, [Alias("t")][switch]$Testnet )
     $SHA256 = New-Object Cryptography.SHA256CryptoServiceProvider
     $unixTime = [UInt32]( Get-Date -Date $datetime -UFormat "%s" )
     if ( $unixTime -lt 500000000 ) {
@@ -1220,7 +1218,7 @@ function CLTVScript ( [string]$datetime, [string]$publicKey, [int]$network = 0 )
     $scriptHash_P2SHP2WSH   = Hash160 $redeemScript_P2SHP2WSH
     $scriptPubKey_P2SHP2WSH = "a914" + $scriptHash_P2SHP2WSH + "87"        # OP_HASH160 PUSH(redeemScript hash) OP_EQUAL
 
-    if ( $network -eq 0 ) {
+    if ( -not $Testnet ) {
         $address_P2SH      = Base58Check_Encode ( "05" + $scriptPubKey_P2SH    )
         $address_P2SHP2WSH = Base58Check_Encode ( "05" + $scriptHash_P2SHP2WSH )
         $address_P2WSH     = Bech32_Encode      $scriptHash_P2WSH "bc" $false 0

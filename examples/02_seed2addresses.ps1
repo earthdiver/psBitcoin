@@ -8,7 +8,7 @@ $w.Derive(44,$true).Derive(0,$true).Derive(0,$true).Path
 $w.Derive(44,$true).Derive(0,$true).Derive(0,$true).GetExtendedPrivateKey()
 $w.Derive(44,$true).Derive(0,$true).Derive(0,$true).GetExtendedPublicKey()
 $w.Derive(44,$true).Derive(0,$true).Derive(0,$true).Derive(0,$false).Derive(0,$false).Path
-$w.Derive(44,$true).Derive(0,$true).Derive(0,$true).Derive(0,$false).Derive(0,$false).GetPrivateKey_WIF()
+$w.Derive(44,$true).Derive(0,$true).Derive(0,$true).Derive(0,$false).Derive(0,$false).GetWIF()
 $w.Derive(44,$true).Derive(0,$true).Derive(0,$true).Derive(0,$false).Derive(0,$false).GetAddressP2PKH()
 
 echo ""
@@ -17,7 +17,7 @@ $w.Derive(49,$true).Derive(0,$true).Derive(0,$true).GetExtendedPrivateKey()
 $w.Derive(49,$true).Derive(0,$true).Derive(0,$true).GetExtendedPrivateKey() | Set-Variable yprv
 $w.Derive(49,$true).Derive(0,$true).Derive(0,$true).GetExtendedPublicKey()
 $w.Derive(49,$true).Derive(0,$true).Derive(0,$true).Derive(0,$false).Derive(0,$false).Path
-$w.Derive(49,$true).Derive(0,$true).Derive(0,$true).Derive(0,$false).Derive(0,$false).GetPrivateKey_WIF()
+$w.Derive(49,$true).Derive(0,$true).Derive(0,$true).Derive(0,$false).Derive(0,$false).GetWIF()
 $w.Derive(49,$true).Derive(0,$true).Derive(0,$true).Derive(0,$false).Derive(0,$false).GetAddressP2SHP2WPKH()
 
 echo ""
@@ -26,7 +26,7 @@ $w.Derive(84,$true).Derive(0,$true).Derive(0,$true).GetExtendedPrivateKey()
 $w.Derive(84,$true).Derive(0,$true).Derive(0,$true).GetExtendedPublicKey()
 $w.Derive(84,$true).Derive(0,$true).Derive(0,$true).GetExtendedPublicKey() | Set-Variable zpub
 $w.Derive(84,$true).Derive(0,$true).Derive(0,$true).Derive(0,$false).Derive(0,$false).Path
-$w.Derive(84,$true).Derive(0,$true).Derive(0,$true).Derive(0,$false).Derive(0,$false).GetPrivateKey_WIF()
+$w.Derive(84,$true).Derive(0,$true).Derive(0,$true).Derive(0,$false).Derive(0,$false).GetWIF()
 $w.Derive(84,$true).Derive(0,$true).Derive(0,$true).Derive(0,$false).Derive(0,$false).GetAddressP2WPKH()
 
 echo ""
@@ -34,7 +34,7 @@ $w.Derive(86,$true).Derive(0,$true).Derive(0,$true).Path
 $w.Derive(86,$true).Derive(0,$true).Derive(0,$true).GetExtendedPrivateKey()
 $w.Derive(86,$true).Derive(0,$true).Derive(0,$true).GetExtendedPublicKey()
 $w.Derive(86,$true).Derive(0,$true).Derive(0,$true).Derive(0,$false).Derive(0,$false).Path
-$w.Derive(86,$true).Derive(0,$true).Derive(0,$true).Derive(0,$false).Derive(0,$false).GetPrivateKey_WIF()
+$w.Derive(86,$true).Derive(0,$true).Derive(0,$true).Derive(0,$false).Derive(0,$false).GetWIF()
 $w.Derive(86,$true).Derive(0,$true).Derive(0,$true).Derive(0,$false).Derive(0,$false).GetAddressP2TR()
 
 echo ""
@@ -43,7 +43,7 @@ echo ""
 $y.GetExtendedPrivateKey()
 $y.GetExtendedPublicKey()
 $y.Derive(0,$false).Derive(0,$false).Path
-$y.Derive(0,$false).Derive(0,$false).GetPrivateKey_WIF()
+$y.Derive(0,$false).Derive(0,$false).GetWIF()
 $y.Derive(0,$false).Derive(0,$false).GetAddressP2SHP2WPKH()
 
 echo ""
@@ -52,5 +52,5 @@ echo ""
 $z.GetExtendedPrivateKey()
 $z.GetExtendedPublicKey()
 $z.Derive(0,$false).Derive(0,$false).Path
-$z.Derive(0,$false).Derive(0,$false).GetPrivateKey_WIF()
+$z.Derive(0,$false).Derive(0,$false).GetWIF()
 $z.Derive(0,$false).Derive(0,$false).GetAddressP2WPKH()

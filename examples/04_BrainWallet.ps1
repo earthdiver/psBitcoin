@@ -8,17 +8,10 @@ $SHA256 = New-Object Security.Cryptography.SHA256CryptoServiceProvider
 0..($NumOfHashings - 1) | % { $hash = $SHA256.ComputeHash( $hash ) }
 
 $privatekey = i2h $hash
-$wif = base58check_encode (
-                  "80" +                          # prefix for a private key
-                  $privatekey +                   # private key
-                  "01"                            # prefix for compressed a public key
-              )
-$publickey = GetPublicKey $privatekey
+$wif        = GetWIF $privatekey
+$publickey  = GetPublicKey $privatekey
 $pubkeyHash = Hash160 $publickey
-$address = base58check_encode (
-                  "00" +                          # prefix for a P2PKH (Pay-to-PublicKey-Hash) address
-                  $pubkeyHash                     # SHA256 + RIPEMD160 hash of public key
-              )
+$address    = GetAddressP2PKH $publickey
 
 echo "Passphrase        : $bwPassphrase"
 echo "Private Key (Hex) : $privatekey"
