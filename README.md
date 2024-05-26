@@ -79,7 +79,9 @@ Please place the wordlists in the same folder.
 
 ## Donations
 
-Donations welcome at `bc1qv6pe28gesk52zuj7fnqk4vul4x6qtyfc7qf9y4`
+Donations welcome at the following addresses (buy me a coffee).
+- `bc1qv6pe28gesk52zuj7fnqk4vul4x6qtyfc7qf9y4`
+- `sp1qq08f39ntp6zv03exfx0he79nklvx9ulh436ygulgddgt26796274qqs5gqanfc8m5hmaecqz40l7uw4qp6ldj37q2lcv35azsegp3huhpclx8qsr`
 
 ## License
 

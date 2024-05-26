@@ -1,0 +1,6 @@
+spend_priv_key      : c88567742d5019d7ccc81f6e82cef8ef01997a6a3761cc9166036b580549539b
+ scan_priv_key      : 78e7fd7d2b7a2c1456709d147021a122d2dccaafeada040cc1002083e2833b09
+address (label:    ): sp1qqfqnnv8czppwysafq3uwgwvsc638hc8rx3hscuddh0xa2yd746s7xqh6yy9ncjnqhqxazct0fzh98w7lpkm5fvlepqec2yy0sxlq4j6ccc3h6t0g
+address (label:   0): sp1qqfqnnv8czppwysafq3uwgwvsc638hc8rx3hscuddh0xa2yd746s7xqc7cztt86v30fp7s8rdq99v4vxl5vs4r6naeha9dgwu38c2aszwlqdmad77  # for change
+address (label:   1): sp1qqfqnnv8czppwysafq3uwgwvsc638hc8rx3hscuddh0xa2yd746s7xqlh4r025th3htxgguxeck4qha04e0rhw33t8m2kpmqju28zzplwmgx2h7dd
+address (label:   2): sp1qqfqnnv8czppwysafq3uwgwvsc638hc8rx3hscuddh0xa2yd746s7xqu7dz87allsc3jgt0wfc7taewfz3p45jp4fm7qaazx94ekyu97elqhn62v5

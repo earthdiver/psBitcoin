@@ -238,7 +238,16 @@ class ECDSA {
         $this.Y   = $ya
         $this.Err = $false
     }
-    
+
+    ECDSA( [bigint]$xa ) { # lift_x()
+        $yy       = ( $xa * $xa * $xa + 7 ) % [ECDSA]::p
+        $ya       = [bigint]::ModPow( $yy, ([ECDSA]::p + 1)/4, [ECDSA]::p )
+        if ( -not $ya.IsEven ) { $ya = ( [ECDSA]::p - $ya ) % [ECDSA]::p }
+        $this.X   = $xa
+        $this.Y   = $ya
+        $this.Err = $false
+    }
+
     ECDSA( [ECDSAJ]$j ) {
         if ( $j.Z -eq [bigint]::Zero ) { 
             $this.Err = $true
@@ -251,6 +260,10 @@ class ECDSA {
         if ( $this.X.Sign -eq -1 ) { $this.X += [ECDSA]::p }
         if ( $this.Y.Sign -eq -1 ) { $this.Y += [ECDSA]::p }
         $this.Err = $false
+    }
+
+    [bool] OnCurve() {
+        return ( $this.X * $this.X * $this.X + 7 ) % [ECDSA]::p -eq $this.Y * $this.Y % [ECDSA]::p
     }
 
     hidden [ECDSA] Add( [ECDSA]$point ) {
@@ -349,10 +362,11 @@ function GetPublicKey {
     if ( $secretKey.IsZero -or $secretKey -ge [ECDSA]::Order ) {
         throw "invalid private key"
     }
-    $G         = [ECDSA]::new()
-    $pubkey    = $G * $secretKey        # multiplication order is noncommutative here
-    $pubkeyX   = $pubkey.X.ToString( "x64" ) -replace '^0(?=[0-9a-f]{64}$)'
-    $pubkeyY   = $pubkey.Y.ToString( "x64" ) -replace '^0(?=[0-9a-f]{64}$)'
+    $G       = [ECDSA]::new()
+    $pubkey  = $G * $secretKey
+    if ( $pubkey -eq $null ) { throw "arithmetic error" }
+    $pubkeyX = $pubkey.X.ToString( "x64" ) -replace '^0(?=[0-9a-f]{64}$)'
+    $pubkeyY = $pubkey.Y.ToString( "x64" ) -replace '^0(?=[0-9a-f]{64}$)'
     if ( -not $UnCompressed ) {
         if ( $pubkey.Y.IsEven ) {
             return "02" + $pubkeyX
@@ -386,16 +400,13 @@ function DecompressPublicKey {
     param( [Parameter(ValueFromPipeline=$True)][string]$publicKey )
     if ( $publicKey.Length -ne 33 * 2 ) { throw "invalid length" }
     $prefix     = $publicKey.Substring( 0, 2 )
-    if ( $prefix -notmatch '^0[23]$' ) { throw "invalid prefix" }
+    if ( $prefix -cnotmatch '^0[23]$' ) { throw "invalid prefix" }
     $publicKeyX = $publicKey.Substring( 2 )
     $x  = [bigint]::Parse( "0" + $publicKeyX, "AllowHexSpecifier" )
-    if ( $x -ge [ECDSA]::p ) { throw "invalid public key" }
-    $p  = [ECDSA]::p
-    $yy = ( $x * $x * $x + 7 ) % $p
-    $y  = [bigint]::ModPow( $yy, ($p + 1)/4, $p )
-    if ( $yy -ne ( $y * $y ) % [ECDSA]::p ) { throw "arithmetic error" }
-    if ( $prefix -eq "02" -and -not $y.IsEven ) { $y = ($p - $y) % $p }
-    if ( $prefix -eq "03" -and      $y.IsEven ) { $y = ($p - $y) % $p }
+    $p = [ECDSA]::p
+    if ( $x -ge $p ) { throw "invalid public key" }
+    $y  = [ECDSA]::new( $x ).Y                                        # $y is even
+    if ( $prefix -eq "03" ) { $y = ($p - $y) % $p }
     $publicKeyY = $y.ToString( "x64" ) -replace '^0(?=[0-9a-f]{64}$)'
     return "04" + $publicKeyX + $publicKeyY
 }
@@ -457,7 +468,7 @@ function Base58Check_Decode {
 
 function Bech32_Encode {
     param( [Parameter(ValueFromPipeline=$True)][string]$hex_string, [string]$hrp, [bool]$m, [int]$v )
-    if ( $hex_string.Length -ne 20*2 -and $hex_string.Length -ne 32*2 ) {
+    if ( $hex_string.Length -ne 20*2 -and $hex_string.Length -ne 32*2 -and $hex_string.Length -ne 66*2 ) {
         throw "invalid length"
     }
     $charset = "qpzry9x8gf2tvdw0s3jn54khce6mua7l"
@@ -487,9 +498,14 @@ function Bech32_Encode {
 function Bech32_Decode {
     param( [Parameter(ValueFromPipeline=$True)][string]$bech32, [bool]$m )
     $charset = "qpzry9x8gf2tvdw0s3jn54khce6mua7l"
-    if ( $bech32 -notmatch '^(bc|tb)1(q|p)' ) { throw "invalid Bech32 address" }
-    $hrp      = $bech32.Substring( 0, 2 )
-    $str      = $bech32.Substring( 3, $bech32.Length - 9 )
+    if ( $bech32 -cnotmatch '^((bc|tb)1(q|p)|t?sp1q)' ) { throw "invalid Bech32 address" }
+    if ( $bech32 -cmatch '^tsp1q' ) {
+        $hrp = $bech32.Substring( 0, 3 )
+        $str = $bech32.Substring( 4, $bech32.Length - 10 )
+    } else {
+        $hrp = $bech32.Substring( 0, 2 )
+        $str = $bech32.Substring( 3, $bech32.Length - 9 )
+    }
     $checksum = $bech32.Substring( $bech32.Length - 6 )
     $b_string = [Text.StringBuilder]::new()
     $data     = @(
@@ -502,7 +518,9 @@ function Bech32_Decode {
     )
     $b_string = $b_string.ToString()
     $h_string = $b_string.Substring( 5, [Math]::Floor( ($b_string.Length - 5)/ 8 ) * 8 ) | b2i | i2h
-    if ( $h_string.Length -ne 20*2 -and $h_string.Length -ne 32*2 ) { throw "invalid length" }
+    if ( $h_string.Length -ne 20*2 -and $h_string.Length -ne 32*2 -and $h_string.Length -ne 66*2 ) {
+        throw "invalid length"
+    }
     $hrp_expanded =           $hrp.ToCharArray() | % { [byte][char]$_ -shr 5 }
     $hrp_expanded += @( 0 ) + $hrp.ToCharArray() | % { [byte][char]$_ -band 0x1f }
     $values = $hrp_expanded + $data
@@ -599,39 +617,37 @@ function GetTweak {
 function GetTweakedWIF {
 # Tweaked secret key ( in WIF ) for an unspendable script path (BIP-0086)
     param( [Parameter(ValueFromPipeline=$True)][string]$wif )
-    $privateKey  = ( Base58Check_Decode $wif ).Substring( 2 )
+    $n = [ECDSA]::Order
+    $G = [ECDSA]::new()
+    $privateKey = ( Base58Check_Decode $wif ).Substring( 2 )
     if ( $privateKey.Length -ne 66 -or $privateKey.Substring( 64, 2 ) -ne "01" ) {
         throw "invalid WIF"
     }
-    $privateKey  = $privateKey.Substring( 0, 64 )
-    $d           = [bigint]::Parse( "0" + $privateKey, "AllowHexSpecifier" )
-    if ( $d.IsZero -or $d -ge [ECDSA]::Order ) { throw "invalid private key" }
-    $G           = [ECDSA]::new()
-    $P           = $G * $d
-    if ( -not $P.Y.IsEven ) { $d = [ECDSA]::Order - $d }
-    $publicKey   = GetPublicKey $privateKey
-    $t           = GetTweak $publicKey
-    $td          = ( $d + $t ) % [ECDSA]::Order
-    $td_hex      = $td.ToString( "x64" ) -replace '^0(?=[0-9a-f]{64}$)'
-    $prefix      = if ( $wif -cmatch '^[KL]' ) { "80" } else { "ef" }
+    $privateKey = $privateKey.Substring( 0, 64 )
+    $d          = [bigint]::Parse( "0" + $privateKey, "AllowHexSpecifier" )
+    if ( $d.IsZero -or $d -ge $n ) { throw "invalid private key" }
+    $P          = $G * $d
+    if ( $P -eq $null ) { throw "arithmetic error" }
+    if ( -not $P.Y.IsEven ) { $d = $n - $d }
+    $publicKey  = GetPublicKey $privateKey
+    $t          = GetTweak $publicKey
+    $td         = ( $d + $t ) % $n
+    $td_hex     = $td.ToString( "x64" ) -replace '^0(?=[0-9a-f]{64}$)'
+    $prefix     = if ( $wif -cmatch '^[KL]' ) { "80" } else { "ef" }
     return Base58Check_Encode ( $prefix + $td_hex + "01" )
 }
 
 function GetAddressP2TR {
 # Taproot address for a single key (BIP-0086)
     param( [Parameter(ValueFromPipeline=$True)][string]$publicKey, [Alias("t")][switch]$Testnet )
-    $prefix = $publicKey.Substring( 0, 2 )
-    $publicKeyX = $publicKey.Substring( 2 )
-    $publicKeyY = ( DecompressPublicKey $publicKey ).Substring( 66 )
-    $KpX = [bigint]::Parse( "0" + $publicKeyX, "AllowHexSpecifier" )
-    $KpY = [bigint]::Parse( "0" + $publicKeyY, "AllowHexSpecifier" )
-    if ( $prefix -eq "03" ) { $KpY = [ECDSA]::p - $KpY }
-    $internalKey = [ECDSA]::new( $KpX, $KpY )
+    $internalKey = $publicKey.Substring( 2 )
+    $x = [bigint]::Parse( "0" + $internalKey, "AllowHexSpecifier" )
+    $P = [ECDSA]::new( $x )
     $G = [ECDSA]::new()
     $tweak = GetTweak $publicKey
-    $Kq = $internalKey + $G * $tweak
-    if ( $Kq -eq $null ) { throw "The resulting address is invalid." }
-    $outputKey  = $Kq.X.ToString( "x64" ) -replace '^0(?=[0-9a-f]{64}$)'
+    $Q = $P + $G * $tweak
+    if ( $Q -eq $null ) { throw "The resulting address is invalid." }
+    $outputKey  = $Q.X.ToString( "x64" ) -replace '^0(?=[0-9a-f]{64}$)'
     $hrp = if ( -not $Testnet ) { "bc" } else { "tb" }
     return ( Bech32_Encode $outputKey $hrp $true 1 )
 }
@@ -712,7 +728,7 @@ class HDWallet {
         $this.PrivateKey  = i2h $extendedKey[0..31]
         $this.ChainCode   = i2h $extendedKey[32..63]
         $this.PublicKeyUC = GetPublicKey -uc $this.PrivateKey
-        if ( $this.PublicKeyUC[-1] -match '[02468ace]' ) {
+        if ( $this.PublicKeyUC[-1] -cmatch '[02468ace]' ) {
             $this.PublicKey = "02" + $this.PublicKeyUC.Substring( 2, 64 )
         } else {
             $this.PublicKey = "03" + $this.PublicKeyUC.Substring( 2, 64 )
@@ -730,9 +746,9 @@ class HDWallet {
     [HDWallet] Derive ( [int]$index, [bool]$hardened ) {
         $child_path  = $this.Path + "/" + $index.ToString( "d" )
         if ( $hardened ) {  $child_path  += "'" }
-        if (       $child_path -match "^m/(?!0')\d+'/0'" ) {
+        if (       $child_path -cmatch "^m/(?!0')\d+'/0'" ) {
             $child_Testnet = $false                                   # Mainnet Bitcoin
-        } elseif ( $child_path -match "^m/(?!0')\d+'/1'" ) {
+        } elseif ( $child_path -cmatch "^m/(?!0')\d+'/1'" ) {
             $child_Testnet = $true                                    # Testnet Bitcoin
         } else {
             $child_Testnet = $this.Testnet                            # inherit from the parent object
@@ -755,8 +771,8 @@ class HDWallet {
 
         if ( $hardened ) {  $child_path  += "'" }
 
-        if (( $child_path -match "^m/(?!0')\d+'/0'" -and $testnet -eq $true  ) -or `
-            ( $child_path -match "^m/(?!0')\d+'/1'" -and $testnet -eq $false )     ) {
+        if (( $child_path -cmatch "^m/(?!0')\d+'/0'" -and $testnet -eq $true  ) -or `
+            ( $child_path -cmatch "^m/(?!0')\d+'/1'" -and $testnet -eq $false )     ) {
             Write-Host "Coin type is inconsistent." -Fore Red
             return $null
         }
@@ -798,7 +814,7 @@ class HDWallet {
 
             $child_privateKey = $kc.ToString( "x64" ) -replace '^0(?=[0-9a-f]{64}$)'
             $child_publicKeyUC = GetPublicKey -uc $child_privateKey
-            if ( $child_publicKeyUC[-1] -match '[02468ace]' ) {
+            if ( $child_publicKeyUC[-1] -cmatch '[02468ace]' ) {
                 $child_publicKey = "02" + $child_publicKeyUC.Substring( 2, 64 )
             } else {
                 $child_publicKey = "03" + $child_publicKeyUC.Substring( 2, 64 )
@@ -806,23 +822,23 @@ class HDWallet {
 
         } else {
 
+            $G   = [ECDSA]::new()
             $publicKeyX = $this.PublicKeyUC.Substring( 2, 64 )
             $publicKeyY = $this.PublicKeyUC.Substring( 66 )
-            $KpX = [bigint]::Parse( "0" + $publicKeyX, "AllowHexSpecifier" )
-            $KpY = [bigint]::Parse( "0" + $publicKeyY, "AllowHexSpecifier" )
-            $Kp  = [ECDSA]::new( $KpX, $KpY )
-            $G   = [ECDSA]::new()
-            $Kc  = $G * $il + $Kp             # multiplication order is noncommutative here
-            if ( $Kc -eq $null ) {
+            $kpX = [bigint]::Parse( "0" + $publicKeyX, "AllowHexSpecifier" )
+            $kpY = [bigint]::Parse( "0" + $publicKeyY, "AllowHexSpecifier" )
+            $Kp  = [ECDSA]::new( $kpX, $kpY )
+            $Pc  = $G * $il + $Kp
+            if ( $Pc -eq $null ) {
                 Write-Host "The resulting key is invalid. Try the next index." -Fore Red
                 return $null
             }
-            $pubkeyX = $Kc.X.ToString( "x64" ) -replace '^0(?=[0-9a-f]{64}$)'
-            $pubkeyY = $Kc.Y.ToString( "x64" ) -replace '^0(?=[0-9a-f]{64}$)'
+            $pubkeyX = $Pc.X.ToString( "x64" ) -replace '^0(?=[0-9a-f]{64}$)'
+            $pubkeyY = $Pc.Y.ToString( "x64" ) -replace '^0(?=[0-9a-f]{64}$)'
 
             $child_privateKey = $null
             $child_publicKeyUC = "04" + $pubkeyX + $pubkeyY
-            if ( $Kc.Y.IsEven ) {
+            if ( $Pc.Y.IsEven ) {
                 $child_publicKey = "02" + $pubkeyX
             } else {
                 $child_publicKey = "03" + $pubkeyX
@@ -912,7 +928,7 @@ class HDWallet {
         if ( $version_e -in $prefixes_prv ) {
             $this.PrivateKey  = $extendedkey_e -replace '^00'
             $this.PublicKeyUC = GetPublicKey -uc $this.PrivateKey
-            if ( $this.PublicKeyUC[-1] -match '[02468ace]' ) {
+            if ( $this.PublicKeyUC[-1] -cmatch '[02468ace]' ) {
                 $this.PublicKey = "02" + $this.PublicKeyUC.Substring( 2, 64 )
             } else {
                 $this.PublicKey = "03" + $this.PublicKeyUC.Substring( 2, 64 )
