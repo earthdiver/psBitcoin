@@ -393,22 +393,22 @@ Update-TypeData -TypeName "DER"       -MemberType "ScriptMethod" -MemberName "To
 }
 
 function EcdsaSig ( [string]$privateKey, [string]$serializedTX, [byte]$sighashType ) {
+    $n   = [ECDSA]::Order
+    $G   = [ECDSA]::new()
     $msg = Hash256 $serializedTX
-#   $rnd = ( 0..31 | % { ( Get-Random -Minimum 0 -Maximum 255 ).ToString( "x2" ) } ) -join ""
+    $z   = [bigint]::Parse( "0" + $msg, "AllowHexSpecifier" )
+    $d   = [bigint]::Parse( "0" + $privateKey, "AllowHexSpecifier" )
+    if ( $d.IsZero -or $d -ge $n ) { throw "invalid private key" }
     $buffer = [byte[]]::new( 32 )
     [Security.Cryptography.RNGCryptoServiceProvider]::Create().GetBytes( $buffer )
     $rnd =  i2h $buffer
-    $d   = [bigint]::Parse( "0" + $privateKey, "AllowHexSpecifier" )
-    if ( $d.IsZero -or $d -ge [ECDSA]::Order ) { throw "invalid private key" }
-    $z   = [bigint]::Parse( "0" + $msg, "AllowHexSpecifier" )
-    $k   = [bigint]::Parse( "0" + $rnd, "AllowHexSpecifier" ) % [ECDSA]::Order
+    $k   = [bigint]::Parse( "0" + $rnd, "AllowHexSpecifier" ) % $n
     if ( $k.IsZero ) { throw "You are unlucky!" }
-    $G   = [ECDSA]::new()
     $kG  = $G * $k
     if ( $kG -eq $null ) { throw "arithmetic error" }
-    $r   = $kG.X                                                        % [ECDSA]::Order
-    $s   = ( ( $z + $d * $r ) * [ECDSA]::ModInv( $k, [ECDSA]::Order ) ) % [ECDSA]::Order
-    if ( $s -gt [ECDSA]::Order / 2 ) { $s = [ECDSA]::Order - $s }
+    $r   = $kG.X                                            % $n
+    $s   = ( ( $z + $d * $r ) * [ECDSA]::ModInv( $k, $n ) ) % $n
+    if ( $s -gt $n / 2 ) { $s = $n - $s }
     $r_h = $r.ToString( "x" ) -replace '^(.(?:..)*)$', '0$1'
     $s_h = $s.ToString( "x" ) -replace '^(.(?:..)*)$', '0$1'
     $sig = [DER]::new( $r_h, $s_h )
@@ -426,32 +426,33 @@ function HashTR( [string]$tag_string, [string]$hex_string ) {    # Tagged hash f
 }
 
 function SchnorrSig ( [string]$privateKey, [string]$serializedTX, [byte]$sighashType ) {
-    $msg  = HashTR "TapSighash" $serializedTX
-    $d    = [bigint]::Parse( "0" + $privateKey, "AllowHexSpecifier" )
-    if ( $d.IsZero -or $d -ge [ECDSA]::Order ) { throw "invalid private key" }
+    $n    = [ECDSA]::Order
     $G    = [ECDSA]::new()
+    $d    = [bigint]::Parse( "0" + $privateKey, "AllowHexSpecifier" )
+    if ( $d.IsZero -or $d -ge $n ) { throw "invalid private key" }
     $P    = $G * $d
-    $p_h  = $P.X.ToString( "x64" ) -replace '^0(?=[0-9a-f]{64}$)'
-    if ( -not $P.Y.IsEven ) { $d = [ECDSA]::Order - $d }
+    if ( $P -eq $null ) { throw "arithmetic error" }
+    if ( -not $P.Y.IsEven ) { $d = $n - $d }
     $d_h  = $d.ToString( "x64" ) -replace '^0(?=[0-9a-f]{64}$)'
     $d_b  = h2i $d_h
-#   $a_h  = ( 0..31 | % { ( Get-Random -Minimum 0 -Maximum 255 ).ToString( "x2" ) } ) -join ""
     $buffer = [byte[]]::new( 32 )
     [Security.Cryptography.RNGCryptoServiceProvider]::Create().GetBytes( $buffer )
     $a_h  = i2h $buffer
     $ha_h = HashTR "BIP0340/aux" $a_h
     $ha_b = h2i $ha_h
     $t_h  = ( 0..31 | % { ( $d_b[$_] -bxor $ha_b[$_] ).ToString( "x2" ) } ) -join ""
+    $p_h  = $P.X.ToString( "x64" ) -replace '^0(?=[0-9a-f]{64}$)'
+    $msg  = HashTR "TapSighash" $serializedTX
     $rnd  = HashTR "BIP0340/nonce" ( $t_h + $p_h + $msg )
-    $k    = [bigint]::Parse( "0" + $rnd, "AllowHexSpecifier" ) % [ECDSA]::Order
+    $k    = [bigint]::Parse( "0" + $rnd, "AllowHexSpecifier" ) % $n
     if ( $k.IsZero ) { throw "You are unlucky!" }
     $R    = $G * $k
     if ( $R -eq $null ) { throw "arithmetic error" }
+    if ( -not $R.Y.IsEven ) { $k = $n - $k }
     $r_h  = $R.X.ToString( "x64" ) -replace '^0(?=[0-9a-f]{64}$)'
-    if ( -not $R.Y.IsEven ) { $k = [ECDSA]::Order - $k }
     $e_h  = HashTR "BIP0340/challenge" ( $r_h + $p_h + $msg )
-    $e    = [bigint]::Parse( "0" + $e_h, "AllowHexSpecifier" ) % [ECDSA]::Order
-    $s    = ( $k + $e * $d ) % [ECDSA]::Order
+    $e    = [bigint]::Parse( "0" + $e_h, "AllowHexSpecifier" ) % $n
+    $s    = ( $k + $e * $d ) % $n
     $s_h  = $s.ToString( "x64" ) -replace '^0(?=[0-9a-f]{64}$)'
     $sig  = $r_h + $s_h
     if ( $sighashType -and $sighashType -ne 0x00 ) { $sig += $sighashType.ToString( "x2" ) }
@@ -461,20 +462,15 @@ function SchnorrSig ( [string]$privateKey, [string]$serializedTX, [byte]$sighash
 function GetAddressP2TR-SP {
     param( [Parameter(ValueFromPipeline=$True)][string]$publicKey, [Alias("t")][switch]$Testnet )
 # Taproot address for a single-key script path spend.
-# Internal key 0x50929b74c1a04954b78b4b6035e97a5e078a5a0f28ec96d547bfee9ace803ac0 is used as an unspendable key path.
-    $script      = "20" + $publicKey.Substring( 2 ) + "ac"            # PUSH(32byte publickey) + OP_CHECKSIG
-    $x           = [bigint]::Parse( "50929b74c1a04954b78b4b6035e97a5e078a5a0f28ec96d547bfee9ace803ac0", "AllowHexSpecifier" )  # SHA256( G ): unspendable keypath
-    $p           = [ECDSA]::p
-    $yy          = ( $x * $x * $x + 7 ) % $p
-    $y           = [bigint]::ModPow( $yy, ($p + 1)/4, $p )
-    if ( $yy -ne ( $y * $y ) % [ECDSA]::p ) { throw "arithmetic error" }
-    if ( -not $y.IsEven ) { $y = ($p - $y) % $p }
-    $H           = [ECDSA]::new( $x, $y ) 
+# Internal key 0x50929b74c1a04954b78b4b6035e97a5e078a5a0f28ec96d547bfee9ace803ac0 ( = SHA256( G ) ) is used as an unspendable key path.
+    $internalKey = "50929b74c1a04954b78b4b6035e97a5e078a5a0f28ec96d547bfee9ace803ac0"
+    $x           = [bigint]::Parse( "0" + $internalKey, "AllowHexSpecifier" )
+    $H           = [ECDSA]::new( $x )  # lift_x( x )
     $G           = [ECDSA]::new()
-    $publicKeyX  = $H.X.ToString( "x64" ) -replace '^0(?=[0-9a-f]{64}$)'
     $leafVersion = "c0"
+    $script      = "20" + $publicKey.Substring( 2 ) + "ac"  # PUSH(32byte publickey) + OP_CHECKSIG
     $tapLeaf     = HashTR "TapLeaf"  ( $leafVersion + ( Push $script ) )
-    $tapTweak    = HashTR "TapTweak" ( $publicKeyX + $tapLeaf )
+    $tapTweak    = HashTR "TapTweak" ( $internalKey + $tapLeaf )
     $t           = [bigint]::Parse( "0" + $tapTweak, "AllowHexSpecifier" )
     if ( $t -ge [ECDSA]::Order ) { throw "You are unlucky!" }
     $Q           = $H + $G * $t
@@ -545,7 +541,7 @@ function GetUTXO {
 
 #===================================================================================================================================
 function RawTXfromLegacyAddress {
-    param ( [string]$WIF, 
+    param ( [string]$wif, 
             [string]$addressFrom, 
             [string]$addressTo, 
             [UInt64]$amount, 
@@ -557,7 +553,7 @@ function RawTXfromLegacyAddress {
 
     if ( $addressTo -cmatch '^script:' ) {
         $scriptHash = Hash160 $addressTo.Substring( 7 )
-        if ( $WIF -cmatch '^[5KL]' ) {
+        if ( $wif -cmatch '^[5KL]' ) {
             $addressTo = Base58Check_Encode ( "05" + $scriptHash )
         } else {
             $addressTo = Base58Check_Encode ( "c4" + $scriptHash )
@@ -567,11 +563,11 @@ function RawTXfromLegacyAddress {
         Write-Host
     }
 
-    if ( $WIF -cmatch '^[5KL]' -and $addressFrom -cnotmatch '^[13]' ) { 
+    if ( $wif -cmatch '^[5KL]' -and $addressFrom -cnotmatch '^[13]' ) { 
         throw "inconsistent networks between 'WIF' and 'addressFrom'" 
-    } elseif ( $WIF -cmatch '^[9c]'  -and $addressFrom -cnotmatch '^[2mn]' ) { 
+    } elseif ( $wif -cmatch '^[9c]'  -and $addressFrom -cnotmatch '^[2mn]' ) { 
         throw "inconsistent networks between'WIF' and 'addressFrom'"
-    } elseif ( $WIF -cnotmatch '^[59KLc]' ) {
+    } elseif ( $wif -cnotmatch '^[59KLc]' ) {
         throw "invalid 'privateKey'"
     } elseif ( $addressFrom -cnotmatch '^[123mn]' ) {
         throw "invalid 'addressFrom'"
@@ -595,8 +591,8 @@ function RawTXfromLegacyAddress {
 
     $utxo = @( GetUTXO $addressFrom )
 
-    $privateKey_in = ( Base58Check_Decode $WIF ).Substring( 2, 64 )
-    $publicKey_in  = GetPublicKeyFromWIF $WIF
+    $privateKey_in = ( Base58Check_Decode $wif ).Substring( 2, 64 )
+    $publicKey_in  = GetPublicKeyFromWIF $wif
     if ( $addressFrom -cmatch '^[1mn]' ) {
         $pubkeyHash_in   = ( Base58Check_Decode $addressFrom ).Substring( 2 )
         $scriptPubKey_in = "76a914" + $pubkeyHash_in + "88ac"              # OP_DUP OP_HASH160 PUSH(pubkeyHash) OP_EQUALVERIFY OP_CHECKSIG
@@ -710,7 +706,7 @@ function RawTXfromLegacyAddress {
 
 #===================================================================================================================================
 function RawTXfromSegwitAddress {
-    param ( [string]$WIF, 
+    param ( [string]$wif, 
             [string]$addressFrom, 
             [string]$addressTo, 
             [UInt64]$amount, 
@@ -724,7 +720,7 @@ function RawTXfromSegwitAddress {
 
     if ( $addressTo -cmatch '^script:' ) {
         $scriptHash = i2h $SHA256.ComputeHash( ( h2i $addressTo.Substring( 7 ) ) )
-        if ( $WIF -cmatch '^[KL]' ) {
+        if ( $wif -cmatch '^[KL]' ) {
             $hrp = "bc"
         } else {
             $hrp = "tb"
@@ -735,11 +731,11 @@ function RawTXfromSegwitAddress {
         Write-Host
     }
 
-    if ( $WIF -cmatch '^[KL]' -and $addressFrom -cnotmatch '^(3|bc1)' ) { 
+    if ( $wif -cmatch '^[KL]' -and $addressFrom -cnotmatch '^(3|bc1)' ) { 
         throw "inconsistent networks between 'WIF' and 'addressFrom'"
-    } elseif ( $WIF -cmatch '^c'  -and $addressFrom -cnotmatch '^(2|tb1)' ) { 
+    } elseif ( $wif -cmatch '^c'  -and $addressFrom -cnotmatch '^(2|tb1)' ) { 
         throw "inconsistent networks between 'WIF' and 'addressFrom'"
-    } elseif ( $WIF -cnotmatch '^[KLc]' ) {
+    } elseif ( $wif -cnotmatch '^[KLc]' ) {
         throw "invalid 'WIF'"
     } elseif ( $addressFrom -cnotmatch '^([23]|bc1|tb1)' ) {
         throw "invalid 'addressFrom'"
@@ -764,7 +760,7 @@ function RawTXfromSegwitAddress {
 
     $utxo = @( GetUTXO $addressFrom )
 
-    $privateKey_in = ( Base58Check_Decode $WIF ).Substring( 2, 64 )
+    $privateKey_in = ( Base58Check_Decode $wif ).Substring( 2, 64 )
     $publicKey_in  = GetPublicKey $privateKey_in
     $pubkeyHash_in = Hash160 $publicKey_in
     if ( $witnessScript -eq "single" ) {
@@ -889,7 +885,7 @@ function RawTXfromSegwitAddress {
 
 #===================================================================================================================================
 function RawTXfromTaprootAddress {
-    param ( [string]$WIF, 
+    param ( [string]$wif, 
             [string]$addressFrom, 
             [string]$addressTo, 
             [UInt64]$amount, 
@@ -900,40 +896,32 @@ function RawTXfromTaprootAddress {
           )
 
     if ( $addressTo -cmatch '^script:' ) {
-        $script      = $addressTo.Substring( 7 )
-        $x           = [bigint]::Parse( "50929b74c1a04954b78b4b6035e97a5e078a5a0f28ec96d547bfee9ace803ac0", "AllowHexSpecifier" )
-        $p           = [ECDSA]::p
-        $yy          = ( $x * $x * $x + 7 ) % $p
-        $y           = [bigint]::ModPow( $yy, ($p + 1)/4, $p )
-        if ( $yy -ne ( $y * $y ) % [ECDSA]::p ) { throw "arithmetic error" }
-        if ( -not $y.IsEven ) { $y = ($p - $y) % $p }
-        $H           = [ECDSA]::new( $x, $y ) 
+# Internal key 0x50929b74c1a04954b78b4b6035e97a5e078a5a0f28ec96d547bfee9ace803ac0 ( = SHA256( G ) ) is used as an unspendable key path.
+        $internalKey = "50929b74c1a04954b78b4b6035e97a5e078a5a0f28ec96d547bfee9ace803ac0"
+        $x           = [bigint]::Parse( "0" + $internalKey, "AllowHexSpecifier" )
+        $H           = [ECDSA]::new( $x )  # lift_x( x )
         $G           = [ECDSA]::new()
-        $publicKeyX  = $H.X.ToString( "x64" ) -replace '^0(?=[0-9a-f]{64}$)'
         $leafVersion = "c0"
+        $script      = $addressTo.Substring( 7 )
         $tapLeaf     = HashTR "TapLeaf"  ( $leafVersion + ( Push $script ) )
-        $tapTweak    = HashTR "TapTweak" ( $publicKeyX + $tapLeaf )
+        $tapTweak    = HashTR "TapTweak" ( $internalKey + $tapLeaf )
         $t           = [bigint]::Parse( "0" + $tapTweak, "AllowHexSpecifier" )
         if ( $t -ge [ECDSA]::Order ) { throw "You are unlucky!" }
         $Q           = $H + $G * $t
         if ( $Q -eq $null ) { throw "The resulting 'addressTo' is invalid." }
         $outputKey   = $Q.X.ToString( "x64" ) -replace '^0(?=[0-9a-f]{64}$)'
-        if ( $WIF -cmatch '^[KL]' ) {
-            $hrp = "bc"
-        } else {
-            $hrp = "tb"
-        }
+        $hrp = if ( $wif -cmatch '^[KL]' ) { "bc" } else { "tb" }
         $addressTo = Bech32_Encode $outputKey $hrp $true 1
         Write-Host
         Write-Host "addressTo: $addressTo " -ForegroundColor Green
         Write-Host
     }
 
-    if ( $WIF -cmatch '^[KL]' -and $addressFrom -cnotmatch '^bc1p' ) {
+    if ( $wif -cmatch '^[KL]' -and $addressFrom -cnotmatch '^bc1p' ) {
         throw "inconsistent networks between 'WIF' and 'addressFrom'"
-    } elseif ( $WIF -cmatch '^c'  -and $addressFrom -cnotmatch '^tb1p' ) { 
+    } elseif ( $wif -cmatch '^c'  -and $addressFrom -cnotmatch '^tb1p' ) { 
         throw "inconsistent networks between 'WIF' and 'addressFrom'"
-    } elseif ( $WIF -cnotmatch '^[KLc]' ) {
+    } elseif ( $wif -cnotmatch '^[KLc]' ) {
         throw "invalid 'WIF'"
     } elseif ( $addressFrom -cnotmatch '^(bc|tb)1p' ) {
         throw "invalid 'addressFrom'"
@@ -1033,14 +1021,14 @@ function RawTXfromTaprootAddress {
     }
 
     if ( $tapScript ) {
-        $privateKey_in = ( Base58Check_Decode $WIF ).Substring( 2, 64 )
+        $privateKey_in = ( Base58Check_Decode $wif ).Substring( 2, 64 )
         if ( $tapScript -eq "single" ) {
             $publicKey_in  = ( GetPublicKey $privateKey_in ).Substring( 2 )
             $tapScript = "20" + $publicKey_in + "ac"                   # PUSH(32-byte pubkey) OP_CHECKSIG
         }
     } else {
-        $tWIF = GetTweakedWIF $WIF
-        $privateKey_in = ( Base58Check_Decode $tWIF ).Substring( 2, 64 )
+        $twif = GetTweakedWIF $wif
+        $privateKey_in = ( Base58Check_Decode $twif ).Substring( 2, 64 )
     }
 
     $sighashType = 0x00       # SIGHASH_DEFAULT
@@ -1071,7 +1059,7 @@ function RawTXfromTaprootAddress {
 
 #===================================================================================================================================
 function NulldataTX {
-    param ( [string]$WIF, 
+    param ( [string]$wif, 
             [string]$addressFrom,  # Segwit v0 address
             [string]$text, 
             [UInt64]$fee,
@@ -1083,11 +1071,11 @@ function NulldataTX {
     if ( $num -gt 40 ) { throw "too long text" }
     $scriptPubKey_out0 = "6a" + ( Push ( i2h $bytes ) )       # 6a: OP_RETURN
 
-    if ( $WIF -cmatch '^[KL]' -and $addressFrom -cnotmatch '^(3|bc1)' ) { 
+    if ( $wif -cmatch '^[KL]' -and $addressFrom -cnotmatch '^(3|bc1)' ) { 
         throw "inconsistent networks between 'WIF' and 'addressFrom'"
-    } elseif ( $WIF -cmatch '^c'  -and $addressFrom -cnotmatch '^(2|tb1)' ) { 
+    } elseif ( $wif -cmatch '^c'  -and $addressFrom -cnotmatch '^(2|tb1)' ) { 
         throw "inconsistent networks between 'WIF' and 'addressFrom'"
-    } elseif ( $WIF -cnotmatch '^[KLc]' ) {
+    } elseif ( $wif -cnotmatch '^[KLc]' ) {
         throw "invalid 'WIF'"
     } elseif ( $addressFrom -cnotmatch '^([23]|bc1|tb1)' ) {
         throw "invalid 'addressFrom'"
@@ -1106,7 +1094,7 @@ function NulldataTX {
 
     $utxo = @( GetUTXO $addressFrom )
 
-    $privateKey_in = ( Base58Check_Decode $WIF ).Substring( 2, 64 )
+    $privateKey_in = ( Base58Check_Decode $wif ).Substring( 2, 64 )
     $publicKey_in  = GetPublicKey $privateKey_in
     $pubkeyHash_in = Hash160 $publicKey_in
     $SHA256 = New-Object Cryptography.SHA256CryptoServiceProvider
