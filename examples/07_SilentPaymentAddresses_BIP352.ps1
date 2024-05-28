@@ -1,9 +1,3 @@
-###########
-$network    = "mainnet"
-$mnemonic   = "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about"
-$passphrase = ""
-$labels     = @( "", "0", "1", "2" )
-###########
 if ( -not ( ValidateMnemonic $mnemonic ) ) { throw "invalid mnemonic phrase" }
 if ( $network -eq "mainnet" ) {
     $coinType = 0
@@ -26,7 +20,7 @@ foreach ( $label in $labels ) {
     } else {
         $SHA256 = New-Object Cryptography.SHA256CryptoServiceProvider
         $tag    = [Text.Encoding]::UTF8.GetBytes( "BIP0352/Label" )
-        $hash   = $SHA256.ComputeHash( $SHA256.ComputeHash( $tag ) * 2 + ( h2i ( $B_Scan_priv + ([UInt32]$label).ToString( "x8" ) ) ) )
+        $hash   = $SHA256.ComputeHash( $SHA256.ComputeHash( $tag ) * 2 + ( $B_Scan_priv + ([UInt32]$label).ToString( "x8" ) | h2i ) )
         $tweak  = [bigint]::new( $hash[31..0] + @(0x00) )
         $G      = [ECDSA]::new()
         $k      = [bigint]::Parse( "0" + $B_Spend_priv, "AllowHexSpecifier" )
