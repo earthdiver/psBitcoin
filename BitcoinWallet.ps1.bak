@@ -234,10 +234,6 @@ class ECDSA {
     }
     
     ECDSA( [bigint]$xa, [bigint]$ya ) {
-        if ( ( $ya * $ya ) % [ECDSA]::p -ne ( $xa * $xa * $xa + 7) % [ECDSA]::p ) {
-            $this.Err = $true
-            return
-        }
         $this.X   = $xa
         $this.Y   = $ya
         $this.Err = $false
@@ -264,6 +260,10 @@ class ECDSA {
         if ( $this.X.Sign -eq -1 ) { $this.X += [ECDSA]::p }
         if ( $this.Y.Sign -eq -1 ) { $this.Y += [ECDSA]::p }
         $this.Err = $false
+    }
+
+    [bool] OnCurve() {
+        return ( $this.X * $this.X * $this.X + 7 ) % [ECDSA]::p -eq $this.Y * $this.Y % [ECDSA]::p
     }
 
     hidden [ECDSA] Add( [ECDSA]$point ) {
@@ -297,7 +297,7 @@ class ECDSA {
     static [ECDSA] op_Multiply( [ECDSA]$left, [bigint]$right ) {
         if ( $right -eq [bigint]::Zero ) { return $null }
         if ( $right -eq [bigint]::One  ) { return $left }
-        $right %= [ECDSA]::Order
+        $right %= [ECDSA]::p
         if ( $right.Sign -eq -1 ) { $right += [ECDSA]::p }
         $buffer = [List[char]]::new()
         while ( $right -ne [bigint]::One ) {
@@ -828,10 +828,6 @@ class HDWallet {
             $kpX = [bigint]::Parse( "0" + $publicKeyX, "AllowHexSpecifier" )
             $kpY = [bigint]::Parse( "0" + $publicKeyY, "AllowHexSpecifier" )
             $Kp  = [ECDSA]::new( $kpX, $kpY )
-            if ( $Kp.Err ) {
-                Write-Host "Kp is not on the curve." -Fore Red
-                return $null
-            }
             $Pc  = $G * $il + $Kp
             if ( $Pc -eq $null ) {
                 Write-Host "The resulting key is invalid. Try the next index." -Fore Red
