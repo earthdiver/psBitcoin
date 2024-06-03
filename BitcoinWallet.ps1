@@ -298,7 +298,7 @@ class ECDSA {
         if ( $right -eq [bigint]::Zero ) { return $null }
         if ( $right -eq [bigint]::One  ) { return $left }
         $right %= [ECDSA]::Order
-        if ( $right.Sign -eq -1 ) { $right += [ECDSA]::p }
+        if ( $right.Sign -eq -1 ) { $right += [ECDSA]::Order }
         $buffer = [List[char]]::new()
         while ( $right -ne [bigint]::One ) {
             if ( $right.IsEven ) {
