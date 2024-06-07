@@ -18,7 +18,7 @@ This tool aims to help users understand bitcoin wallets in various forms, includ
 ```NoNetwork.wsb
 Configuration>
   <LogonCommand>
-    <Command>powershell -Command "Set-ExecutionPolicy -Scope CurrentUser RemoteSigned"</Command>
+    <Command>powershell -Command "Set-ExecutionPolicy ByPass -Scope CurrentUser"</Command>
   </LogonCommand>
   <MappedFolders>
     <MappedFolder>
@@ -56,6 +56,9 @@ Execute the following command to load function/class definitions:
 
 Please place the wordlists in the same folder.
 
+> [!TIP]
+> If you get an error saying "running script is disabled on this system" error, type `Set-ExecutionPolicy ByPass -Scope Process`.
+
 ## Running Examples
 
 ```powershell:
@@ -70,7 +73,7 @@ Please place the wordlists in the same folder.
 
 ## Other Tools
 
-- Functions (`RawTXfromLegacyAddress`,`RawTXfromSegwitAddress`,`RawTXfromTaprootAddress`, etc.) to generate TX data (experimental; use these on Testnet only.)
+- Functions (`RawTXfromLegacyAddress`,`RawTXfromSegwitAddress`,`RawTXfromTaprootAddress`, etc.) to generate TX data (experimental; use these on Testnet only)
 - Functions (`Mnemonic2QRcode`, `Mnemonic2CompactQRcode`) to generate SeedQR images
 
 ```
@@ -80,7 +83,7 @@ Please place the wordlists in the same folder.
 
 ## Donations
 
-Donations welcome at the following addresses (buy me a coffee).
+Welcome at the following addresses (buy me a coffee).
 - `bc1qv6pe28gesk52zuj7fnqk4vul4x6qtyfc7qf9y4`
 - `sp1qq08f39ntp6zv03exfx0he79nklvx9ulh436ygulgddgt26796274qqs5gqanfc8m5hmaecqz40l7uw4qp6ldj37q2lcv35azsegp3huhpclx8qsr`
 
