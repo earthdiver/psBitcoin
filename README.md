@@ -4,7 +4,7 @@
 This tool aims to help users understand bitcoin wallets in various forms, including entropy, mnemonic phrase, seed, extended keys, and more.
 
 ### Pros
-- **No external libraries required**: It leverages the pre-installed PowerShell in Windows, making it compatible with any PC running Windows 10. (The RIPEMD160 NuGet package is required for PowerShell 7.X, though.)
+- **No external libraries are required**: It leverages the pre-installed PowerShell in Windows, making it compatible with any PC running Windows 10. (The RIPEMD160 NuGet package is required for PowerShell 7.X, though.)
 
 ### Cons  (or perhaps even a Pro)
 - Limited to bitcoin; does not support other cryptocurrencies.
@@ -12,7 +12,7 @@ This tool aims to help users understand bitcoin wallets in various forms, includ
 ### Notes
 - **BitcoinWallet.ps1 does not access the network at all.**
 - `GetBalance` and `GetUTXO` functions, along with the four other functions that call GetUTXO in BitcoinTransaction.ps1, connect to the Internet.
-- For enhanced security, it is recommended to use the tool with network disabled in Windows Sandbox, considering the risk of malware infection on your PC. Save the following code as a text file with the extension .wsb on your desktop, and double-click it to start the sandbox with the network disabled.
+- For enhanced security, it is recommended to use the tool with the network disabled in Windows Sandbox, considering the risk of malware infection on your PC. Save the following code as a text file with the extension .wsb on your desktop, and double-click it to start the sandbox with the network disabled.
 
 
 ```NoNetwork.wsb
@@ -57,7 +57,7 @@ Execute the following command to load function/class definitions:
 Please place the wordlists in the same folder.
 
 > [!TIP]
-> If you get an error saying "running script is disabled on this system" error, type `Set-ExecutionPolicy ByPass -Scope Process`.
+> If you encounter an error stating "running script is disabled on this system" error, use `Set-ExecutionPolicy ByPass -Scope Process` to bypass the restriction.
 
 ## Running Examples
 
