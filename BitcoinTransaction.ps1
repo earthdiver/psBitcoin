@@ -630,10 +630,11 @@ function RawTXfromLegacyAddress {
             $pubkeyHash_out0 = $hash_out
             $scriptPubKey_out0 = "0014" + $pubkeyHash_out0                 # OP_0 PUSH(pubkeyHash)
         } elseif ( $hash_out.Length -eq 64 ) {
-            $scriptHash_out0 = $hash_out
             if ( $isTaproot ) {
-                $scriptPubKey_out0 = "5120" + $scriptHash_out0             # OP_1 PUSH(scriptHash) for taproot       ( segwit ver 1 )
+                $outputKey_out0    = $hash_out
+                $scriptPubKey_out0 = "5120" + $outputKey_out0              # OP_1 PUSH(outputKey) for taproot        ( segwit ver 1 )
             } else {
+                $scriptHash_out0   = $hash_out
                 $scriptPubKey_out0 = "0020" + $scriptHash_out0             # OP_0 PUSH(scriptHash) for native segwit ( segwit ver 0 )
             }
         } else {
@@ -653,10 +654,11 @@ function RawTXfromLegacyAddress {
             $pubkeyHash_out1 = $hash_out
             $scriptPubKey_out1 = "0014" + $pubkeyHash_out1
         } elseif ( $hash_out.Length -eq 64 ) {
-            $scriptHash_out1 = $hash_out
             if ( $isTaproot ) {
-                $scriptPubKey_out1 = "5120" + $scriptHash_out1
+                $outputKey_out1    = $hash_out
+                $scriptPubKey_out1 = "5120" + $outputKey_out1
             } else {
+                $scriptHash_out1   = $hash_out
                 $scriptPubKey_out1 = "0020" + $scriptHash_out1
             }
         } else {
@@ -814,10 +816,11 @@ function RawTXfromSegwitAddress {
             $pubkeyHash_out0 = $hash_out
             $scriptPubKey_out0 = "0014" + $pubkeyHash_out0                 # OP_0 PUSH(pubkeyHash)
         } elseif ( $hash_out.Length -eq 64 ) {
-            $scriptHash_out0 = $hash_out
             if ( $isTaproot ) {
-                $scriptPubKey_out0 = "5120" + $scriptHash_out0             # OP_1 PUSH(scriptHash) for taproot       ( segwit ver 1 )
+                $outputKey_out0    = $hash_out
+                $scriptPubKey_out0 = "5120" + $outputKey_out0              # OP_1 PUSH(outputKey) for taproot        ( segwit ver 1 )
             } else {
+                $scriptHash_out0   = $hash_out
                 $scriptPubKey_out0 = "0020" + $scriptHash_out0             # OP_0 PUSH(scriptHash) for native segwit ( segwit ver 0 )
             }
         } else {
@@ -837,10 +840,11 @@ function RawTXfromSegwitAddress {
             $pubkeyHash_out1 = $hash_out
             $scriptPubKey_out1 = "0014" + $pubkeyHash_out1
         } elseif ( $hash_out.Length -eq 64 ) {
-            $scriptHash_out1 = $hash_out
             if ( $isTaproot ) {
-                $scriptPubKey_out1 = "5120" + $scriptHash_out1
+                $outputKey_out1    = $hash_out
+                $scriptPubkey_out1 = "5120" + $outputKey_out1
             } else {
+                $scriptHash_out1   = $hash_out
                 $scriptPubKey_out1 = "0020" + $scriptHash_out1
             }
         } else {
@@ -970,10 +974,11 @@ function RawTXfromTaprootAddress {
             $pubkeyHash_out0 = $hash_out
             $scriptPubKey_out0 = "0014" + $pubkeyHash_out0                 # OP_0 PUSH(pubkeyHash)
         } elseif ( $hash_out.Length -eq 64 ) {
-            $scriptHash_out0 = $hash_out
             if ( $isTaproot ) {
-                $scriptPubKey_out0 = "5120" + $scriptHash_out0             # OP_1 PUSH(scriptHash) for taproot       ( segwit ver 1 )
+                $outputKey_out0    = $hash_out
+                $scriptPubKey_out0 = "5120" + $outputKey_out0              # OP_1 PUSH(outputKey) for taproot        ( segwit ver 1 )
             } else {
+                $scriptHash_out0   = $hash_out
                 $scriptPubKey_out0 = "0020" + $scriptHash_out0             # OP_0 PUSH(scriptHash) for native segwit ( segwit ver 0 )
             }
         } else {
@@ -993,10 +998,11 @@ function RawTXfromTaprootAddress {
             $pubkeyHash_out1 = $hash_out
             $scriptPubKey_out1 = "0014" + $pubkeyHash_out1
         } elseif ( $hash_out.Length -eq 64 ) {
-            $scriptHash_out1 = $hash_out
             if ( $isTaproot ) {
-                $scriptPubKey_out1 = "5120" + $scriptHash_out1
+                $outputKey_out1    = $hash_out
+                $scriptPubKey_out1 = "5120" + $outputKey_out1
             } else {
+                $scriptHash_out1   = $hash_out
                 $scriptPubKey_out1 = "0020" + $scriptHash_out1
             }
         } else {
@@ -1147,10 +1153,11 @@ function NulldataTX {
                 $pubkeyHash_out1 = $hash_out
                 $scriptPubKey_out1 = "0014" + $pubkeyHash_out1             # OP_0 PUSH(pubkeyHash)
             } elseif ( $hash_out.Length -eq 64 ) {
-                $scriptHash_out1 = $hash_out
                 if ( $isTaproot ) {
-                    $scriptPubKey_out1 = "5120" + $scriptHash_out1         # OP_1 PUSH(scriptHash) for taproot       ( segwit ver 1 )
+                    $outputKey_out1    = $hash_out
+                    $scriptPubKey_out1 = "5120" + $outputKey_out1          # OP_1 PUSH(outputKey) for taproot        ( segwit ver 1 )
                 } else {
+                    $scriptHash_out1   = $hash_out
                     $scriptPubKey_out1 = "0020" + $scriptHash_out1         # OP_0 PUSH(scriptHash) for native segwit ( segwit ver 0 )
                 }
             } else {
