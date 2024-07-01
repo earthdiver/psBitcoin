@@ -107,6 +107,9 @@ function GetMnemonic {
     }
     end {
         $entropy  = $buffer.ToArray()
+        if ( $entropy.Length -notin @(16,20,24,28,32) ) {
+            throw "invalid entropy length"
+        }
         $binary   = i2b $entropy
         $SHA256   = New-Object Cryptography.SHA256CryptoServiceProvider
         $checksum = ( i2b $SHA256.ComputeHash( $entropy ) ).Substring( 0, $entropy.Count / 4 )
@@ -126,7 +129,7 @@ function ValidateMnemonic {
         $wordlist = Get-Content "wordlist.txt"
     }
     $words    = $mnemonic -split '\s+'
-    if ( $words.Count -eq 0 -or $words.Count % 3 -ne 0 ) { return $false }
+    if ( $words.Count -notin @(12, 15, 18, 21, 24) ) { return $false }
     $full     = ( $words | % { [Convert]::ToString( $wordlist.IndexOf( $_ ),2).PadLeft( 11, "0" ) } ) -join ""
     $len      = $full.Length / 33
     $checksum = $full.Substring( $full.Length - $len )
@@ -234,7 +237,8 @@ class ECDSA {
     }
     
     ECDSA( [bigint]$xa, [bigint]$ya ) {
-        if ( ( $ya * $ya ) % [ECDSA]::p -ne ( $xa * $xa * $xa + 7) % [ECDSA]::p ) {
+        $yy = ( [bigint]::ModPow( $xa, 3, [ECDSA]::p ) + 7 ) % [ECDSA]::p
+        if ( $yy -ne ( $ya * $ya ) % [ECDSA]::p ) {
             $this.Err = $true
             return
         }
@@ -244,8 +248,12 @@ class ECDSA {
     }
 
     ECDSA( [bigint]$xa ) { # lift_x()
-        $yy       = ( $xa * $xa * $xa + 7 ) % [ECDSA]::p
-        $ya       = [bigint]::ModPow( $yy, ([ECDSA]::p + 1)/4, [ECDSA]::p )
+        $yy = ( [bigint]::ModPow( $xa, 3, [ECDSA]::p ) + 7 ) % [ECDSA]::p
+        $ya = [bigint]::ModPow( $yy, ([ECDSA]::p + 1)/4, [ECDSA]::p )
+        if ( $yy -ne ( $ya * $ya ) % [ECDSA]::p ) {
+            $this.Err = $true
+            return
+        }
         if ( -not $ya.IsEven ) { $ya = ( [ECDSA]::p - $ya ) % [ECDSA]::p }
         $this.X   = $xa
         $this.Y   = $ya
@@ -728,11 +736,8 @@ class HDWallet {
         $this.PrivateKey  = i2h $extendedKey[0..31]
         $this.ChainCode   = i2h $extendedKey[32..63]
         $this.PublicKeyUC = GetPublicKey -uc $this.PrivateKey
-        if ( $this.PublicKeyUC[-1] -cmatch '[02468ace]' ) {
-            $this.PublicKey = "02" + $this.PublicKeyUC.Substring( 2, 64 )
-        } else {
-            $this.PublicKey = "03" + $this.PublicKeyUC.Substring( 2, 64 )
-        }
+        $prefix           = if ( $this.PublicKeyUC -cmatch '[02468ace]$' ) { "02" } else { "03" }
+        $this.PublicKey   = $prefix + $this.PublicKeyUC.Substring( 2, 64 )
         $this.Path        = "m"
         $this.Hardened    = $false
         $this.Testnet     = $testnet
@@ -812,13 +817,10 @@ class HDWallet {
                 return $null
             }
 
-            $child_privateKey = $kc.ToString( "x64" ) -replace '^0(?=[0-9a-f]{64}$)'
+            $child_privateKey  = $kc.ToString( "x64" ) -replace '^0(?=[0-9a-f]{64}$)'
             $child_publicKeyUC = GetPublicKey -uc $child_privateKey
-            if ( $child_publicKeyUC[-1] -cmatch '[02468ace]' ) {
-                $child_publicKey = "02" + $child_publicKeyUC.Substring( 2, 64 )
-            } else {
-                $child_publicKey = "03" + $child_publicKeyUC.Substring( 2, 64 )
-            }
+            $prefix            = if ( $child_publicKeyUC -cmatch '[02468ace]$' ) { "02" } else { "03" }
+            $child_publicKey   = $prefix + $child_publicKeyUC.Substring( 2, 64 )
 
         } else {
 
@@ -840,13 +842,10 @@ class HDWallet {
             $pubkeyX = $Pc.X.ToString( "x64" ) -replace '^0(?=[0-9a-f]{64}$)'
             $pubkeyY = $Pc.Y.ToString( "x64" ) -replace '^0(?=[0-9a-f]{64}$)'
 
-            $child_privateKey = $null
+            $child_privateKey  = $null
             $child_publicKeyUC = "04" + $pubkeyX + $pubkeyY
-            if ( $Pc.Y.IsEven ) {
-                $child_publicKey = "02" + $pubkeyX
-            } else {
-                $child_publicKey = "03" + $pubkeyX
-            }
+            $prefix            = if ( $Pc.Y.IsEven ) { "02" } else { "03" }
+            $child_publicKey   = $prefix + $pubkeyX
 
         }
 
@@ -932,11 +931,8 @@ class HDWallet {
         if ( $version_e -in $prefixes_prv ) {
             $this.PrivateKey  = $extendedkey_e -replace '^00'
             $this.PublicKeyUC = GetPublicKey -uc $this.PrivateKey
-            if ( $this.PublicKeyUC[-1] -cmatch '[02468ace]' ) {
-                $this.PublicKey = "02" + $this.PublicKeyUC.Substring( 2, 64 )
-            } else {
-                $this.PublicKey = "03" + $this.PublicKeyUC.Substring( 2, 64 )
-            }
+            $prefix = if ( $this.PublicKeyUC -cmatch '[02468ace]$' ) { "02" } else { "03" }
+            $this.PublicKey = $prefix + $this.PublicKeyUC.Substring( 2, 64 )
         } elseif ( $version_e -in $prefixes_pub ) {
             $this.PrivateKey  = $null
             $this.PublicKeyUC = DecompressPublicKey $extendedKey_e

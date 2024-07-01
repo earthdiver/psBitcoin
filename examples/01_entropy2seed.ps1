@@ -17,8 +17,8 @@ if ( $entropy ) {
 } elseif ( $entropy_d ) {
    $nbits   = if ( $entropy_d.Length -lt 100 ) { 128 } else { 256 }
    $nbytes  = $nbits / 8
-#  $SHA256  = New-Object Security.Cryptography.SHA256CryptoServiceProvider
-#  $entropy = $SHA256.ComputeHash( [Text.Encoding]::ASCII.GetBytes( $entropy_d ) )[0..($nbytes-1)]
+#  $SHA256  = New-Object Security.Cryptography.SHA256CryptoServiceProvider                               # for compatibility with coldcard, seedsigner, 
+#  $entropy = $SHA256.ComputeHash( [Text.Encoding]::ASCII.GetBytes( $entropy_d ) )[0..($nbytes-1)]       #  krux, iancoleman, etc.
    $ndigits = [Math]::Ceiling( [bigint]::Log( [bigint]::Pow( 2, $nbits ) - 1, 6 ) )
    $n = 0
    do {
