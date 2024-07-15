@@ -24,6 +24,6 @@ $xpub = Base58Check_Encode $serialized
 ($w=[HDWallet]::new()).ImportExtendedKey($xpub,'m')
 Write-Host "Chain Code           : $($result[0])"
 Write-Host "Master Public Key    : $($result[1])"
-Write-Host "(Extended Public Key): $xpub"
+Write-Host "Extended Public Key  : $xpub"
 Write-Host "Address(expected)    : $($result[2])"
 Write-Host "Address(derived(m/0)): $($w.Derive(0,$false).GetAddressP2WPKH())"
