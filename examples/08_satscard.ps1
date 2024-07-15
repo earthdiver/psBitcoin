@@ -1,5 +1,5 @@
 # verifying the payment address derivation of Conkite satscard
-# note: 'cktap' python library must be installed.
+# note: 'cktap' python library needs to be installed.
 $result= python -c @'
 from cktap.transport import find_first
 from cktap.utils     import *
