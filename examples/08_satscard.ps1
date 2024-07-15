@@ -13,7 +13,7 @@ print(a)
 exit()
 '@
 $HMACSHA512 = New-Object Security.Cryptography.HMACSHA512
-$version = "0488b21e"
+$version      = "0488b21e"
 $depth        = "00"
 $pFingerprint = "00000000" 
 $childnumber  = "00000000"
@@ -22,8 +22,8 @@ $publickey    = $result[1]
 $serialized   = $version + $depth + $pFingerprint + $childnumber + $chaincode + $publickey
 $xpub = Base58Check_Encode $serialized
 ($w=[HDWallet]::new()).ImportExtendedKey($xpub,'m')
-Write-Host "Chain Code        : $($result[0])"
-Write-Host "Master PublicKey  : $($result[1])"
-Write-Host "PublicKey         : $($w.Derive(0,$false).PublicKey)"
-Write-Host "Address (expected): $($result[2])"
-Write-Host "Address (derived) : $($w.Derive(0,$false).GetAddressP2WPKH())"
+Write-Host "Chain Code           : $($result[0])"
+Write-Host "Master Public Key    : $($result[1])"
+Write-Host "(Extended Public Key): $xpub"
+Write-Host "Address(expected)    : $($result[2])"
+Write-Host "Address(derived(m/0)): $($w.Derive(0,$false).GetAddressP2WPKH())"
