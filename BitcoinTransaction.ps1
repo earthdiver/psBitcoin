@@ -392,18 +392,54 @@ Update-TypeData -TypeName "DER"       -MemberType "ScriptMethod" -MemberName "To
     return $this.PSObject.Properties.Value -join ""
 }
 
-function EcdsaSig ( [string]$privateKey, [string]$serializedTX, [byte]$sighashType ) {
+function deterministic_k( [bigint]$d, [bigint]$z ) {
+# rfc6979's deterministic nonces
+    $n  = [ECDSA]::Order
+    $z  %= $n
+    $da = $d.ToString( "x64" ) -replace '^0(?=[0-9a-f]{64}$)' | h2i
+    $za = $z.ToString( "x64" ) -replace '^0(?=[0-9a-f]{64}$)' | h2i
+    $wa = $da + $za
+    $HMACSHA256 = New-Object Cryptography.HMACSHA256
+    $HMACSHA256.Key = @(0x00) * 32
+    $va = @(0x01) * 32
+    $HMACSHA256.Key = $HMACSHA256.ComputeHash( $va + @(0x00) + $wa )
+    $va = $HMACSHA256.ComputeHash( $va )
+    $HMACSHA256.Key = $HMACSHA256.ComputeHash( $va + @(0x01) + $wa )
+    while ( $true ) {
+        $va = $HMACSHA256.ComputeHash( $HMACSHA256.ComputeHash( $va ) )
+        $k  = [bigint]::new( $va[31..0] + @(0x00) )
+        if ( $k -gt [bigint]::Zero -and $k -lt $n ) {
+            return $k
+        }
+        $HMACSHA256.Key = $HMACSHA256.ComputeHash( $va + @(0x00) )
+    }
+}
+
+function EcdsaSig {
+    param( [string]$privateKey, 
+           [string]$serializedTX, 
+           [byte]$sighashType,
+           [bool]$deterministic = $true
+    )
     $n   = [ECDSA]::Order
     $G   = [ECDSA]::new()
     $msg = Hash256 $serializedTX
     $z   = [bigint]::Parse( "0" + $msg, "AllowHexSpecifier" )
     $d   = [bigint]::Parse( "0" + $privateKey, "AllowHexSpecifier" )
     if ( $d.IsZero -or $d -ge $n ) { throw "invalid private key" }
-    $buffer = [byte[]]::new( 32 )
-    [Security.Cryptography.RNGCryptoServiceProvider]::Create().GetBytes( $buffer )
-    $rnd =  i2h $buffer
-    $k   = [bigint]::Parse( "0" + $rnd, "AllowHexSpecifier" ) % $n
-    if ( $k.IsZero ) { throw "You are unlucky!" }
+    if ( $deterministic ) {
+        $k = deterministic_k $d $z
+    } else {
+        $buffer = [byte[]]::new( 32 )
+        while( $true ) {
+            [Security.Cryptography.RNGCryptoServiceProvider]::Create().GetBytes( $buffer )
+            $rnd = i2h $buffer
+            $k = [bigint]::Parse( "0" + $rnd, "AllowHexSpecifier" )
+            if ( $k -gt [bigint]::Zero -and $k -lt $n ) {
+                break
+            }
+        }
+    }
     $kG  = $G * $k
     if ( $kG -eq $null ) { throw "arithmetic error" }
     $r   = $kG.X                                            % $n
