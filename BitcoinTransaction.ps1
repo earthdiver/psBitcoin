@@ -396,8 +396,8 @@ function deterministic_k( [bigint]$d, [bigint]$z ) {
 # rfc6979's deterministic nonces
     $n  = [ECDSA]::Order
     $z  %= $n
-    $da = $d.ToString( "x64" ) -replace '^0(?=[0-9a-f]{64}$)' | h2i
-    $za = $z.ToString( "x64" ) -replace '^0(?=[0-9a-f]{64}$)' | h2i
+    $da = $d.ToHexString64() | h2i
+    $za = $z.ToHexString64() | h2i
     $wa = $da + $za
     $HMACSHA256 = New-Object Cryptography.HMACSHA256
     $HMACSHA256.Key = @(0x00) * 32
@@ -469,7 +469,7 @@ function SchnorrSig ( [string]$privateKey, [string]$serializedTX, [byte]$sighash
     $P    = $G * $d
     if ( $P -eq $null ) { throw "arithmetic error" }
     if ( -not $P.Y.IsEven ) { $d = $n - $d }
-    $d_h  = $d.ToString( "x64" ) -replace '^0(?=[0-9a-f]{64}$)'
+    $d_h  = $d.ToHexString64()
     $d_b  = h2i $d_h
     $buffer = [byte[]]::new( 32 )
     [Security.Cryptography.RNGCryptoServiceProvider]::Create().GetBytes( $buffer )
@@ -477,7 +477,7 @@ function SchnorrSig ( [string]$privateKey, [string]$serializedTX, [byte]$sighash
     $ha_h = HashTR "BIP0340/aux" $a_h
     $ha_b = h2i $ha_h
     $t_h  = ( 0..31 | % { ( $d_b[$_] -bxor $ha_b[$_] ).ToString( "x2" ) } ) -join ""
-    $p_h  = $P.X.ToString( "x64" ) -replace '^0(?=[0-9a-f]{64}$)'
+    $p_h  = $P.X.ToHexString64()
     $msg  = HashTR "TapSighash" $serializedTX
     $rnd  = HashTR "BIP0340/nonce" ( $t_h + $p_h + $msg )
     $k    = [bigint]::Parse( "0" + $rnd, "AllowHexSpecifier" ) % $n
@@ -485,11 +485,11 @@ function SchnorrSig ( [string]$privateKey, [string]$serializedTX, [byte]$sighash
     $R    = $G * $k
     if ( $R -eq $null ) { throw "arithmetic error" }
     if ( -not $R.Y.IsEven ) { $k = $n - $k }
-    $r_h  = $R.X.ToString( "x64" ) -replace '^0(?=[0-9a-f]{64}$)'
+    $r_h  = $R.X.ToHexString64()
     $e_h  = HashTR "BIP0340/challenge" ( $r_h + $p_h + $msg )
     $e    = [bigint]::Parse( "0" + $e_h, "AllowHexSpecifier" ) % $n
     $s    = ( $k + $e * $d ) % $n
-    $s_h  = $s.ToString( "x64" ) -replace '^0(?=[0-9a-f]{64}$)'
+    $s_h  = $s.ToHexString64()
     $sig  = $r_h + $s_h
     if ( $sighashType -and $sighashType -ne 0x00 ) { $sig += $sighashType.ToString( "x2" ) }
     return $sig
@@ -511,7 +511,7 @@ function GetAddressP2TR-SP {
     if ( $t -ge [ECDSA]::Order ) { throw "You are unlucky!" }
     $Q           = $H + $G * $t
     if ( $Q -eq $null ) { throw "The resulting address is invalid." }
-    $outputKey   = $Q.X.ToString( "x64" ) -replace '^0(?=[0-9a-f]{64}$)'
+    $outputKey   = $Q.X.ToHexString64()
     $hrp = if ( -not $Testnet ) { "bc" } else { "tb" }
     return ( Bech32_Encode $outputKey $hrp $true 1 )
 }
@@ -949,7 +949,7 @@ function RawTXfromTaprootAddress {
         if ( $t -ge [ECDSA]::Order ) { throw "You are unlucky!" }
         $Q           = $H + $G * $t
         if ( $Q -eq $null ) { throw "The resulting 'addressTo' is invalid." }
-        $outputKey   = $Q.X.ToString( "x64" ) -replace '^0(?=[0-9a-f]{64}$)'
+        $outputKey   = $Q.X.ToHexString64()
         $hrp = if ( $wif -cmatch '^[KL]' ) { "bc" } else { "tb" }
         $addressTo = Bech32_Encode $outputKey $hrp $true 1
         Write-Host

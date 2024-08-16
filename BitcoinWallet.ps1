@@ -12,6 +12,10 @@ if ( $PSVersionTable.PSVersion.Major -ge 7 ) {
     Add-Type -A "$($env:ProgramFiles)\PackageManagement\NuGet\Packages\RIPEMD160.1.0.0\lib\netcoreapp2.0\RIPEMD160.dll"
 }
 
+Update-TypeData -TypeName "bigint" -MemberType "ScriptMethod" -MemberName "ToHexString64" -Force -Value {
+    return $this.ToString( "x64" ) -replace '^0(?=[0-9a-f]{64}$)'
+}
+
 function i2b {
     # byte array to binary string
     param( [Parameter(ValueFromPipeline=$True)][byte[]]$i )
@@ -373,8 +377,8 @@ function GetPublicKey {
     $G       = [ECDSA]::new()
     $pubkey  = $G * $secretKey
     if ( $pubkey -eq $null ) { throw "arithmetic error" }
-    $pubkeyX = $pubkey.X.ToString( "x64" ) -replace '^0(?=[0-9a-f]{64}$)'
-    $pubkeyY = $pubkey.Y.ToString( "x64" ) -replace '^0(?=[0-9a-f]{64}$)'
+    $pubkeyX = $pubkey.X.ToHexString64()
+    $pubkeyY = $pubkey.Y.ToHexString64()
     if ( -not $UnCompressed ) {
         if ( $pubkey.Y.IsEven ) {
             return "02" + $pubkeyX
@@ -415,7 +419,7 @@ function DecompressPublicKey {
     if ( $x -ge $p ) { throw "invalid public key" }
     $y  = [ECDSA]::new( $x ).Y                                        # $y is even
     if ( $prefix -eq "03" ) { $y = ($p - $y) % $p }
-    $publicKeyY = $y.ToString( "x64" ) -replace '^0(?=[0-9a-f]{64}$)'
+    $publicKeyY = $y.ToHexString64()
     return "04" + $publicKeyX + $publicKeyY
 }
 
@@ -640,7 +644,7 @@ function GetTweakedWIF {
     $publicKey  = GetPublicKey $privateKey
     $t          = GetTweak $publicKey
     $td         = ( $d + $t ) % $n
-    $td_hex     = $td.ToString( "x64" ) -replace '^0(?=[0-9a-f]{64}$)'
+    $td_hex     = $td.ToHexString64()
     $prefix     = if ( $wif -cmatch '^[KL]' ) { "80" } else { "ef" }
     return Base58Check_Encode ( $prefix + $td_hex + "01" )
 }
@@ -655,7 +659,7 @@ function GetAddressP2TR {
     $tweak = GetTweak $publicKey
     $Q = $P + $G * $tweak
     if ( $Q -eq $null ) { throw "The resulting address is invalid." }
-    $outputKey  = $Q.X.ToString( "x64" ) -replace '^0(?=[0-9a-f]{64}$)'
+    $outputKey  = $Q.X.ToHexString64()
     $hrp = if ( -not $Testnet ) { "bc" } else { "tb" }
     return ( Bech32_Encode $outputKey $hrp $true 1 )
 }
@@ -817,7 +821,7 @@ class HDWallet {
                 return $null
             }
 
-            $child_privateKey  = $kc.ToString( "x64" ) -replace '^0(?=[0-9a-f]{64}$)'
+            $child_privateKey  = $kc.ToHexString64()
             $child_publicKeyUC = GetPublicKey -uc $child_privateKey
             $prefix            = if ( $child_publicKeyUC -cmatch '[02468ace]$' ) { "02" } else { "03" }
             $child_publicKey   = $prefix + $child_publicKeyUC.Substring( 2, 64 )
@@ -839,8 +843,8 @@ class HDWallet {
                 Write-Host "The resulting key is invalid. Try the next index." -Fore Red
                 return $null
             }
-            $pubkeyX = $Pc.X.ToString( "x64" ) -replace '^0(?=[0-9a-f]{64}$)'
-            $pubkeyY = $Pc.Y.ToString( "x64" ) -replace '^0(?=[0-9a-f]{64}$)'
+            $pubkeyX = $Pc.X.ToHexString64()
+            $pubkeyY = $Pc.Y.ToHexString64()
 
             $child_privateKey  = $null
             $child_publicKeyUC = "04" + $pubkeyX + $pubkeyY
