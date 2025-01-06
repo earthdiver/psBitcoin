@@ -1250,11 +1250,11 @@ function CLTVScript {
     $scriptPubKey_P2SHP2WSH = "a914" + $scriptHash_P2SHP2WSH + "87"        # OP_HASH160 PUSH(redeemScript hash) OP_EQUAL
 
     if ( -not $Testnet ) {
-        $address_P2SH      = Base58Check_Encode ( "05" + $scriptPubKey_P2SH    )
+        $address_P2SH      = Base58Check_Encode ( "05" + $scriptHash_P2SH      )
         $address_P2SHP2WSH = Base58Check_Encode ( "05" + $scriptHash_P2SHP2WSH )
         $address_P2WSH     = Bech32_Encode      $scriptHash_P2WSH "bc" $false 0
     } else {
-        $address_P2SH      = Base58Check_Encode ( "c4" + $scriptPubKey_P2SH    )
+        $address_P2SH      = Base58Check_Encode ( "c4" + $scriptHash_P2SH      )
         $address_P2SHP2WSH = Base58Check_Encode ( "c4" + $scriptHash_P2SHP2WSH )
         $address_P2WSH     = Bech32_Encode      $scriptHash_P2WSH "tb" $false 0
     }
