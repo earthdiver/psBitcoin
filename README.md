@@ -44,7 +44,7 @@ The tool has been tested on a PC running Windows 10, in the following environmen
 Obtain the RIPEMD160 NuGet package by executing the following command:
 
 ```
-Install-Package RIPEMD160 -Source https://www.nuget.org/api/v2     # Execute only once. 
+Install-Package RIPEMD160 -Source https://www.nuget.org/api/v2 -Scope CurrentUser    # Execute only once. 
 ```
 
 [For Windows PowerShell 5.1/PowerShell 7 series]
