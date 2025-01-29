@@ -15,8 +15,9 @@ if ( $PSVersionTable.PSVersion.Major -ge 7 ) {
             Add-Type -A "$($env:ProgramFiles)\PackageManagement\NuGet\Packages\RIPEMD160.1.0.0\lib\netcoreapp2.0\RIPEMD160.dll"
 	}     
     } else {
-    	Add-Type -A "$env:HOME/.local/share/PackageManagement/NuGet/Packages/RIPEMD160.1.0.0/lib/netcoreapp2.0/RIPEMD160.dll"
-        If (-Not ($?)) {
+    	If (Test-Path "$env:HOME/.local/share/PackageManagement/NuGet/Packages/RIPEMD160.1.0.0/lib/netcoreapp2.0/RIPEMD160.dll") {
+    	    Add-Type -A "$env:HOME/.local/share/PackageManagement/NuGet/Packages/RIPEMD160.1.0.0/lib/netcoreapp2.0/RIPEMD160.dll"
+	} else {
 	    Add-Type -A "/usr/local/share/PackageManagement/NuGet/Packages/RIPEMD160.1.0.0/lib/netcoreapp2.0/RIPEMD160.dll"
 	}
     }
