@@ -9,9 +9,17 @@ using namespace System.Collections.Generic
 using namespace System.Security
 
 if ( $PSVersionTable.PSVersion.Major -ge 7 ) {
-    Add-Type -A "$($env:LocalAppData)\PackageManagement\NuGet\Packages\RIPEMD160.1.0.0\lib\netcoreapp2.0\RIPEMD160.dll"
+    If ($IsWindows) {
+        Add-Type -A "$($env:LocalAppData)\PackageManagement\NuGet\Packages\RIPEMD160.1.0.0\lib\netcoreapp2.0\RIPEMD160.dll"
 	If (-Not ($?)) {
-        Add-Type -A "$($env:ProgramFiles)\PackageManagement\NuGet\Packages\RIPEMD160.1.0.0\lib\netcoreapp2.0\RIPEMD160.dll"
+            Add-Type -A "$($env:ProgramFiles)\PackageManagement\NuGet\Packages\RIPEMD160.1.0.0\lib\netcoreapp2.0\RIPEMD160.dll"
+	}     
+    } else {
+    	If (Test-Path "$env:HOME/.local/share/PackageManagement/NuGet/Packages/RIPEMD160.1.0.0/lib/netcoreapp2.0/RIPEMD160.dll") {
+    	    Add-Type -A "$env:HOME/.local/share/PackageManagement/NuGet/Packages/RIPEMD160.1.0.0/lib/netcoreapp2.0/RIPEMD160.dll"
+	} else {
+	    Add-Type -A "/usr/local/share/PackageManagement/NuGet/Packages/RIPEMD160.1.0.0/lib/netcoreapp2.0/RIPEMD160.dll"
+	}
     }
 }
 
