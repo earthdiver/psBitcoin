@@ -1,3 +1,9 @@
+###########
+$network    = "mainnet"
+$mnemonic   = "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about"
+$passphrase = ""
+$labels     = @( "", "0", "1", "2" )
+###########
 if ( -not ( ValidateMnemonic $mnemonic ) ) { throw "invalid mnemonic phrase" }
 if ( $network -eq "mainnet" ) {
     $coinType = 0
