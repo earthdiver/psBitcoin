@@ -1,7 +1,7 @@
-#
+﻿#
 # classes and functions for bitcoin transactions
 #
-# Copyright (c) 2023-2024 earthdiver1
+# Copyright (c) 2023-2025 earthdiver1
 #
 # This work is licensed under the Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0).
 #
@@ -1267,4 +1267,189 @@ function CLTVScript {
     Write-Output "                 address: $($address_P2WSH)"
     Write-Output ""
     Write-Output "   redeem/witness script: $($script)"
+}
+
+#===================================================================================================================================
+function SignMessage {
+    param( [string]$wif,
+           [string]$address,
+           [string]$message,
+             [bool]$deterministic = $true,
+           [switch]$electrum = $false,
+           [switch]$verbose = $false
+    )
+    $decodedWIF = Base58Check_Decode $wif
+    if ( $decodedWIF ) {
+        $privateKey = $decodedWIF.Substring( 2, 64 )
+        $compressed = $decodedWIF.Length -eq 68 -and $decodedWIF.SubString( 66, 2 ) -eq "01"
+    } elseif ( $wif.Length -eq 64 ) {
+        $privateKey = $wif
+        $compressed = $true
+    } else {
+        throw "invalid wif"
+    }
+    if ( $address -cmatch '^([13]|bc1)' ) {
+        $Testnet = $false
+    } elseif ( $address -cmatch '^([2mn]|tb1)' ) {
+        $Testnet = $true
+    } else {
+        throw "invalid address"
+    }
+    $n = [ECDSA]::Order
+    $p = [ECDSA]::p
+    $G = [ECDSA]::new()
+    $msgPrefix = @( 0x18 ) + [Text.Encoding]::UTF8.GetBytes( "Bitcoin Signed Message:`n" )
+    $msgBytes  = [Text.Encoding]::UTF8.GetBytes( $message )
+    $msgMagic  = [Bitconverter]::ToString( $msgPrefix ).Replace( "-", "" ) `
+               + ( VarInttoStr $msgBytes.Length )                          `
+               + [Bitconverter]::ToString( $msgBytes  ).Replace( "-", "" )
+    $msgHash   = Hash256 $msgMagic
+    $z = [bigint]::Parse( "0" + $msgHash   , "AllowHexSpecifier" )
+    $d = [bigint]::Parse( "0" + $privateKey, "AllowHexSpecifier" )
+    if ( $d.IsZero -or $d -ge $n ) { throw "invalid private key" }
+    if ( $deterministic ) {
+        $k = deterministic_k $d $z
+    } else {
+        $buffer = [byte[]]::new( 32 )
+        while( $true ) {
+            [Security.Cryptography.RNGCryptoServiceProvider]::Create().GetBytes( $buffer )
+            $rnd = i2h $buffer
+            $k = [bigint]::Parse( "0" + $rnd, "AllowHexSpecifier" )
+            if ( $k -gt [bigint]::Zero -and $k -lt $n ) {
+                break
+            }
+        }
+    }
+    $kG  = $G * $k
+    if ( $kG -eq $null ) { throw "arithmetic error" }
+    $r   = $kG.X                                            % $n
+    if ( -not $r ) { throw "arithmetic error" }
+    $s   = ( ( $z + $d * $r ) * [ECDSA]::ModInv( $k, $n ) ) % $n
+    if ( -not $s ) { throw "arithmetic error" }
+    if ( $s -gt $n / 2 ) { $s = $n - $s }
+    $Rcand = @(
+        $R0 = [ECDSA]::new( $r )
+        $R0, [ECDSA]::new( $R0.X, ( $p - $R0.Y ) % $p )
+        if ( $r + $n -lt $p ) {
+            $R2 = [ECDSA]::new( $r + $n )
+            $R2, [ECDSA]::new( $R2.X, ( $p - $R2.Y ) % $p )
+        }
+    )
+    $publicKey = GetPublicKey $privateKey
+    if ( $compressed ) {
+        $recId = 4
+    } else {
+        $recId = 0
+    }
+    for ( $i = 0 ; $i -lt $Rcand.Length; $i++ ) {
+        if ( -not $Rcand[$i].Err ) {
+            $Q = ( ( $Rcand[$i] * $s ) + $G * ( (-$z) % $n ) ) * [ECDSA]::ModInv( $r, $n )
+            if ( $publicKey.SubString(2, 64) -eq $Q.X.ToHexString64() ) {
+                $recId += $i
+                break
+            }
+         }
+    }
+    if ( $electrum ) {
+        $recId += 27
+    } elseif ( -not $compressed -and $address -eq ( GetAddressP2PKH ( GetPublicKey -uc $privateKey ) -Testnet:$Testnet ) ) {
+        $recId += 27
+    } elseif ( $compressed -and $address -eq ( GetAddressP2PKH       $publicKey -Testnet:$Testnet ) ) {
+        $recId += 27
+    } elseif ( $compressed -and $address -eq ( GetAddressP2SH-P2WPKH $publicKey -Testnet:$Testnet ) ) {
+        $recId += 35
+    } elseif ( $compressed -and $address -eq ( GetAddressP2WPKH      $publicKey -Testnet:$Testnet ) ) {
+        $recId += 39
+    } elseif ( $compressed -and $address -eq ( GetAddressP2TR        $publicKey -Testnet:$Testnet ) ) {
+        $recId += 43
+    } else {
+        throw "address mismatch"
+    }
+    $r_h = $r.ToHexString64()
+    $s_h = $s.ToHexString64()
+    $sig = [Convert]::ToBase64String( ( $recId.ToString( "x2" ) + $r_h + $s_h | h2i ) )
+    if ( $verbose ) {
+        return "-----BEGIN BITCOIN SIGNED MESSAGE-----`n$message`n-----BEGIN BITCOIN SIGNATURE-----`n$address`n`n$sig`n-----END BITCOIN SIGNATURE-----"
+    } else {
+        return $sig
+    }
+}
+
+function VerifyMessage {
+    param( [string]$sig,
+           [string]$address,
+           [string]$message,
+           [switch]$electrum = $false
+    )
+    $sig_h  = i2h ( [Convert]::FromBase64String( $sig ) )
+    if ( $sig_h.Length -ne 130 ) {
+        throw "invalid signature length"
+    }
+    $header = [byte]( "0x" + $sig_h.SubString(  0,  2 ) )
+    $r_h    = $sig_h.SubString(  2, 64 )
+    $s_h    = $sig_h.SubString( 66, 64 )
+    if ( $address -cmatch '^([13]|bc1)' ) {
+        $Testnet = $false
+    } elseif ( $address -cmatch '^([2mn]|tb1)' ) {
+        $Testnet = $true
+    } else {
+        throw "invalid address"
+    }
+    $n = [ECDSA]::Order
+    $p = [ECDSA]::p
+    $G = [ECDSA]::new()
+    $msgPrefix = @( 0x18 ) + [Text.Encoding]::UTF8.GetBytes( "Bitcoin Signed Message:`n" )
+    $msgBytes  = [Text.Encoding]::UTF8.GetBytes( $message )
+    $msgMagic  = [Bitconverter]::ToString( $msgPrefix ).Replace( "-", "" ) `
+               + ( VarInttoStr $msgBytes.Length )                          `
+               + [Bitconverter]::ToString( $msgBytes  ).Replace( "-", "" )
+    $msgHash   = Hash256 $msgMagic
+    $z = [bigint]::Parse( "0" + $msgHash, "AllowHexSpecifier" )
+    $r = [bigint]::Parse( "0" + $r_h    , "AllowHexSpecifier" )
+    $s = [bigint]::Parse( "0" + $s_h    , "AllowHexSpecifier" )
+    $recId = ( $header - 27 ) -band 0x03
+    if ( ( $recId -band 0x02 ) -eq 0 ) {
+        $x = $r
+    } else {
+        $x = $r + $n
+    }
+    $yy = ( [bigint]::ModPow( $x, 3, $p ) + 7 ) % $p
+    $ya = [bigint]::ModPow( $yy, ($p + 1)/4, $p )
+    if ( $yy -ne ( $ya * $ya ) % $p ) {
+        throw "not on curve"
+    }
+    if ( (      $ya.IsEven -and ( $recId -band 0x01 ) -eq 0 ) -or `
+         ( -not $ya.IsEven -and ( $recId -band 0x01 ) -ne 0 )     ) {
+        $kG = [ECDSA]::new( $x, $ya )
+    } else {
+        $kG = [ECDSA]::new( $x, ( $p - $ya ) % $p )
+    }
+    $Q = ( ( $kG * $s ) + $G * ( (-$z) % $n ) ) * [ECDSA]::ModInv( $r, $n )
+    if ( $header -lt 31 ) {
+        $publicKey = "04" + $Q.X.ToHexString64() + $Q.Y.ToHexString64()
+    } elseif ( $Q.Y.IsEven ) {
+        $publicKey = "02" + $Q.X.ToHexString64()
+    } else {
+        $publicKey = "03" + $Q.X.ToHexString64()
+    }
+    if (       $header -ge 27 -and $header -lt 31 ) {
+        return $address -eq ( GetAddressP2PKH       $publicKey -Testnet:$Testnet )
+    } elseif ( $header -ge 31 -and $header -lt 35 ) {
+        if ( $address -match '^[1mn]' ) {
+            return $address -eq ( GetAddressP2PKH   $publicKey -Testnet:$Testnet )
+        } elseif ( $electrum ) {
+            if ( $address -match '^[23]' )      { return $address -eq ( GetAddressP2SH-P2WPKH $publicKey -Testnet:$Testnet ) }
+            if ( $address -match '^(bc|tb)1q' ) { return $address -eq ( GetAddressP2WPKH      $publicKey -Testnet:$Testnet ) }
+            if ( $address -match '^(bc|tb)1p' ) { return $address -eq ( GetAddressP2TR        $publicKey -Testnet:$Testnet ) }
+        }
+        return $false
+    } elseif ( $header -ge 35 -and $header -lt 39 ) {
+        return $address -eq ( GetAddressP2SH-P2WPKH $publicKey -Testnet:$Testnet )
+    } elseif ( $header -ge 39 -and $header -lt 43 ) {
+        return $address -eq ( GetAddressP2WPKH      $publicKey -Testnet:$Testnet )
+    } elseif ( $header -ge 43 -and $header -lt 47 ) {
+        return $address -eq ( GetAddressP2TR        $publicKey -Testnet:$Testnet )
+    } else {
+        throw "invalid header"
+    }
 }
