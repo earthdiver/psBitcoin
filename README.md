@@ -47,6 +47,9 @@ Obtain the RIPEMD160 NuGet package by executing the following command:
 Install-Package RIPEMD160 -Source https://www.nuget.org/api/v2 -Scope CurrentUser    # Execute only once. 
 ```
 
+> [!TIP]
+> If RIPEMD160.dll is not found, the assembly will be loaded from the DLL image embedded within the script.
+
 [For Windows PowerShell 5.1/PowerShell 7 series]
 Execute the following command to load function/class definitions:
 
