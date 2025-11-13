@@ -4,7 +4,7 @@
 This tool aims to help users understand bitcoin wallets in various forms, including entropy, mnemonic phrase, seed, extended keys, and more.
 
 ### Pros
-- **No external libraries are required**: It leverages the pre-installed PowerShell in Windows, making it compatible with any PC running Windows 10. (The RIPEMD160 NuGet package is required for PowerShell 7.X, though.)
+- **No external libraries are required**: It leverages the pre-installed PowerShell in Windows, making it compatible with any PC running Windows 11.
 
 ### Cons  (or perhaps even a Pro)
 - Limited to bitcoin; does not support other cryptocurrencies.
@@ -35,22 +35,12 @@ Configuration>
 
 ## Operating Environment
 
-The tool has been tested on a PC running Windows 10, in the following environment:
+The tool has been tested on a PC running Windows 11, in the following environment:
 - Windows PowerShell 5.1
 - PowerShell 7.X
 
 ## Setup
-[For PowerShell 7 series only]
-Obtain the RIPEMD160 NuGet package by executing the following command:
 
-```
-Install-Package RIPEMD160 -Source https://www.nuget.org/api/v2 -Scope CurrentUser    # Execute only once. 
-```
-
-> [!TIP]
-> If RIPEMD160.dll is not found, the assembly will be loaded from the DLL image embedded within the script.
-
-[For Windows PowerShell 5.1/PowerShell 7 series]
 Execute the following command to load function/class definitions:
 
 ```powershell:
