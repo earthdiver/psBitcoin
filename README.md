@@ -30,6 +30,7 @@ Configuration>
     </MappedFolder>
   </MappedFolders>
   <Networking>Disable</Networking>
+  <ClipboardRedirection>Disable</ClipboardRedirection>
 </Configuration>
 ```
 
