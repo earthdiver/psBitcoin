@@ -19,7 +19,8 @@ $B_Spend_pub  = $w.Derive(352,$true).Derive($coinType,$true).Derive(0,$true).Der
 $B_Scan_priv  = $w.Derive(352,$true).Derive($coinType,$true).Derive(0,$true).Derive(1,$true).Derive(0,$false).PrivateKey
 $B_Scan_pub   = $w.Derive(352,$true).Derive($coinType,$true).Derive(0,$true).Derive(1,$true).Derive(0,$false).PublicKey
 echo "spend_priv_key      : $B_Spend_priv"
-echo " scan_priv_key      : $B_Scan_priv"
+echo "spend_pub_key       : $B_Spend_pub"
+echo "scan_priv_key       : $B_Scan_priv"
 foreach ( $label in $labels ) {
     if ( $label -eq "" ) {
         $B_m_pub = $B_Spend_pub
