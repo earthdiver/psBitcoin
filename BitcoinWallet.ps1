@@ -154,6 +154,7 @@ function ValidateMnemonic {
     }
     $words    = $mnemonic -split '\s+'
     if ( $words.Count -notin @(12, 15, 18, 21, 24) ) { return $false }
+	foreach ( $w in $words ) { if ( $w -cnotin $wordlist ) { return $false } }
     $full     = ( $words | % { [Convert]::ToString( $wordlist.IndexOf( $_ ),2).PadLeft( 11, "0" ) } ) -join ""
     $len      = $full.Length / 33
     $checksum = $full.Substring( $full.Length - $len )
