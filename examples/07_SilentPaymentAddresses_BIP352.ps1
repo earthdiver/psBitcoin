@@ -7,10 +7,14 @@ $labels     = @( "", "0", "1", "2" )
 if ( -not ( ValidateMnemonic $mnemonic ) ) { throw "invalid mnemonic phrase" }
 if ( $network -eq "mainnet" ) {
     $coinType = 0
-    $hrp      = "sp"
+    $hrp_address = "sp"
+    $hrp_spend   = "spspend"
+    $hrp_scan    = "spscan"
 } else {
     $coinType = 1
-    $hrp      = "tsp"
+    $hrp_address = "tsp"
+    $hrp_spend   = "tspspend"
+    $hrp_scan    = "tspscan"
 }
 $seed = PBKDF2 $mnemonic "mnemonic$passphrase" 2048 64 (New-Object Security.Cryptography.HMACSHA512)
 $w = [HDWallet]::new( $seed )
@@ -18,9 +22,13 @@ $B_Spend_priv = $w.Derive(352,$true).Derive($coinType,$true).Derive(0,$true).Der
 $B_Spend_pub  = $w.Derive(352,$true).Derive($coinType,$true).Derive(0,$true).Derive(0,$true).Derive(0,$false).PublicKey
 $B_Scan_priv  = $w.Derive(352,$true).Derive($coinType,$true).Derive(0,$true).Derive(1,$true).Derive(0,$false).PrivateKey
 $B_Scan_pub   = $w.Derive(352,$true).Derive($coinType,$true).Derive(0,$true).Derive(1,$true).Derive(0,$false).PublicKey
+$spSpend = Bech32_Encode ( $B_Scan_priv + $B_Spend_priv ) $hrp_spend   $true 0
+$spScan  = Bech32_Encode ( $B_Scan_priv + $B_Spend_pub  ) $hrp_scan    $true 0
 echo "spend_priv_key      : $B_Spend_priv"
 echo "spend_pub_key       : $B_Spend_pub"
 echo "scan_priv_key       : $B_Scan_priv"
+echo "spspend             : $spSpend"
+echo "spscan              : $spScan"
 foreach ( $label in $labels ) {
     if ( $label -eq "" ) {
         $B_m_pub = $B_Spend_pub
@@ -37,7 +45,7 @@ foreach ( $label in $labels ) {
         $prefix = if ( $B_m.Y.IsEven ) { "02" } else { "03" }
         $B_m_pub = $prefix + ( $B_m.X.ToString( "x64" ) -replace '^0(?=[0-9a-f]{64}$)' )
     }
-    $silentAddress = Bech32_Encode ( $B_Scan_pub + $B_m_pub ) $hrp $true 0
+    $spAddress = Bech32_Encode ( $B_Scan_pub  + $B_m_pub ) $hrp_address $true 0
     $comment = if ( $label -eq "0" ) { " # for change" } else { "" }
-    echo "address (label:$($label.PadLeft( 4, ' ' ))): $silentAddress $comment"
+    echo "address (label:$($label.PadLeft( 4, ' ' ))): $spAddress $comment"
 }
