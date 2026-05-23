@@ -154,7 +154,7 @@ function ValidateMnemonic {
     }
     $words    = $mnemonic -split '\s+'
     if ( $words.Count -notin @(12, 15, 18, 21, 24) ) { return $false }
-	foreach ( $w in $words ) { if ( $w -cnotin $wordlist ) { return $false } }
+    foreach ( $w in $words ) { if ( $w -cnotin $wordlist ) { return $false } }
     $full     = ( $words | % { [Convert]::ToString( $wordlist.IndexOf( $_ ),2).PadLeft( 11, "0" ) } ) -join ""
     $len      = $full.Length / 33
     $checksum = $full.Substring( $full.Length - $len )
@@ -501,7 +501,11 @@ function Base58Check_Decode {
 
 function Bech32_Encode {
     param( [Parameter(ValueFromPipeline=$True)][string]$hex_string, [string]$hrp, [bool]$m, [int]$v )
-    if ( $hex_string.Length -ne 20*2 -and $hex_string.Length -ne 32*2 -and $hex_string.Length -ne 66*2 ) {
+    if ( $hex_string.Length -ne 20*2 -and $hex_string.Length -ne 32*2 -and
+         $hex_string.Length -ne (32+32)*2 -and   # silent payment (spspend)
+         $hex_string.Length -ne (32+33)*2 -and   # silent payment (spscan)
+         $hex_string.Length -ne (33+33)*2      ) # silent payment (sp1)
+    {
         throw "invalid length"
     }
     $charset = "qpzry9x8gf2tvdw0s3jn54khce6mua7l"

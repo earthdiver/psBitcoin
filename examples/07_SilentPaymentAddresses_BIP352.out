@@ -1,6 +1,8 @@
 spend_priv_key      : c88567742d5019d7ccc81f6e82cef8ef01997a6a3761cc9166036b580549539b
 spend_pub_key       : 02fa210b3c4a60b80dd1616f48ae53bbdf0db744b3f9083385108f81be0acb58c6
 scan_priv_key       : 78e7fd7d2b7a2c1456709d147021a122d2dccaafeada040cc1002083e2833b09
+spspend             : spspend1q0rnl6lft0gkpg4nsn528qgdpytfdej40atdqgrxpqqsg8c5r8vyu3pt8wsk4qxwhenyp7m5zemuw7qve0f4rwcwvj9nqx66cq4y48xcdu9qer
+spscan              : spscan1q0rnl6lft0gkpg4nsn528qgdpytfdej40atdqgrxpqqsg8c5r8vys973ppv7y5c9cphgkzm6g4efmhhcdkazt87ggxwz3pruphc9vkkxxhtvyag
 address (label:    ): sp1qqfqnnv8czppwysafq3uwgwvsc638hc8rx3hscuddh0xa2yd746s7xqh6yy9ncjnqhqxazct0fzh98w7lpkm5fvlepqec2yy0sxlq4j6ccc3h6t0g
 address (label:   0): sp1qqfqnnv8czppwysafq3uwgwvsc638hc8rx3hscuddh0xa2yd746s7xqc7cztt86v30fp7s8rdq99v4vxl5vs4r6naeha9dgwu38c2aszwlqdmad77  # for change
 address (label:   1): sp1qqfqnnv8czppwysafq3uwgwvsc638hc8rx3hscuddh0xa2yd746s7xqlh4r025th3htxgguxeck4qha04e0rhw33t8m2kpmqju28zzplwmgx2h7dd
