@@ -435,10 +435,13 @@ function DecompressPublicKey {
     $prefix     = $publicKey.Substring( 0, 2 )
     if ( $prefix -cnotmatch '^0[23]$' ) { throw "invalid prefix" }
     $publicKeyX = $publicKey.Substring( 2 )
+    if ( $publicKeyX -notmatch '^[0-9a-f]{64}$' ) { throw "invalid public key" }
     $x  = [bigint]::Parse( "0" + $publicKeyX, "AllowHexSpecifier" )
     $p = [ECDSA]::p
     if ( $x -ge $p ) { throw "invalid public key" }
-    $y  = [ECDSA]::new( $x ).Y                                        # $y is even
+    $point = [ECDSA]::new( $x )                                       # $point.Y is even
+    if ( $point.Err ) { throw "public key is not on secp256k1" }
+    $y = $point.Y
     if ( $prefix -eq "03" ) { $y = ($p - $y) % $p }
     $publicKeyY = $y.ToHexString64()
     return "04" + $publicKeyX + $publicKeyY
@@ -1215,4 +1218,3 @@ function descsum_create {
     $checksum  = ( 0..7 | % { $CHECKSUM_CHARSET[ ( $chk -shr (5 * (7 - $_)) ) -band 31 ] } ) -join ""
     return $s + "#" + $checksum
 }
-
