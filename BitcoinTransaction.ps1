@@ -33,6 +33,11 @@ function VarInttoStr( [UInt64]$int ) {
     return $result
 }
 
+function ConvertTo-CompactSizeHex ( [string]$str ) {
+    if ( $str.Length % 2 -ne 0 ) { throw "invalid hex string length" }
+    return ( VarInttoStr ( $str.Length / 2 ) ) + $str
+}
+
 function Push ( [string]$str ) {
     if ( $str.Length % 2 -ne 0 ) { throw "invalid hex string length" }
     [UInt32]$size = $str.Length / 2
@@ -182,11 +187,9 @@ class SegwitMsg {
         $this.Init( $tx, $ntx, $scriptCode, $value, $sighashType )
     }
     hidden Init ( [TXS]$tx, [UInt32]$ntx, [string]$scriptCode, [UInt64]$value, [UInt32]$sighashType ) {
-        if ( $tx -and $ntx -ge $tx.txins.Length ) { throw "'ntx' must be smaller than the size of 'tx.txins'." }
-        if ( ( $sighashType -band 0x1f ) -eq 3 ) {
-           if ( $tx -and $ntx -ge $tx.txouts.Length ) { throw "'ntx' must be smaller than the size of 'tx.txouts'." }
-        }
-        if ( $sighashType -notin ( 0x00, 0x01, 0x02, 0x03, 0x81, 0x82, 0x83 ) ) { throw "invalid sighash type" }
+        if ( $null -eq $tx ) { throw "'tx' must not be null." }
+        if ( $ntx -ge $tx.txins.Length ) { throw "'ntx' must be smaller than the size of 'tx.txins'." }
+        if ( $sighashType -notin ( 0x01, 0x02, 0x03, 0x81, 0x82, 0x83 ) ) { throw "invalid sighash type" }
 
 # SIGHASH_ALL          : 0x01
 # SIGHASH_NONE         : 0x02
@@ -220,7 +223,7 @@ class SegwitMsg {
         $this.nSequence  = $tx.txins[$ntx].sequence
         if ( ( $sighashType -band 0x02 ) -eq 0 ) {
             $this.hashOutputs = Hash256 $outputs
-        } elseif ( ( $sighashType -band 0x1f ) -eq 0x03 -and $ntx -lt $tx.output_count ) {
+        } elseif ( ( $sighashType -band 0x1f ) -eq 0x03 -and $ntx -lt $tx.txouts.Length ) {
             $this.hashOutputs = Hash256 $tx.txouts[$ntx].ToString()
         } else {
             $this.hashOutputs = "00" * 32
@@ -261,11 +264,18 @@ class TaprootMsg {
         $this.Init( $tx, $ntx, $scripts, $values, $sighashType, $ext_flag, $annex, $tapleaf_hash )
     }
     hidden Init ( [TXS]$tx, [UInt32]$ntx, [string[]]$scripts, [UInt64[]]$values, [byte]$sighashType, [byte]$ext_flag, [string]$annex, [string]$tapleaf_hash ) {
-        if ( $tx -and $tx.txins.Length -lt $ntx ) { throw "'ntx' must be smaller than the size of 'tx.txins'." }
-        if ( ( $sighashType -band 0x03 ) -eq 3 ) {
-           if ( $tx -and $tx.txouts.Length -lt $ntx ) { throw "'ntx' must be smaller than the size of 'tx.txouts'." }
+        if ( $null -eq $tx ) { throw "'tx' must not be null." }
+        if ( $ntx -ge $tx.txins.Length ) { throw "'ntx' must be smaller than the size of 'tx.txins'." }
+        if ( $scripts.Length -lt $tx.txins.Length -or $values.Length -lt $tx.txins.Length ) {
+            throw "'scripts' and 'values' must contain an entry for every input."
         }
-        if ( $ext_flag -eq 1 -and $tapleaf_hash -eq "" ) { throw "inconsistent 'ext_flag' and 'tapleaf_hash'" }
+        if ( $sighashType -notin ( 0x00, 0x01, 0x02, 0x03, 0x81, 0x82, 0x83 ) ) { throw "invalid sighash type" }
+        if ( ( $sighashType -band 0x03 ) -eq 3 ) {
+            if ( $ntx -ge $tx.txouts.Length ) { throw "'ntx' must be smaller than the size of 'tx.txouts'." }
+        }
+        if ( $ext_flag -notin ( 0, 1 ) ) { throw "invalid 'ext_flag'" }
+        if ( $ext_flag -eq 1 -and $tapleaf_hash.Length -ne 64 ) { throw "inconsistent 'ext_flag' and 'tapleaf_hash'" }
+        if ( $ext_flag -eq 0 -and $tapleaf_hash ) { throw "inconsistent 'ext_flag' and 'tapleaf_hash'" }
 
 # SIGHASH_DEFAULT      : 0x00
 # SIGHASH_ALL          : 0x01
@@ -285,7 +295,7 @@ class TaprootMsg {
             for ( $i = 0; $i -lt $tx.txins.Length; $i++ ) {
                 $prevouts      += $tx.txins[$i].txid + $tx.txins[$i].index
                 $amounts       += UInt64toStr $values[$i]
-                $scriptpubkeys += Push $scripts[$i]
+                $scriptpubkeys += ConvertTo-CompactSizeHex $scripts[$i]
                 $sequences     += $tx.txins[$i].sequence
             }
             $this.sha_prevouts      = i2h $SHA256.ComputeHash( ( h2i $prevouts      ) )
@@ -311,7 +321,7 @@ class TaprootMsg {
         if ( ( $sighashType -band 0x80 ) -ne 0 ) {
             $this.outpoint          = $tx.txins[$ntx].txid + $tx.txins[$ntx].index
             $this.amount            = UInt64toStr $values[$ntx]
-            $this.scriptPubKey      = Push $scripts[$ntx]
+            $this.scriptPubKey      = ConvertTo-CompactSizeHex $scripts[$ntx]
             $this.nSequence         = $tx.txins[$ntx].sequence
             $this.input_index       = ""
         } else {
@@ -322,13 +332,13 @@ class TaprootMsg {
             $this.input_index       = UInt32toStr $ntx
         }
         if ( $annex ) {
-            if ( $annex -notmatch '^50' ) { throw "invalid 'annex'" }
-            $this.sha_annex         = h2i $SHA256.ComputeHash( ( h2i ( ( VarInttoStr $annex ) + $annex ) ) )
+            if ( $annex.Length % 2 -ne 0 -or $annex -notmatch '^50' ) { throw "invalid 'annex'" }
+            $this.sha_annex         = i2h $SHA256.ComputeHash( ( h2i ( ConvertTo-CompactSizeHex $annex ) ) )
         } else {
             $this.sha_annex         = ""
         }
         if ( ( $sighashType -band 0x03 ) -eq 3 ) {
-            $this.sha_single_output = h2i $SHA256.ComputeHash( ( h2i $tx.txouts[$ntx].ToString() ) )
+            $this.sha_single_output = i2h $SHA256.ComputeHash( ( h2i $tx.txouts[$ntx].ToString() ) )
         } else {
             $this.sha_single_output = ""
         }
@@ -505,7 +515,7 @@ function GetAddressP2TR-SP {
     $G           = [ECDSA]::new()
     $leafVersion = "c0"
     $script      = "20" + $publicKey.Substring( 2 ) + "ac"  # PUSH(32byte publickey) + OP_CHECKSIG
-    $tapLeaf     = HashTR "TapLeaf"  ( $leafVersion + ( Push $script ) )
+    $tapLeaf     = HashTR "TapLeaf"  ( $leafVersion + ( ConvertTo-CompactSizeHex $script ) )
     $tapTweak    = HashTR "TapTweak" ( $internalKey + $tapLeaf )
     $t           = [bigint]::Parse( "0" + $tapTweak, "AllowHexSpecifier" )
     if ( $t -ge [ECDSA]::Order ) { throw "You are unlucky!" }
@@ -533,6 +543,20 @@ function GetBalance {
     throw "failed to get the balance"
 }
 
+function Invoke-RestMethodWithRetry {
+    param ( [string]$Uri, [UInt32]$RetryCount = 5 )
+
+    for ( [UInt32]$attempt = 0; $attempt -le $RetryCount; $attempt++ ) {
+        try {
+            $value = Invoke-RestMethod -Uri $Uri -ErrorAction Stop
+            return [pscustomobject]@{ Succeeded = $true; Value = $value }
+        } catch {
+            if ( $attempt -lt $RetryCount ) { Start-Sleep -Milliseconds 500 }
+        }
+    }
+    return [pscustomobject]@{ Succeeded = $false; Value = $null }
+}
+
 function GetUTXO {
     param ( [Parameter(ValueFromPipeline=$True)][string]$addr )
     if ( $addr -cmatch '^([13]|bc1)' ) {
@@ -545,32 +569,25 @@ function GetUTXO {
         throw "invalid address"
     }
     $uri = "https://mempool.space/$network/api/address/$addr/utxo"
-    try { $response = Invoke-RestMethod $uri } catch {}
-    $it = 0
-    while (-not $response -and $it -lt 5) {
-        $it++
-        Start-Sleep -Milliseconds 500
-        try { $response = Invoke-RestMethod $uri } catch {}
-    }
-    if (-not $response) { throw "failed to get utxo info from mempool.space." }
+    $result = Invoke-RestMethodWithRetry $uri
+    if ( -not $result.Succeeded ) { throw "failed to get utxo info from mempool.space." }
+    $response = @( $result.Value )
     $value = @{ Expression = { $_.value             }; Descending = $true  }
     $btime = @{ Expression = { $_.status.block_time }; Descending = $false }
     $utxo  = @( 
-        $response | Where-Object { $_.status.confirmed -eq "True" } `
+        $response | Where-Object { $_.status.confirmed }            `
                   | Sort-Object $value, $btime                      `
                   | Select-Object txid, vout, value, script
     )
     $utxo | % {
         $uri2 = "https://api.blockcypher.com/v1/btc/$chain/txs/$($_.txid)"
-        try { $response = Invoke-RestMethod $uri2 } catch {}
-        $it = 0
-        while (-not $response -and $it -lt 5) {
-            $it++
-            Start-Sleep -Milliseconds 500
-            try { $response = Invoke-RestMethod $uri2 } catch {}
+        $result = Invoke-RestMethodWithRetry $uri2
+        if ( -not $result.Succeeded ) { throw "failed to get utxo info from blockcypher.com." }
+        $outputs = @( $result.Value.outputs )
+        if ( $_.vout -ge $outputs.Length -or -not $outputs[$_.vout].script ) {
+            throw "invalid utxo info from blockcypher.com."
         }
-        if (-not $response) { throw "failed to get utxo info from blockcypher.com." }
-        $_.script = $response.outputs[$_.vout].script
+        $_.script = $outputs[$_.vout].script
     }
     return $utxo
 }
@@ -722,7 +739,7 @@ function RawTXfromLegacyAddress {
 
     $txins = @(
         for ( $i=0; $i -lt $txins_e.Length; $i++ ) {
-            $txins_t      = $txins_e
+            $txins_t      = [TXin[]]$txins_e.Clone()
             if ( $addressFrom -cmatch '^[1mn]' ) {
                 $txins_t[$i]  = [TXin]::new( $utxo[$i].txid, $utxo[$i].vout, $scriptPubKey_in )
                 $serializedTX = [TX]::new( $txins_t, $txouts ).ToString() + ( UInt32toStr $sighashType )
@@ -808,7 +825,7 @@ function RawTXfromSegwitAddress {
         if ( $witnessScript ) {    # P2SH-P2WSH
             $scriptHash_in = i2h $SHA256.ComputeHash( ( h2i $witnessScript ) )
             $scriptSig  = "220020"   + $scriptHash_in                      # PUSH( OP_0 PUSH(scriptHash) )
-            $scriptCode = Push $witnessScript                              # PUSH(witnessScript)
+            $scriptCode = ConvertTo-CompactSizeHex $witnessScript           # CompactSize(witnessScript)
         } else {                   # P2SH-P2WPKH
             $scriptSig  = "160014"   + $pubkeyHash_in                      # PUSH( OP_0 PUSH(pubkeyHash) )
             $scriptCode = "1976a914" + $pubkeyHash_in + "88ac"             # PUSH( OP_DUP OP_HASH160 PUSH(pubkeyHash) OP_EQUALVERIFY OP_CHECKSIG )
@@ -821,7 +838,7 @@ function RawTXfromSegwitAddress {
         }
         $scriptSig = ""
         if ( $witnessScript ) {    # P2WSH
-            $scriptCode = Push $witnessScript                              # PUSH(witnessScript)
+            $scriptCode = ConvertTo-CompactSizeHex $witnessScript           # CompactSize(witnessScript)
         } else {                   # P2WPKH
             $scriptCode = "1976a914" + $pubkeyHash_in + "88ac"             # PUSH( OP_DUP OP_HASH160 PUSH(pubkeyHash) OP_EQUALVERIFY OP_CHECKSIG )
         }
@@ -912,9 +929,9 @@ function RawTXfromSegwitAddress {
             $serializedTX = [SegwitMsg]::new( $tx_t, $i, $scriptCode, $utxo[$i].value, $sighashType ).ToString()
             $signature    = EcdsaSig $privateKey_in $serializedTX $sighashType
             if ( $witnessScript ) {
-                [Witness]::new( @( ( Push $signature ), ( Push $witnessScript ) ) )
+                [Witness]::new( @( ( ConvertTo-CompactSizeHex $signature ), ( ConvertTo-CompactSizeHex $witnessScript ) ) )
             } else {
-                [Witness]::new( @( ( Push $signature ), ( Push $publicKey_in  ) ) )
+                [Witness]::new( @( ( ConvertTo-CompactSizeHex $signature ), ( ConvertTo-CompactSizeHex $publicKey_in  ) ) )
             }
         }
     )
@@ -943,7 +960,7 @@ function RawTXfromTaprootAddress {
         $G           = [ECDSA]::new()
         $leafVersion = "c0"
         $script      = $addressTo.Substring( 7 )
-        $tapLeaf     = HashTR "TapLeaf"  ( $leafVersion + ( Push $script ) )
+        $tapLeaf     = HashTR "TapLeaf"  ( $leafVersion + ( ConvertTo-CompactSizeHex $script ) )
         $tapTweak    = HashTR "TapTweak" ( $internalKey + $tapLeaf )
         $t           = [bigint]::Parse( "0" + $tapTweak, "AllowHexSpecifier" )
         if ( $t -ge [ECDSA]::Order ) { throw "You are unlucky!" }
@@ -1068,6 +1085,22 @@ function RawTXfromTaprootAddress {
             $publicKey_in  = ( GetPublicKey $privateKey_in ).Substring( 2 )
             $tapScript = "20" + $publicKey_in + "ac"                   # PUSH(32-byte pubkey) OP_CHECKSIG
         }
+
+# Internal key 0x50929b74c1a04954b78b4b6035e97a5e078a5a0f28ec96d547bfee9ace803ac0 ( = SHA256( G ) ) is used as an unspendable key path.
+        $internalKey  = "50929b74c1a04954b78b4b6035e97a5e078a5a0f28ec96d547bfee9ace803ac0"
+        $leafVersion  = "c0"
+        $tapleaf_hash = HashTR "TapLeaf" ( $leafVersion + ( ConvertTo-CompactSizeHex $tapScript ) )
+        $tapTweak     = HashTR "TapTweak" ( $internalKey + $tapleaf_hash )
+        $t            = [bigint]::Parse( "0" + $tapTweak, "AllowHexSpecifier" )
+        if ( $t -ge [ECDSA]::Order ) { throw "You are unlucky!" }
+        $H = [ECDSA]::new( [bigint]::Parse( "0" + $internalKey, "AllowHexSpecifier" ) )
+        $Q = $H + [ECDSA]::new() * $t
+        if ( $Q -eq $null ) { throw "The resulting 'addressFrom' is invalid." }
+        if ( ( Bech32_Decode $addressFrom $true ) -cne $Q.X.ToHexString64() ) {
+            throw "inconsistent 'addressFrom' and 'tapScript'"
+        }
+        $controlByte  = if ( $Q.Y.IsEven ) { "c0" } else { "c1" }
+        $controlBlock = $controlByte + $internalKey
     } else {
         $twif = GetTweakedWIF $wif
         $privateKey_in = ( Base58Check_Decode $twif ).Substring( 2, 64 )
@@ -1077,20 +1110,18 @@ function RawTXfromTaprootAddress {
 
     $witnesses = @(
         $tx_t = [TXS]::new( $txins, $txouts )
-        $scripts = $utxo | % { $_.script }
-        $values  = $utxo | % { $_.value  }
+        $selectedUtxo = $utxo[0..($txins.Length - 1)]
+        [string[]]$scripts = $selectedUtxo | % { $_.script }
+        [UInt64[]]$values  = $selectedUtxo | % { $_.value  }
         for ( $i=0; $i -lt $txins.Length; $i++ ) {
             if ( $tapScript ) {
-                $leafVersion = "c0"
-                $tapleaf_hash = HashTR "TapLeaf"  ( $leafVersion + ( Push $tapScript ) )
                 $serializedTX = "00" + [TaprootMsg]::new( $tx_t, $i, $scripts, $values, $sighashType, 1, "", $tapleaf_hash ).ToString()
                 $signature    = SchnorrSig $privateKey_in $serializedTX $sighashType
-                $control_block = "c1" + "50929b74c1a04954b78b4b6035e97a5e078a5a0f28ec96d547bfee9ace803ac0"
-                [Witness]::new( @( ( Push $signature ), ( Push $tapScript ), ( Push $control_block ) ) )
+                [Witness]::new( @( ( ConvertTo-CompactSizeHex $signature ), ( ConvertTo-CompactSizeHex $tapScript ), ( ConvertTo-CompactSizeHex $controlBlock ) ) )
             } else {
                 $serializedTX = "00" + [TaprootMsg]::new( $tx_t, $i, $scripts, $values, $sighashType ).ToString()
                 $signature    = SchnorrSig $privateKey_in $serializedTX $sighashType
-                [Witness]::new( @( ( Push $signature ) ) )
+                [Witness]::new( @( ( ConvertTo-CompactSizeHex $signature ) ) )
             }
         }
     )
@@ -1147,7 +1178,7 @@ function NulldataTX {
         if ( $witnessScript ) {    # P2SH-P2WSH
             $scriptHash_in = i2h $SHA256.ComputeHash( ( h2i $witnessScript ) )
             $scriptSig  = "220020"   + $scriptHash_in                      # PUSH( OP_0 PUSH(scriptHash) )
-            $scriptCode = Push $witnessScript                              # PUSH(witnessScript)
+            $scriptCode = ConvertTo-CompactSizeHex $witnessScript           # CompactSize(witnessScript)
         } else {                   # P2SH-P2WPKH
             $scriptSig  = "160014"   + $pubkeyHash_in                      # PUSH( OP_0 PUSH(pubkeyHash) )
             $scriptCode = "1976a914" + $pubkeyHash_in + "88ac"             # PUSH( OP_DUP OP_HASH160 PUSH(pubkeyHash) OP_EQUALVERIFY OP_CHECKSIG )
@@ -1160,7 +1191,7 @@ function NulldataTX {
         }
         $scriptSig = ""
         if ( $witnessScript ) {    # P2WSH
-            $scriptCode = Push $witnessScript                              # PUSH(witnessScript)
+            $scriptCode = ConvertTo-CompactSizeHex $witnessScript           # CompactSize(witnessScript)
         } else {                   # P2WPKH
             $scriptCode = "1976a914" + $pubkeyHash_in + "88ac"             # PUSH( OP_DUP OP_HASH160 PUSH(pubkeyHash) OP_EQUALVERIFY OP_CHECKSIG )
         }
@@ -1217,9 +1248,9 @@ function NulldataTX {
             $serializedTX = [SegwitMsg]::new( $tx_t, $i, $scriptCode, $utxo[$i].value, $sighashType ).ToString()
             $signature    = EcdsaSig $privateKey_in $serializedTX $sighashType
             if ( $witnessScript ) {
-                [Witness]::new( @( ( Push $signature ), ( Push $witnessScript ) ) )
+                [Witness]::new( @( ( ConvertTo-CompactSizeHex $signature ), ( ConvertTo-CompactSizeHex $witnessScript ) ) )
             } else {
-                [Witness]::new( @( ( Push $signature ), ( Push $publicKey_in  ) ) )
+                [Witness]::new( @( ( ConvertTo-CompactSizeHex $signature ), ( ConvertTo-CompactSizeHex $publicKey_in  ) ) )
             }
         }
     )
