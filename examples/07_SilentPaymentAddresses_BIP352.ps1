@@ -5,16 +5,22 @@ $passphrase = ""
 $labels     = @( "", "0", "1", "2" )
 ###########
 if ( -not ( ValidateMnemonic $mnemonic ) ) { throw "invalid mnemonic phrase" }
-if ( $network -eq "mainnet" ) {
-    $coinType = 0
-    $hrp_address = "sp"
-    $hrp_spend   = "spspend"
-    $hrp_scan    = "spscan"
-} else {
-    $coinType = 1
-    $hrp_address = "tsp"
-    $hrp_spend   = "tspspend"
-    $hrp_scan    = "tspscan"
+switch ( $network ) {
+    "mainnet" {
+        $coinType = 0
+        $hrp_address = "sp"
+        $hrp_spend   = "spspend"
+        $hrp_scan    = "spscan"
+    }
+    "testnet" {
+        $coinType = 1
+        $hrp_address = "tsp"
+        $hrp_spend   = "tspspend"
+        $hrp_scan    = "tspscan"
+    }
+    default {
+        throw "'network' must be 'mainnet' or 'testnet'"
+    }
 }
 $seed = GetBIP39Seed $mnemonic $passphrase
 $w = [HDWallet]::new( $seed )
