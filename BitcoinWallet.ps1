@@ -804,9 +804,14 @@ class HDWallet {
     hidden [void] Init ( [string]$seed, [bool]$testnet ) {
         Add-Type -AssemblyName System.Security
 
+        if ( $seed -notmatch '^(?:[0-9a-f]{2}){16,64}$' ) {
+            throw "BIP32 seed must be a 16-to-64-byte hexadecimal string"
+        }
+        $normalizedSeed = $seed.ToLowerInvariant()
+
         $HMACSHA512      = New-Object Cryptography.HMACSHA512
         $HMACSHA512.Key  = [Text.Encoding]::UTF8.GetBytes( "Bitcoin seed" )
-        $bytes           = h2i $seed
+        $bytes           = h2i $normalizedSeed
         $extendedKey     = $HMACSHA512.ComputeHash( $bytes )
 
         $il = [bigint]::new( $extendedKey[31..0]  + @(0x00) )
@@ -814,7 +819,7 @@ class HDWallet {
             throw "Result of digest is zero or greater than the order of the curve. Try a different seed."
         }
 
-        $this.Seed        = $seed
+        $this.Seed        = $normalizedSeed
         $this.Depth       = 0
         $this.Index       = 0
         $this.PrivateKey  = i2h $extendedKey[0..31]
@@ -829,7 +834,8 @@ class HDWallet {
         $this.FingerPrint = ( Hash160 $this.PublicKey ).SubString( 0, 8 )
 
         $this.Dict = [Dictionary[String, HDWallet]]::new()
-        $this.Dict.Add( $this.Path, $this )
+        $cacheKey = "$($this.Path)|$([int]$this.Testnet)"
+        $this.Dict.Add( $cacheKey, $this )
     }
 
     [HDWallet] Derive ( [int]$index, [bool]$hardened ) {
@@ -851,12 +857,16 @@ class HDWallet {
             return $null
         }
 
+        if ( $this.Depth -ge 255 ) {
+            throw "BIP32 maximum depth (255) exceeded"
+        }
+
         if ( -not $this.PrivateKey -and $hardened ) {
             Write-Host "Not possible to derive a child without the private key." -Fore Red
             return $null
         }
 
-        $child_path  = $this.Path + "/" + $index.ToString( "d" )
+        $child_path = $this.Path + "/" + $index.ToString( "d" )
 
         if ( $hardened ) {  $child_path  += "'" }
 
@@ -866,48 +876,15 @@ class HDWallet {
             return $null
         }
 
-        if ( $this.Dict.ContainsKey( $child_path ) ) { return $this.Dict.Item( $child_path ) }
-
-        $child_index     = [UInt32]$index
-        if ( $hardened ) { $child_index += [UInt32]"0x80000000" }
-        $child_depth     = $this.Depth + 1
-        $child_Testnet   = $testnet
-
-        $HMACSHA512      = New-Object Cryptography.HMACSHA512
-        $HMACSHA512.Key  = h2i $this.ChainCode
-
-        if ( -not $hardened ) {
-            $bytes = h2i $this.PublicKey
-        } else {
-            $bytes = h2i ( "00" + $this.PrivateKey )
-        }
-        $bytes += h2i $child_index.ToString( "x8" )
-
-        $extendedKey = $HMACSHA512.ComputeHash( $bytes )
-
-        $il = [bigint]::new( $extendedKey[31..0]  + @(0x00) )
-
-        if ( $il.IsZero -or $il -ge [ECDSA]::Order ) {
-            Write-Host "The resulting key is invalid. Try the next index." -Fore Red
-            return $null
-        }
+        $child_depth   = $this.Depth + 1
+        $child_Testnet = $testnet
+        $kp = [bigint]::Zero
+        $G  = $null
+        $Kp = $null
 
         if ( $this.PrivateKey ) {
-
             $kp = [bigint]::Parse( "0" + $this.PrivateKey, "AllowHexSpecifier" )
-            $kc = ( $il + $kp ) % [ECDSA]::Order
-            if ( $kc.IsZero ) {
-                Write-Host "The resulting key is invalid. Try the next index." -Fore Red
-                return $null
-            }
-
-            $child_privateKey  = $kc.ToHexString64()
-            $child_publicKeyUC = GetPublicKey -uc $child_privateKey
-            $prefix            = if ( $child_publicKeyUC -cmatch '[02468ace]$' ) { "02" } else { "03" }
-            $child_publicKey   = $prefix + $child_publicKeyUC.Substring( 2, 64 )
-
         } else {
-
             $G   = [ECDSA]::new()
             $publicKeyX = $this.PublicKeyUC.Substring( 2, 64 )
             $publicKeyY = $this.PublicKeyUC.Substring( 66 )
@@ -918,24 +895,60 @@ class HDWallet {
                 Write-Host "Kp is not on the curve." -Fore Red
                 return $null
             }
-            $Pc  = $G * $il + $Kp
-            if ( $Pc -eq $null ) {
-                Write-Host "The resulting key is invalid. Try the next index." -Fore Red
-                return $null
-            }
-            $pubkeyX = $Pc.X.ToHexString64()
-            $pubkeyY = $Pc.Y.ToHexString64()
-
-            $child_privateKey  = $null
-            $child_publicKeyUC = "04" + $pubkeyX + $pubkeyY
-            $prefix            = if ( $Pc.Y.IsEven ) { "02" } else { "03" }
-            $child_publicKey   = $prefix + $pubkeyX
-
         }
 
-        $child_chainCode = i2h $extendedKey[32..63]
+        $HMACSHA512     = New-Object Cryptography.HMACSHA512
+        $HMACSHA512.Key = h2i $this.ChainCode
+        try {
+            for ( [Int64]$candidate = $index; $candidate -le [Int32]::MaxValue; $candidate++ ) {
+                $child_path = $this.Path + "/" + $candidate.ToString( "d" )
+                if ( $hardened ) { $child_path += "'" }
 
-        return [HDWallet]::new($child_depth, $child_index, $child_privateKey, $child_chainCode, $child_publicKeyUC, $child_publicKey, $child_path, $child_Testnet, $this)
+                $cacheKey = "$child_path|$([int]$testnet)"
+                if ( $this.Dict.ContainsKey( $cacheKey ) ) { return $this.Dict.Item( $cacheKey ) }
+
+                $child_index = [UInt32]$candidate
+                if ( $hardened ) { $child_index += [UInt32]"0x80000000" }
+
+                if ( -not $hardened ) {
+                    $bytes = h2i $this.PublicKey
+                } else {
+                    $bytes = h2i ( "00" + $this.PrivateKey )
+                }
+                $bytes += h2i $child_index.ToString( "x8" )
+
+                $extendedKey = $HMACSHA512.ComputeHash( $bytes )
+                $il = [bigint]::new( $extendedKey[31..0] + @(0x00) )
+                if ( $il.IsZero -or $il -ge [ECDSA]::Order ) { continue }
+
+                if ( $this.PrivateKey ) {
+                    $kc = ( $il + $kp ) % [ECDSA]::Order
+                    if ( $kc.IsZero ) { continue }
+
+                    $child_privateKey  = $kc.ToHexString64()
+                    $child_publicKeyUC = GetPublicKey -uc $child_privateKey
+                    $prefix            = if ( $child_publicKeyUC -cmatch '[02468ace]$' ) { "02" } else { "03" }
+                    $child_publicKey   = $prefix + $child_publicKeyUC.Substring( 2, 64 )
+                } else {
+                    $Pc = $G * $il + $Kp
+                    if ( $Pc -eq $null ) { continue }
+
+                    $pubkeyX = $Pc.X.ToHexString64()
+                    $pubkeyY = $Pc.Y.ToHexString64()
+                    $child_privateKey  = $null
+                    $child_publicKeyUC = "04" + $pubkeyX + $pubkeyY
+                    $prefix            = if ( $Pc.Y.IsEven ) { "02" } else { "03" }
+                    $child_publicKey   = $prefix + $pubkeyX
+                }
+
+                $child_chainCode = i2h $extendedKey[32..63]
+                return [HDWallet]::new($child_depth, $child_index, $child_privateKey, $child_chainCode, $child_publicKeyUC, $child_publicKey, $child_path, $child_Testnet, $this)
+            }
+        } finally {
+            $HMACSHA512.Dispose()
+        }
+
+        throw "No valid BIP32 child index remains."
     }
 
     hidden HDWallet ([int]$depth, [UInt32]$index, [string]$privateKey, [string]$chainCode, [string]$publicKeyUC, [string]$publicKey, [string]$path, [bool]$testnet, [HDWallet]$parent) {
@@ -953,7 +966,8 @@ class HDWallet {
         $this.FingerPrint = ( Hash160 $publicKey ).SubString( 0, 8 )
         $this.Dict        = $parent.Dict
 
-        $this.Dict.Add( $this.Path, $this )
+        $cacheKey = "$($this.Path)|$([int]$this.Testnet)"
+        $this.Dict.Add( $cacheKey, $this )
     }
 
     [void] Dispose() {
@@ -961,7 +975,8 @@ class HDWallet {
         $wallets = [HDWallet[]]$this.Dict.Values
         $wallets | ? { $this -eq $_.Parent } | % { $_.Dispose() }
 
-        $null = $this.Dict.Remove( $this.Path )
+        $cacheKey = "$($this.Path)|$([int]$this.Testnet)"
+        $null = $this.Dict.Remove( $cacheKey )
 
         $this.Seed        = $null
         $this.Depth       = $null
@@ -994,14 +1009,25 @@ class HDWallet {
 #
 
     [void] ImportExtendedKey( [string]$extendedKey, [string]$path ) {
-        $this.ImportExtendedKey( $extendedKey, $path, $false )
+        $serialized = Base58Check_Decode $extendedKey
+        if ( -not $serialized -or $serialized.Length -ne 156 ) {
+            throw "extended key payload must be exactly 78 bytes"
+        }
+        $version = $serialized.Substring( 0, 8 )
+        $testnetVersions = @(
+            "024285b5", "02575048", "04358394", "044a4e28", "045f18bc",
+            "024289ef", "02575483", "043587cf", "044a5262", "045f1cf6"
+        )
+        $this.ImportExtendedKey( $extendedKey, $path, $version -in $testnetVersions )
     }
 
     [void] ImportExtendedKey( [string]$extendedKey, [string]$path, [bool]$testnet ) {
 
         $serialized = Base58Check_Decode $extendedKey
 
-        if ( -not $serialized ) { Write-Host "Not properly deserialized." -Fore Red ; return }
+        if ( -not $serialized -or $serialized.Length -ne 156 ) {
+            throw "extended key payload must be exactly 78 bytes"
+        }
         $version_e      = $serialized.Substring(  0,  8 )
         $depth_e        = $serialized.Substring(  8,  2 )
         $pFingerprint_e = $serialized.Substring( 10,  8 )
@@ -1009,53 +1035,95 @@ class HDWallet {
         $chainCode_e    = $serialized.Substring( 26, 64 )
         $extendedKey_e  = $serialized.Substring( 90, 66 )
 
-        $prefixes_prv   = @("024285b5","02575048","0295b005","02aa7a99","04358394","044a4e28","045f18bc","0488ade4","049d7878","04b2430c")
-        $prefixes_pub   = @("024289ef","02575483","0295b43f","02aa7ed3","043587cf","044a5262","045f1cf6","0488b21e","049d7cb2","04b24746")
+        $prefixes_prv_main = @("0295b005","02aa7a99","0488ade4","049d7878","04b2430c")
+        $prefixes_pub_main = @("0295b43f","02aa7ed3","0488b21e","049d7cb2","04b24746")
+        $prefixes_prv_test = @("024285b5","02575048","04358394","044a4e28","045f18bc")
+        $prefixes_pub_test = @("024289ef","02575483","043587cf","044a5262","045f1cf6")
+        $prefixes_prv = $prefixes_prv_main + $prefixes_prv_test
+        $prefixes_pub = $prefixes_pub_main + $prefixes_pub_test
 
+        if ( $version_e -notin ( $prefixes_prv + $prefixes_pub ) ) {
+            throw "invalid extended-key prefix"
+        }
+        $encodedTestnet = $version_e -in ( $prefixes_prv_test + $prefixes_pub_test )
+        if ( $testnet -ne $encodedTestnet ) { throw "extended-key network mismatch" }
+
+        $expectedPath = switch ( $version_e ) {
+            { $_ -in @( "049d7878", "049d7cb2" ) } { "^m/49'/0'(?:/|$)"       ; break }
+            { $_ -in @( "044a4e28", "044a5262" ) } { "^m/49'/1'(?:/|$)"       ; break }
+            { $_ -in @( "04b2430c", "04b24746" ) } { "^m/84'/0'(?:/|$)"       ; break }
+            { $_ -in @( "045f18bc", "045f1cf6" ) } { "^m/84'/1'(?:/|$)"       ; break }
+            default                                  { $null }
+        }
+
+        $importedPrivateKey = $null
+        $importedPublicKey  = ""
+        $importedPublicKeyUC = ""
         if ( $version_e -in $prefixes_prv ) {
-            $this.PrivateKey  = $extendedkey_e -replace '^00'
-            $this.PublicKeyUC = GetPublicKey -uc $this.PrivateKey
-            $prefix = if ( $this.PublicKeyUC -cmatch '[02468ace]$' ) { "02" } else { "03" }
-            $this.PublicKey = $prefix + $this.PublicKeyUC.Substring( 2, 64 )
+            if ( $extendedKey_e -cnotmatch '^00[0-9a-f]{64}$' ) {
+                throw "invalid extended private key data"
+            }
+            $importedPrivateKey = $extendedkey_e.Substring( 2 )
+            $importedPublicKeyUC = GetPublicKey -uc $importedPrivateKey
+            $prefix = if ( $importedPublicKeyUC -cmatch '[02468ace]$' ) { "02" } else { "03" }
+            $importedPublicKey = $prefix + $importedPublicKeyUC.Substring( 2, 64 )
         } elseif ( $version_e -in $prefixes_pub ) {
-            $this.PrivateKey  = $null
-            $this.PublicKeyUC = DecompressPublicKey $extendedKey_e
-            $this.PublicKey   = $extendedKey_e
+            if ( $extendedKey_e -cnotmatch '^(02|03)[0-9a-f]{64}$' ) {
+                throw "invalid extended public key data"
+            }
+            $importedPublicKeyUC = DecompressPublicKey $extendedKey_e
+            $importedPublicKey   = $extendedKey_e
+        }
+
+        $parsedDepth       = [Convert]::ToByte( $depth_e, 16 )
+        $parsedIndex       = [Convert]::ToUInt32( $index_e, 16 )
+        $isHardened        = $parsedIndex -ge [UInt32]"0x80000000"
+        $derivedFingerprint = ( Hash160 $importedPublicKey ).SubString( 0, 8 )
+
+        if ( $path -cnotmatch '^m(?:/\d+''?)*$' ) {
+            throw "invalid derivation path"
+        }
+        if ( $parsedDepth -ne ( $path -replace '[^/]' ).Length ) {
+            throw "the depths in the extended key and the path are inconsistent"
+        }
+        if ( $path -eq "m" ) {
+            [UInt32]$idx = 0
         } else {
-            Write-Host "Invalid prefix." -Fore Red
-            return
+            [UInt64]$pathIndex = $path -replace '^.+/(\d+)''?$','$1'
+            if ( $pathIndex -gt [Int32]::MaxValue ) {
+                throw "derivation path index must be between 0 and 2^31 - 1"
+            }
+            [UInt32]$idx = $pathIndex
+        }
+        if ( $parsedIndex % [UInt32]"0x80000000" -ne $idx ) {
+            throw "the indexes in the extended key and the path are inconsistent"
+        }
+        if (      $isHardened -and $path[-1] -ne "'" -or
+             -not $isHardened -and $path[-1] -eq "'"     ) {
+            throw "the types (normal/hardened) in the extended key and the path are inconsistent"
+        }
+        if ( $parsedDepth -eq 0 -and ( $pFingerprint_e -cne "00000000" -or $parsedIndex -ne 0 ) ) {
+            throw "root extended key must have zero parent fingerprint and child number"
+        }
+        if ( $expectedPath -and $path -cnotmatch $expectedPath ) {
+            throw "extended-key prefix is inconsistent with the derivation path"
         }
 
         $this.Seed        = $null
-        $this.Depth       = [Convert]::ToInt32( $depth_e, 16 )
-        $this.FingerPrint = ( Hash160 $this.PublicKey ).SubString( 0, 8 )
-        $this.Index       = [Convert]::ToInt64( $index_e, 16 )
+        $this.Depth       = $parsedDepth
+        $this.Index       = $parsedIndex
+        $this.PrivateKey  = $importedPrivateKey
         $this.ChainCode   = $chainCode_e
+        $this.PublicKeyUC = $importedPublicKeyUC
+        $this.PublicKey   = $importedPublicKey
         $this.Path        = $path
-        $this.Hardened    = $this.Index -ge [UInt32]"0x80000000"
+        $this.Hardened    = $isHardened
         $this.Testnet     = $testnet
-
-        if ( $this.Depth -ne ( $path -replace '[^/]' ).Length ) {
-             Write-Host "The depths in the extended key and the path are inconsistent." -Fore Red
-             return
-        }
-        if ( $path -eq "m" ) {
-            $idx = 0
-        } else {
-            $idx = [int]( $path -replace '^.+/(\d+)''?$','$1' )
-        }
-        if ( $this.Index % [UInt32]"0x80000000" -ne $idx ) {
-             Write-Host "The indexes in the extended key and the path are inconsistent." -Fore Red
-             return
-        }
-        if (      $this.Hardened -and $path[-1] -ne "'" -or
-             -not $this.Hardened -and $path[-1] -eq "'"     ) {
-            Write-Host "The types (normal/hardened) in the extended key and the path are inconsistent." -Fore Red
-            return
-        }
+        $this.FingerPrint = $derivedFingerprint
 
         $this.Dict = [Dictionary[String, HDWallet]]::new()
-        $this.Dict.Add( $this.Path, $this )
+        $cacheKey = "$($this.Path)|$([int]$this.Testnet)"
+        $this.Dict.Add( $cacheKey, $this )
 
         if ( $path -eq "m" ) {
             $this.Parent = $null
@@ -1063,7 +1131,9 @@ class HDWallet {
             $this.Parent             = [HDWallet]::new()
             $this.Parent.FingerPrint = $pFingerprint_e
             $this.Parent.Path        = $this.Path -replace '/[^/]+$'
-            $this.Dict.Add( $this.Parent.Path, $this.Parent )
+            $this.Parent.Testnet     = $this.Testnet
+            $parentCacheKey = "$($this.Parent.Path)|$([int]$this.Parent.Testnet)"
+            $this.Dict.Add( $parentCacheKey, $this.Parent )
         }
 
     }
@@ -1101,7 +1171,8 @@ class HDWallet {
                 $version_e = "04358394"
             }
         }
-        $depth_e = $this.Depth.ToString( "x2" )
+        if ( $this.Depth -lt 0 -or $this.Depth -gt 255 ) { throw "invalid BIP32 depth" }
+        $depth_e = ([byte]$this.Depth).ToString( "x2" )
         if ( $this.Parent ) {
             $pFingerprint_e = $this.Parent.FingerPrint
         } else {
@@ -1143,7 +1214,8 @@ class HDWallet {
                 $version_e = "043587cf"
             }
         }
-        $depth_e = $this.Depth.ToString( "x2" )
+        if ( $this.Depth -lt 0 -or $this.Depth -gt 255 ) { throw "invalid BIP32 depth" }
+        $depth_e = ([byte]$this.Depth).ToString( "x2" )
         if ( $this.Parent ) {
             $pFingerprint_e = $this.Parent.FingerPrint
         } else {
