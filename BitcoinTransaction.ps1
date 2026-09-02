@@ -51,6 +51,39 @@ function Push ( [string]$str ) {
     return $result
 }
 
+function GetDustThreshold ( [string]$scriptPubKey ) {
+    switch -Regex ( $scriptPubKey ) {
+        '^0014'        { return [UInt64]294 } # P2WPKH
+        '^(0020|5120)' { return [UInt64]330 } # P2WSH, P2TR
+        '^a914'        { return [UInt64]540 } # P2SH
+        '^76a914'      { return [UInt64]546 } # P2PKH
+        default        { return [UInt64]546 }
+    }
+}
+
+function AssertPaymentAmount ( [UInt64]$amount, [UInt64]$fee, [string]$scriptPubKey ) {
+    [UInt64]$maxMoney = 2100000000000000
+    if ( [bigint]$amount + [bigint]$fee -gt [bigint]$maxMoney ) {
+        throw "amount and fee exceed MAX_MONEY"
+    }
+    if ( $amount -lt ( GetDustThreshold $scriptPubKey ) ) {
+        throw "destination amount is below the dust threshold"
+    }
+}
+
+function ConvertTo-ScriptNumHex ( [UInt64]$value ) {
+    if ( $value -eq 0 ) { return "" }
+    $bytes = [Collections.Generic.List[byte]]::new()
+    while ( $value -gt 0 ) {
+        $bytes.Add( [byte]( $value -band 0xff ) )
+        $value = $value -shr 8
+    }
+    if ( ( $bytes[$bytes.Count - 1] -band 0x80 ) -ne 0 ) {
+        $bytes.Add( 0 )
+    }
+    return i2h ( $bytes.ToArray() )
+}
+
 class TXin {
     [string]$txid
     [string]$index
@@ -691,7 +724,8 @@ function RawTXfromLegacyAddress {
             [UInt64]$fee,
             [string]$redeemScript  = "",
             [string]$addressChange = "",
-            [string]$memo          = ""
+            [string]$memo          = "",
+            [switch]$AllowDustToFee
           )
 
     $addressFrom = NormalizeBitcoinAddress $addressFrom
@@ -815,11 +849,17 @@ function RawTXfromLegacyAddress {
         }
     }
 
+    AssertPaymentAmount $amount $fee $scriptPubKey_out0
     $txout0 = [TXout]::new( $amount, $scriptPubKey_out0 )
     $txouts = @( $txout0 )
 
-    if ( $sum -gt $amount + $fee ) {
-        $txout1 = [TXout]::new( $sum - $amount - $fee, $scriptPubKey_out1 )
+    [UInt64]$change = $sum - $amount - $fee
+    [UInt64]$dustThreshold = GetDustThreshold $scriptPubKey_out1
+    if ( $change -gt 0 -and $change -lt $dustThreshold -and -not $AllowDustToFee ) {
+        throw "change ($change sat) is below the dust threshold ($dustThreshold sat); use -AllowDustToFee to add it to the fee"
+    }
+    if ( $change -ge $dustThreshold ) {
+        $txout1 = [TXout]::new( $change, $scriptPubKey_out1 )
         $txouts += $txout1
     }
     if ( $memo ) {
@@ -864,7 +904,8 @@ function RawTXfromSegwitAddress {
             [UInt64]$fee,
             [string]$witnessScript = "",
             [string]$addressChange = "",
-            [string]$memo          = ""
+            [string]$memo          = "",
+            [switch]$AllowDustToFee
           )
 
     $addressFrom = NormalizeBitcoinAddress $addressFrom
@@ -1007,11 +1048,17 @@ function RawTXfromSegwitAddress {
         }
     }
 
+    AssertPaymentAmount $amount $fee $scriptPubKey_out0
     $txout0 = [TXout]::new( $amount, $scriptPubKey_out0 )
     $txouts = @( $txout0 )
 
-    if ( $sum -gt $amount + $fee ) {
-        $txout1 = [TXout]::new( $sum - $amount - $fee, $scriptPubKey_out1 )
+    [UInt64]$change = $sum - $amount - $fee
+    [UInt64]$dustThreshold = GetDustThreshold $scriptPubKey_out1
+    if ( $change -gt 0 -and $change -lt $dustThreshold -and -not $AllowDustToFee ) {
+        throw "change ($change sat) is below the dust threshold ($dustThreshold sat); use -AllowDustToFee to add it to the fee"
+    }
+    if ( $change -ge $dustThreshold ) {
+        $txout1 = [TXout]::new( $change, $scriptPubKey_out1 )
         $txouts += $txout1
     }
     if ( $memo ) {
@@ -1051,7 +1098,8 @@ function RawTXfromTaprootAddress {
             [UInt64]$fee,
             [string]$tapScript = "",
             [string]$addressChange = "",
-            [string]$memo          = ""
+            [string]$memo          = "",
+            [switch]$AllowDustToFee
           )
 
     $addressFrom = NormalizeBitcoinAddress $addressFrom
@@ -1175,11 +1223,17 @@ function RawTXfromTaprootAddress {
         }
     }
 
+    AssertPaymentAmount $amount $fee $scriptPubKey_out0
     $txout0 = [TXout]::new( $amount, $scriptPubKey_out0 )
     $txouts = @( $txout0 )
 
-    if ( $sum -gt $amount + $fee ) {
-        $txout1 = [TXout]::new( $sum - $amount - $fee, $scriptPubKey_out1 )
+    [UInt64]$change = $sum - $amount - $fee
+    [UInt64]$dustThreshold = GetDustThreshold $scriptPubKey_out1
+    if ( $change -gt 0 -and $change -lt $dustThreshold -and -not $AllowDustToFee ) {
+        throw "change ($change sat) is below the dust threshold ($dustThreshold sat); use -AllowDustToFee to add it to the fee"
+    }
+    if ( $change -ge $dustThreshold ) {
+        $txout1 = [TXout]::new( $change, $scriptPubKey_out1 )
         $txouts += $txout1
     }
     if ( $memo ) {
@@ -1249,7 +1303,9 @@ function NulldataTX {
             [string]$text, 
             [UInt64]$fee,
             [string]$witnessScript = "",
-            [string]$addressChange = ""
+            [string]$addressChange = "",
+            [switch]$AllowDustToFee,
+            [UInt32]$lockTime      = 0
           )
     $addressFrom = NormalizeBitcoinAddress $addressFrom
     if ( $addressChange ) { $addressChange = NormalizeBitcoinAddress $addressChange }
@@ -1327,7 +1383,9 @@ function NulldataTX {
     if ( $txins.Count -eq 0 -or $sum -eq 0 -or $sum -lt $minimumFee ) {
         throw "insufficient balance"
     }
-    if ( $sum -gt $fee ) {
+    [UInt64]$change = if ( $sum -gt $fee ) { $sum - $fee } else { 0 }
+    $createChange = $false
+    if ( $change -gt 0 ) {
         if ( $addressChange -cmatch '^[1mn]' ) {
             $pubkeyHash_out1   = ( Base58Address_Decode $addressChange ).Substring( 2 )
             $scriptPubKey_out1 = "76a914" + $pubkeyHash_out1 + "88ac"      # OP_DUP OP_HASH160 PUSH(pubkeyHash) OP_EQUALVERIFY OP_CHECKSIG
@@ -1352,8 +1410,15 @@ function NulldataTX {
                 throw "invalid hash length (addressChange)"
             }
         }
+        [UInt64]$dustThreshold = GetDustThreshold $scriptPubKey_out1
+        if ( $change -lt $dustThreshold -and -not $AllowDustToFee ) {
+            throw "change ($change sat) is below the dust threshold ($dustThreshold sat); use -AllowDustToFee to add it to the fee"
+        }
+        $createChange = $change -ge $dustThreshold
+    }
+    if ( $createChange ) {
         $txout0 = [TXout]::new( 0          , $scriptPubKey_out0 )
-        $txout1 = [TXout]::new( $sum - $fee, $scriptPubKey_out1 )
+        $txout1 = [TXout]::new( $change, $scriptPubKey_out1 )
         $txouts = @( $txout0, $txout1 )
     } else {
         if ( $sum -lt $fee ) { Write-Host "The fee has been changed to $($sum)." -ForegroundColor Yellow }
@@ -1383,6 +1448,7 @@ function NulldataTX {
 #===================================================================================================================================
 function CLTVScript {
     param( [string]$datetime, [string]$publicKey, [Alias("t")][switch]$Testnet )
+    AssertCompressedPublicKey $publicKey
     $SHA256 = New-Object Cryptography.SHA256CryptoServiceProvider
     $unixTime = [UInt32]( Get-Date -Date $datetime -UFormat "%s" )
     if ( $unixTime -lt 500000000 ) {
