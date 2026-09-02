@@ -1,3 +1,3 @@
-. ./BitcoinWallet.ps1
-. ./BitcoinTransaction.ps1
-. ./SeedQR.ps1
+. ( Join-Path $PSScriptRoot "BitcoinWallet.ps1" )
+. ( Join-Path $PSScriptRoot "BitcoinTransaction.ps1" )
+. ( Join-Path $PSScriptRoot "SeedQR.ps1" )
