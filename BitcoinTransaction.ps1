@@ -466,7 +466,7 @@ function EcdsaSig {
 function HashTR( [string]$tag_string, [string]$hex_string ) {    # Tagged hash function for Schnorr Signature
     if ( $tag_string -eq "" ) { throw "'tag_string' is empty" }
     if ( $hex_string -eq "" ) { throw "'hex_string' is empty" }
-    if ( $hex_string.Length % 2 -ne 0 ) { $hex_string = "0" + $hex_string }
+    if ( $hex_string -notmatch '^(?:[0-9a-f]{2})+$' ) { throw "invalid hex string" }
     $SHA256 = New-Object Cryptography.SHA256CryptoServiceProvider
     $tag  = $SHA256.ComputeHash( [Text.Encoding]::UTF8.GetBytes( $tag_string ) )
     $hash = i2h $SHA256.ComputeHash( $tag * 2 + ( h2i $hex_string ) )
@@ -531,6 +531,7 @@ function GetAddressP2TR-SP {
 
 function GetBalance {
     param( [Parameter(ValueFromPipeline=$True)][string]$addr )
+    $addr = NormalizeBitcoinAddress $addr
     if ( $addr -cmatch '^[xyzYZ]prv' ) { return }
     if ( $addr -cmatch '^([13]|bc1|[xyzYZ]p(rv|ub))' ) {
         $chain   = "main"
@@ -562,6 +563,7 @@ function Invoke-RestMethodWithRetry {
 
 function GetUTXO {
     param ( [Parameter(ValueFromPipeline=$True)][string]$addr )
+    $addr = NormalizeBitcoinAddress $addr
     if ( $addr -cmatch '^([13]|bc1)' ) {
         $chain   = "main"
         $network = ""
@@ -595,6 +597,59 @@ function GetUTXO {
     return $utxo
 }
 
+function AssertLegacySource {
+    param( [string]$address,
+           [string]$publicKey,
+           [string]$redeemScript
+    )
+    $actual = ( Base58Address_Decode $address ).Substring( 2 )
+    $expected = if ( $address -cmatch '^[1mn]' ) {
+        Hash160 $publicKey
+    } else {
+        Hash160 $redeemScript
+    }
+    if ( $actual -cne $expected ) {
+        throw "private key or redeem script does not match 'addressFrom'"
+    }
+}
+
+function AssertSegwitSource {
+    param( [string]$address,
+           [string]$publicKey,
+           [string]$witnessScript
+    )
+    $address = NormalizeBitcoinAddress $address
+    $pubkeyHash = Hash160 $publicKey
+    if ( $witnessScript ) {
+        $SHA256 = New-Object Cryptography.SHA256CryptoServiceProvider
+        $witnessProgram = "0020" + ( i2h $SHA256.ComputeHash( ( h2i $witnessScript ) ) )
+    } else {
+        $witnessProgram = "0014" + $pubkeyHash
+    }
+    if ( $address -cmatch '^[23]' ) {
+        $actual = ( Base58Address_Decode $address ).Substring( 2 )
+        $expected = Hash160 $witnessProgram
+    } else {
+        $actual = Bech32_Decode $address $false
+        $expected = $witnessProgram.Substring( 4 )
+    }
+    if ( $actual -cne $expected ) {
+        throw "private key or witness script does not match 'addressFrom'"
+    }
+}
+
+function AssertTaprootKeySource {
+    param( [string]$address,
+           [string]$publicKey
+    )
+    $address = NormalizeBitcoinAddress $address
+    $testnet = $address -cmatch '^tb1p'
+    $expected = GetAddressP2TR $publicKey -Testnet:$testnet
+    if ( $address -ine $expected ) {
+        throw "private key does not match 'addressFrom'"
+    }
+}
+
 #===================================================================================================================================
 function RawTXfromLegacyAddress {
     param ( [string]$wif, 
@@ -606,6 +661,10 @@ function RawTXfromLegacyAddress {
             [string]$addressChange = "",
             [string]$memo          = ""
           )
+
+    $addressFrom = NormalizeBitcoinAddress $addressFrom
+    $addressTo = NormalizeBitcoinAddress $addressTo
+    if ( $addressChange ) { $addressChange = NormalizeBitcoinAddress $addressChange }
 
     if ( $addressTo -cmatch '^script:' ) {
         $scriptHash = Hash160 $addressTo.Substring( 7 )
@@ -647,10 +706,10 @@ function RawTXfromLegacyAddress {
 
     $utxo = @( GetUTXO $addressFrom )
 
-    $privateKey_in = ( Base58Check_Decode $wif ).Substring( 2, 64 )
+    $privateKey_in = ( DecodeWIF $wif ).PrivateKey
     $publicKey_in  = GetPublicKeyFromWIF $wif
     if ( $addressFrom -cmatch '^[1mn]' ) {
-        $pubkeyHash_in   = ( Base58Check_Decode $addressFrom ).Substring( 2 )
+        $pubkeyHash_in   = ( Base58Address_Decode $addressFrom ).Substring( 2 )
         $scriptPubKey_in = "76a914" + $pubkeyHash_in + "88ac"              # OP_DUP OP_HASH160 PUSH(pubkeyHash) OP_EQUALVERIFY OP_CHECKSIG
         if ( $redeemScript ) {
             Write-Host "'redeemScript' is ignored" -ForegroundColor Yellow
@@ -674,10 +733,10 @@ function RawTXfromLegacyAddress {
     }
 
     if ( $addressTo -cmatch '^[1mn]' ) {
-        $pubkeyHash_out0   = ( Base58Check_Decode $addressTo ).Substring( 2 )
+        $pubkeyHash_out0   = ( Base58Address_Decode $addressTo ).Substring( 2 )
         $scriptPubKey_out0 = "76a914" + $pubkeyHash_out0 + "88ac"          # OP_DUP OP_HASH160 PUSH(pubkeyHash) OP_EQUALVERIFY OP_CHECKSIG
     } elseif ( $addressTo -cmatch '^[23]' ) { 
-        $scriptHash_out0   = ( Base58Check_Decode $addressTo ).Substring( 2 )
+        $scriptHash_out0   = ( Base58Address_Decode $addressTo ).Substring( 2 )
         $scriptPubKey_out0 = "a914" + $scriptHash_out0 + "87"              # OP_HASH160 PUSH(scriptHash) OP_EQUAL
     } elseif ( $addressTo -cmatch '^(bc1|tb1)' ) {
         $isTaproot = $addressTo -cmatch '^(bc|tb)1p'
@@ -698,10 +757,10 @@ function RawTXfromLegacyAddress {
         }
     }
     if ( $addressChange -cmatch '^[1mn]' ) {
-        $pubkeyHash_out1   = ( Base58Check_Decode $addressChange ).Substring( 2 )
+        $pubkeyHash_out1   = ( Base58Address_Decode $addressChange ).Substring( 2 )
         $scriptPubKey_out1 = "76a914" + $pubkeyHash_out1 + "88ac"
     } elseif ( $addressChange -cmatch '^[23]' ) {
-        $scriptHash_out1   = ( Base58Check_Decode $addressChange ).Substring( 2 )
+        $scriptHash_out1   = ( Base58Address_Decode $addressChange ).Substring( 2 )
         $scriptPubKey_out1 = "a914" + $scriptHash_out1 + "87"
     } elseif ( $addressChange -cmatch '^(bc1|tb1)' ) { 
         $isTaproot = $addressChange -cmatch '^(bc|tb)1p'
@@ -774,6 +833,10 @@ function RawTXfromSegwitAddress {
             [string]$memo          = ""
           )
 
+    $addressFrom = NormalizeBitcoinAddress $addressFrom
+    $addressTo = NormalizeBitcoinAddress $addressTo
+    if ( $addressChange ) { $addressChange = NormalizeBitcoinAddress $addressChange }
+
     $SHA256 = New-Object Cryptography.SHA256CryptoServiceProvider
 
     if ( $addressTo -cmatch '^script:' ) {
@@ -818,7 +881,7 @@ function RawTXfromSegwitAddress {
 
     $utxo = @( GetUTXO $addressFrom )
 
-    $privateKey_in = ( Base58Check_Decode $wif ).Substring( 2, 64 )
+    $privateKey_in = ( DecodeWIF $wif -Compressed ).PrivateKey
     $publicKey_in  = GetPublicKey $privateKey_in
     $pubkeyHash_in = Hash160 $publicKey_in
     if ( $witnessScript -eq "single" ) {
@@ -860,10 +923,10 @@ function RawTXfromSegwitAddress {
     }
 
     if ( $addressTo -cmatch '^[1mn]' ) {
-        $pubkeyHash_out0   = ( Base58Check_Decode $addressTo ).Substring( 2 )
+        $pubkeyHash_out0   = ( Base58Address_Decode $addressTo ).Substring( 2 )
         $scriptPubKey_out0 = "76a914" + $pubkeyHash_out0 + "88ac"          # OP_DUP OP_HASH160 PUSH(pubkeyHash) OP_EQUALVERIFY OP_CHECKSIG
     } elseif ( $addressTo -cmatch '^[23]' ) { 
-        $scriptHash_out0   = ( Base58Check_Decode $addressTo ).Substring( 2 )
+        $scriptHash_out0   = ( Base58Address_Decode $addressTo ).Substring( 2 )
         $scriptPubKey_out0 = "a914" + $scriptHash_out0 + "87"              # OP_HASH160 PUSH(scriptHash) OP_EQUAL
     } elseif ( $addressTo -cmatch '^(bc1|tb1)' ) {
         $isTaproot = $addressTo -cmatch '^(bc|tb)1p'
@@ -884,10 +947,10 @@ function RawTXfromSegwitAddress {
         }
     }
     if ( $addressChange -cmatch '^[1mn]' ) {
-        $pubkeyHash_out1   = ( Base58Check_Decode $addressChange ).Substring( 2 )
+        $pubkeyHash_out1   = ( Base58Address_Decode $addressChange ).Substring( 2 )
         $scriptPubKey_out1 = "76a914" + $pubkeyHash_out1 + "88ac"
     } elseif ( $addressChange -cmatch '^[23]' ) {
-        $scriptHash_out1   = ( Base58Check_Decode $addressChange ).Substring( 2 )
+        $scriptHash_out1   = ( Base58Address_Decode $addressChange ).Substring( 2 )
         $scriptPubKey_out1 = "a914" + $scriptHash_out1 + "87"
     } elseif ( $addressChange -cmatch '^(bc1|tb1)' ) { 
         $isTaproot = $addressChange -cmatch '^(bc|tb)1p'
@@ -955,6 +1018,10 @@ function RawTXfromTaprootAddress {
             [string]$memo          = ""
           )
 
+    $addressFrom = NormalizeBitcoinAddress $addressFrom
+    $addressTo = NormalizeBitcoinAddress $addressTo
+    if ( $addressChange ) { $addressChange = NormalizeBitcoinAddress $addressChange }
+
     if ( $addressTo -cmatch '^script:' ) {
 # Internal key 0x50929b74c1a04954b78b4b6035e97a5e078a5a0f28ec96d547bfee9ace803ac0 ( = SHA256( G ) ) is used as an unspendable key path.
         $internalKey = "50929b74c1a04954b78b4b6035e97a5e078a5a0f28ec96d547bfee9ace803ac0"
@@ -1003,6 +1070,12 @@ function RawTXfromTaprootAddress {
         $addressChange = $addressFrom
     }
 
+    if ( -not $tapScript ) {
+        $privateKey_in = ( DecodeWIF $wif -Compressed ).PrivateKey
+        $publicKey_in  = GetPublicKey $privateKey_in
+        AssertTaprootKeySource $addressFrom $publicKey_in
+    }
+
     $utxo = @( GetUTXO $addressFrom )
 
     [UInt64]$sum = 0
@@ -1018,10 +1091,10 @@ function RawTXfromTaprootAddress {
     }
 
     if ( $addressTo -cmatch '^[1mn]' ) {
-        $pubkeyHash_out0   = ( Base58Check_Decode $addressTo ).Substring( 2 )
+        $pubkeyHash_out0   = ( Base58Address_Decode $addressTo ).Substring( 2 )
         $scriptPubKey_out0 = "76a914" + $pubkeyHash_out0 + "88ac"          # OP_DUP OP_HASH160 PUSH(pubkeyHash) OP_EQUALVERIFY OP_CHECKSIG
     } elseif ( $addressTo -cmatch '^[23]' ) { 
-        $scriptHash_out0   = ( Base58Check_Decode $addressTo ).Substring( 2 )
+        $scriptHash_out0   = ( Base58Address_Decode $addressTo ).Substring( 2 )
         $scriptPubKey_out0 = "a914" + $scriptHash_out0 + "87"              # OP_HASH160 PUSH(scriptHash) OP_EQUAL
     } elseif ( $addressTo -cmatch '^(bc1|tb1)' ) {
         $isTaproot = $addressTo -cmatch '^(bc|tb)1p'
@@ -1042,10 +1115,10 @@ function RawTXfromTaprootAddress {
         }
     }
     if ( $addressChange -cmatch '^[1mn]' ) {
-        $pubkeyHash_out1   = ( Base58Check_Decode $addressChange ).Substring( 2 )
+        $pubkeyHash_out1   = ( Base58Address_Decode $addressChange ).Substring( 2 )
         $scriptPubKey_out1 = "76a914" + $pubkeyHash_out1 + "88ac"
     } elseif ( $addressChange -cmatch '^[23]' ) {
-        $scriptHash_out1   = ( Base58Check_Decode $addressChange ).Substring( 2 )
+        $scriptHash_out1   = ( Base58Address_Decode $addressChange ).Substring( 2 )
         $scriptPubKey_out1 = "a914" + $scriptHash_out1 + "87"
     } elseif ( $addressChange -cmatch '^(bc1|tb1)' ) { 
         $isTaproot = $addressChange -cmatch '^(bc|tb)1p'
@@ -1083,7 +1156,7 @@ function RawTXfromTaprootAddress {
     }
 
     if ( $tapScript ) {
-        $privateKey_in = ( Base58Check_Decode $wif ).Substring( 2, 64 )
+        $privateKey_in = ( DecodeWIF $wif -Compressed ).PrivateKey
         if ( $tapScript -eq "single" ) {
             $publicKey_in  = ( GetPublicKey $privateKey_in ).Substring( 2 )
             $tapScript = "20" + $publicKey_in + "ac"                   # PUSH(32-byte pubkey) OP_CHECKSIG
@@ -1142,6 +1215,9 @@ function NulldataTX {
             [string]$witnessScript = "",
             [string]$addressChange = ""
           )
+    $addressFrom = NormalizeBitcoinAddress $addressFrom
+    if ( $addressChange ) { $addressChange = NormalizeBitcoinAddress $addressChange }
+
     $bytes = [Text.Encoding]::UTF8.GetBytes( $text )
     $num   = $bytes.Length
     if ( $num -gt 40 ) { throw "too long text" }
@@ -1170,7 +1246,7 @@ function NulldataTX {
 
     $utxo = @( GetUTXO $addressFrom )
 
-    $privateKey_in = ( Base58Check_Decode $wif ).Substring( 2, 64 )
+    $privateKey_in = ( DecodeWIF $wif -Compressed ).PrivateKey
     $publicKey_in  = GetPublicKey $privateKey_in
     $pubkeyHash_in = Hash160 $publicKey_in
     $SHA256 = New-Object Cryptography.SHA256CryptoServiceProvider
@@ -1211,10 +1287,10 @@ function NulldataTX {
     )
     if ( $sum -gt $fee ) {
         if ( $addressChange -cmatch '^[1mn]' ) {
-            $pubkeyHash_out1   = ( Base58Check_Decode $addressChange ).Substring( 2 )
+            $pubkeyHash_out1   = ( Base58Address_Decode $addressChange ).Substring( 2 )
             $scriptPubKey_out1 = "76a914" + $pubkeyHash_out1 + "88ac"      # OP_DUP OP_HASH160 PUSH(pubkeyHash) OP_EQUALVERIFY OP_CHECKSIG
         } elseif ( $addressChange -cmatch '^[23]' ) {
-            $scriptHash_out1   = ( Base58Check_Decode $addressChange ).Substring( 2 )
+            $scriptHash_out1   = ( Base58Address_Decode $addressChange ).Substring( 2 )
             $scriptPubKey_out1 = "a914" + $scriptHash_out1 + "87"          # OP_HASH160 PUSH(scriptHash) OP_EQUAL
         } elseif ( $addressChange -cmatch '^(bc1|tb1)' ) { 
             $isTaproot = $addressChange -cmatch '^(bc|tb)1p'
@@ -1313,6 +1389,8 @@ function SignMessage {
            [switch]$_taprootExtension = $false,
            [switch]$verbose = $false
     )
+    $address = NormalizeBitcoinAddress $address
+
     $isEncodedWIF = $false
     if ( $wif -cmatch '^[0-9a-fA-F]{64}$' ) {
         AssertPrivateKey $wif
@@ -1454,6 +1532,8 @@ function VerifyMessage {
            [switch]$electrum = $false,
            [switch]$_taprootExtension = $false
     )
+    $address = NormalizeBitcoinAddress $address
+
     $sig_h  = i2h ( [Convert]::FromBase64String( $sig ) )
     if ( $sig_h.Length -ne 130 ) {
         throw "invalid signature length"
