@@ -54,7 +54,7 @@ function Push ( [string]$str ) {
 function GetDustThreshold ( [string]$scriptPubKey ) {
     switch -Regex ( $scriptPubKey ) {
         '^0014'        { return [UInt64]294 } # P2WPKH
-        '^(0020|5120)' { return [UInt64]330 } # P2WSH, P2TR
+        '^(0020|5[1-9a-f]|60)' { return [UInt64]330 } # P2WSH, witness v1..16
         '^a914'        { return [UInt64]540 } # P2SH
         '^76a914'      { return [UInt64]546 } # P2PKH
         default        { return [UInt64]546 }
@@ -68,6 +68,18 @@ function AssertPaymentAmount ( [UInt64]$amount, [UInt64]$fee, [string]$scriptPub
     }
     if ( $amount -lt ( GetDustThreshold $scriptPubKey ) ) {
         throw "destination amount is below the dust threshold"
+    }
+}
+
+function AssertTransactionOutputs ( $txouts ) {
+    [bigint]$total = 0
+    [bigint]$maxMoney = 2100000000000000
+    foreach ( $txout in $txouts ) {
+        $bytes = h2i $txout.value
+        $total += [bigint]::new( $bytes + [byte]0 )
+        if ( $total -gt $maxMoney ) {
+            throw "transaction output total exceeds MAX_MONEY"
+        }
     }
 }
 
@@ -100,8 +112,8 @@ class TXin {
         $this.Init( $txid, $index, $scriptSig, $sequence )
     }
     hidden [void] Init ( [string]$txid, [UInt32]$index, [string]$scriptSig, [UInt32]$sequence ) {
-        if ( $txid.Length -ne 64 ) { throw "invlid txid" }
-        if ( $scriptSig.Length % 2 -ne 0 ) { throw "invalid scriptSig" }
+        if ( $txid -cnotmatch '^[0-9a-fA-F]{64}$' ) { throw "invalid txid" }
+        if ( $scriptSig -cnotmatch '^(?:[0-9a-fA-F]{2})*$' ) { throw "invalid scriptSig" }
         $sb = [Text.StringBuilder]::new( $txid.Length )
         for ( $i = ($txid.Length - 1); $i -ge 0; $i-=2 ) {
             [void]$sb.Append( $txid.Chars($i-1) )
@@ -120,7 +132,8 @@ class TXout {
     [string]$SPLen
     [string]$scriptPubKey
     TXout ( [UInt64]$value, [string]$scriptPubKey ) {
-        if ( $scriptPubKey.Length % 2 -ne 0 ) { throw "invalid scriptPubkey" }
+        if ( $value -gt [UInt64]2100000000000000 ) { throw "transaction output exceeds MAX_MONEY" }
+        if ( $scriptPubKey -cnotmatch '^(?:[0-9a-fA-F]{2})*$' ) { throw "invalid scriptPubKey" }
         $this.value        = UInt64toStr $value
         $this.SPLen        = VarInttoStr ( $scriptPubKey.Length / 2 )
         $this.scriptPubKey = $scriptPubKey
@@ -136,7 +149,14 @@ class Witness {
     }
     Witness ( [string[]]$witness_items ) {
         $this.count         = VarInttoStr $witness_items.Length
-        $this.witness_items = $witness_items
+        $this.witness_items = @(
+            foreach ( $item in $witness_items ) {
+                if ( $item -notmatch '^(?:[0-9a-f]{2})*$' ) {
+                    throw "invalid witness item"
+                }
+                ConvertTo-CompactSizeHex $item.ToLowerInvariant()
+            }
+        )
     }
 }
 
@@ -154,6 +174,16 @@ class TX {
         $this.Init( $version, $txins, $txouts, $lock_time )
     }
     hidden [void] Init ( [UInt32]$version, [TXin[]]$txins, [TXout[]]$txouts, [Uint32]$lock_time ) {
+        if ( $null -eq $txins -or $txins.Length -eq 0 ) {
+            throw "transaction must contain at least one input"
+        }
+        if ( $null -eq $txouts -or $txouts.Length -eq 0 ) {
+            throw "transaction must contain at least one output"
+        }
+        if ( $txins -contains $null -or $txouts -contains $null ) {
+            throw "transaction inputs and outputs must not contain null"
+        }
+        AssertTransactionOutputs $txouts
         $this.version     = UInt32toStr $version
         $this.txin_count  = VarInttoStr $txins.Length
         $this.txins       = $txins
@@ -174,7 +204,11 @@ class TXS {
     [Witness[]]$witnesses
     [string]$lock_time
     TXS ( [TXin[]]$txins, [TXout[]]$txouts ) {
-        $this.Init( 2,        0,       1,     $txins, $txouts, @( [Witness]::new() ), 0 )
+        $emptyWitnesses = [Witness[]]::new( $txins.Length )
+        for ( $i = 0; $i -lt $txins.Length; $i++ ) {
+            $emptyWitnesses[$i] = [Witness]::new()
+        }
+        $this.Init( 2,        0,       1,     $txins, $txouts, $emptyWitnesses, 0 )
     }
     TXS ( [TXin[]]$txins, [TXout[]]$txouts, [Witness[]]$witnesses ) {
         $this.Init( 2,        0,       1,     $txins, $txouts, $witnesses, 0 )
@@ -190,6 +224,25 @@ class TXS {
                         [Witness[]]$witnesses,
                         [UInt32]$lock_time
                       ) {
+        if ( $marker -ne 0 -or $flag -ne 1 ) {
+            throw "invalid witness marker or flag"
+        }
+        if ( $null -eq $txins -or $txins.Length -eq 0 ) {
+            throw "transaction must contain at least one input"
+        }
+        if ( $null -eq $txouts -or $txouts.Length -eq 0 ) {
+            throw "transaction must contain at least one output"
+        }
+        if ( $null -eq $witnesses ) {
+            throw "witnesses must not be null"
+        }
+        if ( $txins -contains $null -or $txouts -contains $null -or $witnesses -contains $null ) {
+            throw "transaction inputs, outputs, and witnesses must not contain null"
+        }
+        if ( $witnesses.Length -ne $txins.Length ) {
+            throw "witness count must match input count"
+        }
+        AssertTransactionOutputs $txouts
         $this.version     = UInt32toStr $version
         $this.marker      = $marker.ToString( "x2" )
         $this.flag        = $flag.ToString( "x2" )
@@ -423,6 +476,7 @@ Update-TypeData -TypeName "TX"      -MemberType "ScriptMethod" -MemberName "ToSt
     return $this.PSObject.Properties.Value -join ""
 }
 Update-TypeData -TypeName "TXS"       -MemberType "ScriptMethod" -MemberName "ToString" -Force -Value {
+    if ( -not ( $this.witnesses | ? { $_.count -ne "00" } ) ) { throw "cannot serialize a SegWit transaction with all witness stacks empty; use TX for legacy serialization" }
     return $this.PSObject.Properties.Value -join ""
 }
 Update-TypeData -TypeName "SegwitMsg" -MemberType "ScriptMethod" -MemberName "ToString" -Force -Value {
@@ -715,6 +769,24 @@ function AssertTaprootKeySource {
     }
 }
 
+function ConvertAddressToScriptPubKey {
+    param( [Parameter(ValueFromPipeline=$True)][string]$address )
+    $address = AssertBitcoinAddress $address
+    if ( $address -cmatch '^[123mn]' ) {
+        $decoded = Base58Address_Decode $address
+        $payload = $decoded.Substring( 2 )
+        if ( $decoded.StartsWith( "00" ) -or $decoded.StartsWith( "6f" ) ) {
+            return "76a914" + $payload + "88ac"
+        }
+        return "a914" + $payload + "87"
+    }
+    $decoded = Bech32_Decode $address -WithVersion
+    if ( $decoded.Hrp -notin @( "bc", "tb" ) ) { throw "invalid bitcoin address" }
+    $opcode = if ( $decoded.Version -eq 0 ) { "00" } else { ( 0x50 + $decoded.Version ).ToString( "x2" ) }
+    $pushLength = ( $decoded.Program.Length / 2 ).ToString( "x2" )
+    return $opcode + $pushLength + $decoded.Program
+}
+
 #===================================================================================================================================
 function RawTXfromLegacyAddress {
     param ( [string]$wif, 
@@ -725,7 +797,8 @@ function RawTXfromLegacyAddress {
             [string]$redeemScript  = "",
             [string]$addressChange = "",
             [string]$memo          = "",
-            [switch]$AllowDustToFee
+            [switch]$AllowDustToFee,
+            [UInt32]$lockTime      = 0
           )
 
     $addressFrom = NormalizeBitcoinAddress $addressFrom
@@ -800,54 +873,8 @@ function RawTXfromLegacyAddress {
         throw "insufficient balance"
     }
 
-    if ( $addressTo -cmatch '^[1mn]' ) {
-        $pubkeyHash_out0   = ( Base58Address_Decode $addressTo ).Substring( 2 )
-        $scriptPubKey_out0 = "76a914" + $pubkeyHash_out0 + "88ac"          # OP_DUP OP_HASH160 PUSH(pubkeyHash) OP_EQUALVERIFY OP_CHECKSIG
-    } elseif ( $addressTo -cmatch '^[23]' ) { 
-        $scriptHash_out0   = ( Base58Address_Decode $addressTo ).Substring( 2 )
-        $scriptPubKey_out0 = "a914" + $scriptHash_out0 + "87"              # OP_HASH160 PUSH(scriptHash) OP_EQUAL
-    } elseif ( $addressTo -cmatch '^(bc1|tb1)' ) {
-        $isTaproot = $addressTo -cmatch '^(bc|tb)1p'
-        $hash_out = Bech32_Decode $addressTo $isTaproot
-        if ( $hash_out.Length -eq 40 ) {
-            $pubkeyHash_out0 = $hash_out
-            $scriptPubKey_out0 = "0014" + $pubkeyHash_out0                 # OP_0 PUSH(pubkeyHash)
-        } elseif ( $hash_out.Length -eq 64 ) {
-            if ( $isTaproot ) {
-                $outputKey_out0    = $hash_out
-                $scriptPubKey_out0 = "5120" + $outputKey_out0              # OP_1 PUSH(outputKey) for taproot        ( segwit ver 1 )
-            } else {
-                $scriptHash_out0   = $hash_out
-                $scriptPubKey_out0 = "0020" + $scriptHash_out0             # OP_0 PUSH(scriptHash) for native segwit ( segwit ver 0 )
-            }
-        } else {
-            throw "invalid hash length (addressTo)"
-        }
-    }
-    if ( $addressChange -cmatch '^[1mn]' ) {
-        $pubkeyHash_out1   = ( Base58Address_Decode $addressChange ).Substring( 2 )
-        $scriptPubKey_out1 = "76a914" + $pubkeyHash_out1 + "88ac"
-    } elseif ( $addressChange -cmatch '^[23]' ) {
-        $scriptHash_out1   = ( Base58Address_Decode $addressChange ).Substring( 2 )
-        $scriptPubKey_out1 = "a914" + $scriptHash_out1 + "87"
-    } elseif ( $addressChange -cmatch '^(bc1|tb1)' ) { 
-        $isTaproot = $addressChange -cmatch '^(bc|tb)1p'
-        $hash_out = Bech32_Decode $addressChange $isTaproot
-        if ( $hash_out.Length -eq 40 ) {
-            $pubkeyHash_out1 = $hash_out
-            $scriptPubKey_out1 = "0014" + $pubkeyHash_out1
-        } elseif ( $hash_out.Length -eq 64 ) {
-            if ( $isTaproot ) {
-                $outputKey_out1    = $hash_out
-                $scriptPubKey_out1 = "5120" + $outputKey_out1
-            } else {
-                $scriptHash_out1   = $hash_out
-                $scriptPubKey_out1 = "0020" + $scriptHash_out1
-            }
-        } else {
-            throw "invalid hash length (addressChange)"
-        }
-    }
+    $scriptPubKey_out0 = ConvertAddressToScriptPubKey $addressTo
+    $scriptPubKey_out1 = ConvertAddressToScriptPubKey $addressChange
 
     AssertPaymentAmount $amount $fee $scriptPubKey_out0
     $txout0 = [TXout]::new( $amount, $scriptPubKey_out0 )
@@ -878,12 +905,12 @@ function RawTXfromLegacyAddress {
             $txins_t      = [TXin[]]$txins_e.Clone()
             if ( $addressFrom -cmatch '^[1mn]' ) {
                 $txins_t[$i]  = [TXin]::new( $utxo[$i].txid, $utxo[$i].vout, $scriptPubKey_in )
-                $serializedTX = [TX]::new( $txins_t, $txouts ).ToString() + ( UInt32toStr $sighashType )
+                $serializedTX = [TX]::new( 2, $txins_t, $txouts, $lockTime ).ToString() + ( UInt32toStr $sighashType )
                 $signature    = EcdsaSig $privateKey_in $serializedTX $sighashType
                 $scriptSig = ( Push $signature ) + ( Push $publicKey_in )
             } elseif ( $addressFrom -cmatch '^[23]' ) {
                 $txins_t[$i]  = [TXin]::new( $utxo[$i].txid, $utxo[$i].vout, $redeemScript )
-                $serializedTX = [TX]::new( $txins_t, $txouts ).ToString() + ( UInt32toStr $sighashType )
+                $serializedTX = [TX]::new( 2, $txins_t, $txouts, $lockTime ).ToString() + ( UInt32toStr $sighashType )
                 $signature    = EcdsaSig $privateKey_in $serializedTX $sighashType
                 $scriptSig = ( Push $signature ) + ( Push $redeemScript )
             }
@@ -891,7 +918,7 @@ function RawTXfromLegacyAddress {
         }
     )
 
-    $tx = [TX]::new( $txins, $txouts ).ToString()
+    $tx = [TX]::new( 2, $txins, $txouts, $lockTime ).ToString()
     return $tx
 }
 
@@ -905,7 +932,8 @@ function RawTXfromSegwitAddress {
             [string]$witnessScript = "",
             [string]$addressChange = "",
             [string]$memo          = "",
-            [switch]$AllowDustToFee
+            [switch]$AllowDustToFee,
+            [UInt32]$lockTime      = 0
           )
 
     $addressFrom = NormalizeBitcoinAddress $addressFrom
@@ -999,54 +1027,8 @@ function RawTXfromSegwitAddress {
         throw "Insufficient balance"
     }
 
-    if ( $addressTo -cmatch '^[1mn]' ) {
-        $pubkeyHash_out0   = ( Base58Address_Decode $addressTo ).Substring( 2 )
-        $scriptPubKey_out0 = "76a914" + $pubkeyHash_out0 + "88ac"          # OP_DUP OP_HASH160 PUSH(pubkeyHash) OP_EQUALVERIFY OP_CHECKSIG
-    } elseif ( $addressTo -cmatch '^[23]' ) { 
-        $scriptHash_out0   = ( Base58Address_Decode $addressTo ).Substring( 2 )
-        $scriptPubKey_out0 = "a914" + $scriptHash_out0 + "87"              # OP_HASH160 PUSH(scriptHash) OP_EQUAL
-    } elseif ( $addressTo -cmatch '^(bc1|tb1)' ) {
-        $isTaproot = $addressTo -cmatch '^(bc|tb)1p'
-        $hash_out = Bech32_Decode $addressTo $isTaproot
-        if ( $hash_out.Length -eq 40 ) {
-            $pubkeyHash_out0 = $hash_out
-            $scriptPubKey_out0 = "0014" + $pubkeyHash_out0                 # OP_0 PUSH(pubkeyHash)
-        } elseif ( $hash_out.Length -eq 64 ) {
-            if ( $isTaproot ) {
-                $outputKey_out0    = $hash_out
-                $scriptPubKey_out0 = "5120" + $outputKey_out0              # OP_1 PUSH(outputKey) for taproot        ( segwit ver 1 )
-            } else {
-                $scriptHash_out0   = $hash_out
-                $scriptPubKey_out0 = "0020" + $scriptHash_out0             # OP_0 PUSH(scriptHash) for native segwit ( segwit ver 0 )
-            }
-        } else {
-            throw "invalid hash length (addressTo)"
-        }
-    }
-    if ( $addressChange -cmatch '^[1mn]' ) {
-        $pubkeyHash_out1   = ( Base58Address_Decode $addressChange ).Substring( 2 )
-        $scriptPubKey_out1 = "76a914" + $pubkeyHash_out1 + "88ac"
-    } elseif ( $addressChange -cmatch '^[23]' ) {
-        $scriptHash_out1   = ( Base58Address_Decode $addressChange ).Substring( 2 )
-        $scriptPubKey_out1 = "a914" + $scriptHash_out1 + "87"
-    } elseif ( $addressChange -cmatch '^(bc1|tb1)' ) { 
-        $isTaproot = $addressChange -cmatch '^(bc|tb)1p'
-        $hash_out = Bech32_Decode $addressChange $isTaproot
-        if ( $hash_out.Length -eq 40 ) {
-            $pubkeyHash_out1 = $hash_out
-            $scriptPubKey_out1 = "0014" + $pubkeyHash_out1
-        } elseif ( $hash_out.Length -eq 64 ) {
-            if ( $isTaproot ) {
-                $outputKey_out1    = $hash_out
-                $scriptPubkey_out1 = "5120" + $outputKey_out1
-            } else {
-                $scriptHash_out1   = $hash_out
-                $scriptPubKey_out1 = "0020" + $scriptHash_out1
-            }
-        } else {
-            throw "invalid hash length (addressChange)"
-        }
-    }
+    $scriptPubKey_out0 = ConvertAddressToScriptPubKey $addressTo
+    $scriptPubKey_out1 = ConvertAddressToScriptPubKey $addressChange
 
     AssertPaymentAmount $amount $fee $scriptPubKey_out0
     $txout0 = [TXout]::new( $amount, $scriptPubKey_out0 )
@@ -1072,20 +1054,24 @@ function RawTXfromSegwitAddress {
 
     $sighashType = 0x01       # SIGHASH_ALL
 
+    $emptyWitnesses = [Witness[]]::new( $txins.Length )
+    for ( $i=0; $i -lt $txins.Length; $i++ ) {
+        $emptyWitnesses[$i] = [Witness]::new()
+    }
+    $tx_t = [TXS]::new( 2, 0, 1, $txins, $txouts, $emptyWitnesses, $lockTime )
     $witnesses = @(
-        $tx_t = [TXS]::new( $txins, $txouts )
         for ( $i=0; $i -lt $txins.Length; $i++ ) {
             $serializedTX = [SegwitMsg]::new( $tx_t, $i, $scriptCode, $utxo[$i].value, $sighashType ).ToString()
             $signature    = EcdsaSig $privateKey_in $serializedTX $sighashType
             if ( $witnessScript ) {
-                [Witness]::new( @( ( ConvertTo-CompactSizeHex $signature ), ( ConvertTo-CompactSizeHex $witnessScript ) ) )
+                [Witness]::new( @( $signature, $witnessScript ) )
             } else {
-                [Witness]::new( @( ( ConvertTo-CompactSizeHex $signature ), ( ConvertTo-CompactSizeHex $publicKey_in  ) ) )
+                [Witness]::new( @( $signature, $publicKey_in ) )
             }
         }
     )
 
-    $tx = [TXS]::new( $txins, $txouts, $witnesses ).ToString()
+    $tx = [TXS]::new( 2, 0, 1, $txins, $txouts, $witnesses, $lockTime ).ToString()
     return $tx
 }
 
@@ -1099,7 +1085,8 @@ function RawTXfromTaprootAddress {
             [string]$tapScript = "",
             [string]$addressChange = "",
             [string]$memo          = "",
-            [switch]$AllowDustToFee
+            [switch]$AllowDustToFee,
+            [UInt32]$lockTime      = 0
           )
 
     $addressFrom = NormalizeBitcoinAddress $addressFrom
@@ -1174,54 +1161,8 @@ function RawTXfromTaprootAddress {
         throw "Insufficient balance"
     }
 
-    if ( $addressTo -cmatch '^[1mn]' ) {
-        $pubkeyHash_out0   = ( Base58Address_Decode $addressTo ).Substring( 2 )
-        $scriptPubKey_out0 = "76a914" + $pubkeyHash_out0 + "88ac"          # OP_DUP OP_HASH160 PUSH(pubkeyHash) OP_EQUALVERIFY OP_CHECKSIG
-    } elseif ( $addressTo -cmatch '^[23]' ) { 
-        $scriptHash_out0   = ( Base58Address_Decode $addressTo ).Substring( 2 )
-        $scriptPubKey_out0 = "a914" + $scriptHash_out0 + "87"              # OP_HASH160 PUSH(scriptHash) OP_EQUAL
-    } elseif ( $addressTo -cmatch '^(bc1|tb1)' ) {
-        $isTaproot = $addressTo -cmatch '^(bc|tb)1p'
-        $hash_out = Bech32_Decode $addressTo $isTaproot
-        if ( $hash_out.Length -eq 40 ) {
-            $pubkeyHash_out0 = $hash_out
-            $scriptPubKey_out0 = "0014" + $pubkeyHash_out0                 # OP_0 PUSH(pubkeyHash)
-        } elseif ( $hash_out.Length -eq 64 ) {
-            if ( $isTaproot ) {
-                $outputKey_out0    = $hash_out
-                $scriptPubKey_out0 = "5120" + $outputKey_out0              # OP_1 PUSH(outputKey) for taproot        ( segwit ver 1 )
-            } else {
-                $scriptHash_out0   = $hash_out
-                $scriptPubKey_out0 = "0020" + $scriptHash_out0             # OP_0 PUSH(scriptHash) for native segwit ( segwit ver 0 )
-            }
-        } else {
-            throw "invalid hash length (addressTo)"
-        }
-    }
-    if ( $addressChange -cmatch '^[1mn]' ) {
-        $pubkeyHash_out1   = ( Base58Address_Decode $addressChange ).Substring( 2 )
-        $scriptPubKey_out1 = "76a914" + $pubkeyHash_out1 + "88ac"
-    } elseif ( $addressChange -cmatch '^[23]' ) {
-        $scriptHash_out1   = ( Base58Address_Decode $addressChange ).Substring( 2 )
-        $scriptPubKey_out1 = "a914" + $scriptHash_out1 + "87"
-    } elseif ( $addressChange -cmatch '^(bc1|tb1)' ) { 
-        $isTaproot = $addressChange -cmatch '^(bc|tb)1p'
-        $hash_out = Bech32_Decode $addressChange $isTaproot
-        if ( $hash_out.Length -eq 40 ) {
-            $pubkeyHash_out1 = $hash_out
-            $scriptPubKey_out1 = "0014" + $pubkeyHash_out1
-        } elseif ( $hash_out.Length -eq 64 ) {
-            if ( $isTaproot ) {
-                $outputKey_out1    = $hash_out
-                $scriptPubKey_out1 = "5120" + $outputKey_out1
-            } else {
-                $scriptHash_out1   = $hash_out
-                $scriptPubKey_out1 = "0020" + $scriptHash_out1
-            }
-        } else {
-            throw "invalid hash length (addressChange)"
-        }
-    }
+    $scriptPubKey_out0 = ConvertAddressToScriptPubKey $addressTo
+    $scriptPubKey_out1 = ConvertAddressToScriptPubKey $addressChange
 
     AssertPaymentAmount $amount $fee $scriptPubKey_out0
     $txout0 = [TXout]::new( $amount, $scriptPubKey_out0 )
@@ -1274,8 +1215,12 @@ function RawTXfromTaprootAddress {
 
     $sighashType = 0x00       # SIGHASH_DEFAULT
 
+    $emptyWitnesses = [Witness[]]::new( $txins.Length )
+    for ( $i=0; $i -lt $txins.Length; $i++ ) {
+        $emptyWitnesses[$i] = [Witness]::new()
+    }
+    $tx_t = [TXS]::new( 2, 0, 1, $txins, $txouts, $emptyWitnesses, $lockTime )
     $witnesses = @(
-        $tx_t = [TXS]::new( $txins, $txouts )
         $selectedUtxo = $utxo[0..($txins.Length - 1)]
         [string[]]$scripts = $selectedUtxo | % { $_.script }
         [UInt64[]]$values  = $selectedUtxo | % { $_.value  }
@@ -1283,16 +1228,16 @@ function RawTXfromTaprootAddress {
             if ( $tapScript ) {
                 $serializedTX = "00" + [TaprootMsg]::new( $tx_t, $i, $scripts, $values, $sighashType, 1, "", $tapleaf_hash ).ToString()
                 $signature    = SchnorrSig $privateKey_in $serializedTX $sighashType
-                [Witness]::new( @( ( ConvertTo-CompactSizeHex $signature ), ( ConvertTo-CompactSizeHex $tapScript ), ( ConvertTo-CompactSizeHex $controlBlock ) ) )
+                [Witness]::new( @( $signature, $tapScript, $controlBlock ) )
             } else {
                 $serializedTX = "00" + [TaprootMsg]::new( $tx_t, $i, $scripts, $values, $sighashType ).ToString()
                 $signature    = SchnorrSig $privateKey_in $serializedTX $sighashType
-                [Witness]::new( @( ( ConvertTo-CompactSizeHex $signature ) ) )
+                [Witness]::new( @( $signature ) )
             }
         }
     )
 
-    $tx = [TXS]::new( $txins, $txouts, $witnesses ).ToString()
+    $tx = [TXS]::new( 2, 0, 1, $txins, $txouts, $witnesses, $lockTime ).ToString()
     return $tx
 }
 
@@ -1386,30 +1331,7 @@ function NulldataTX {
     [UInt64]$change = if ( $sum -gt $fee ) { $sum - $fee } else { 0 }
     $createChange = $false
     if ( $change -gt 0 ) {
-        if ( $addressChange -cmatch '^[1mn]' ) {
-            $pubkeyHash_out1   = ( Base58Address_Decode $addressChange ).Substring( 2 )
-            $scriptPubKey_out1 = "76a914" + $pubkeyHash_out1 + "88ac"      # OP_DUP OP_HASH160 PUSH(pubkeyHash) OP_EQUALVERIFY OP_CHECKSIG
-        } elseif ( $addressChange -cmatch '^[23]' ) {
-            $scriptHash_out1   = ( Base58Address_Decode $addressChange ).Substring( 2 )
-            $scriptPubKey_out1 = "a914" + $scriptHash_out1 + "87"          # OP_HASH160 PUSH(scriptHash) OP_EQUAL
-        } elseif ( $addressChange -cmatch '^(bc1|tb1)' ) { 
-            $isTaproot = $addressChange -cmatch '^(bc|tb)1p'
-            $hash_out = Bech32_Decode $addressChange $isTaproot
-            if ( $hash_out.Length -eq 40 ) {
-                $pubkeyHash_out1 = $hash_out
-                $scriptPubKey_out1 = "0014" + $pubkeyHash_out1             # OP_0 PUSH(pubkeyHash)
-            } elseif ( $hash_out.Length -eq 64 ) {
-                if ( $isTaproot ) {
-                    $outputKey_out1    = $hash_out
-                    $scriptPubKey_out1 = "5120" + $outputKey_out1          # OP_1 PUSH(outputKey) for taproot        ( segwit ver 1 )
-                } else {
-                    $scriptHash_out1   = $hash_out
-                    $scriptPubKey_out1 = "0020" + $scriptHash_out1         # OP_0 PUSH(scriptHash) for native segwit ( segwit ver 0 )
-                }
-            } else {
-                throw "invalid hash length (addressChange)"
-            }
-        }
+        $scriptPubKey_out1 = ConvertAddressToScriptPubKey $addressChange
         [UInt64]$dustThreshold = GetDustThreshold $scriptPubKey_out1
         if ( $change -lt $dustThreshold -and -not $AllowDustToFee ) {
             throw "change ($change sat) is below the dust threshold ($dustThreshold sat); use -AllowDustToFee to add it to the fee"
@@ -1428,20 +1350,24 @@ function NulldataTX {
 
     $sighashType = 0x01       # SIGHASH_ALL
 
+    $emptyWitnesses = [Witness[]]::new( $txins.Length )
+    for ( $i=0; $i -lt $txins.Length; $i++ ) {
+        $emptyWitnesses[$i] = [Witness]::new()
+    }
+    $tx_t = [TXS]::new( 2, 0, 1, $txins, $txouts, $emptyWitnesses, $lockTime )
     $witnesses = @(
-        $tx_t = [TXS]::new( $txins, $txouts )
         for ( $i=0; $i -lt $txins.Length; $i++ ) {
             $serializedTX = [SegwitMsg]::new( $tx_t, $i, $scriptCode, $utxo[$i].value, $sighashType ).ToString()
             $signature    = EcdsaSig $privateKey_in $serializedTX $sighashType
             if ( $witnessScript ) {
-                [Witness]::new( @( ( ConvertTo-CompactSizeHex $signature ), ( ConvertTo-CompactSizeHex $witnessScript ) ) )
+                [Witness]::new( @( $signature, $witnessScript ) )
             } else {
-                [Witness]::new( @( ( ConvertTo-CompactSizeHex $signature ), ( ConvertTo-CompactSizeHex $publicKey_in  ) ) )
+                [Witness]::new( @( $signature, $publicKey_in ) )
             }
         }
     )
 
-    $tx = [TXS]::new( $txins, $txouts, $witnesses ).ToString()
+    $tx = [TXS]::new( 2, 0, 1, $txins, $txouts, $witnesses, $lockTime ).ToString()
     return $tx
 }
 
@@ -1450,11 +1376,22 @@ function CLTVScript {
     param( [string]$datetime, [string]$publicKey, [Alias("t")][switch]$Testnet )
     AssertCompressedPublicKey $publicKey
     $SHA256 = New-Object Cryptography.SHA256CryptoServiceProvider
-    $unixTime = [UInt32]( Get-Date -Date $datetime -UFormat "%s" )
-    if ( $unixTime -lt 500000000 ) {
-        throw "'datetime' must be after or the same as '1985/11/05 9:53:20'JST"
+    if ( $datetime -cnotmatch '(?:Z|[+-]\d{2}:\d{2})$' ) {
+        throw "'datetime' must include an explicit UTC offset"
     }
-    $lockTime = UInt32toStr ( $unixTime )
+    [DateTimeOffset]$dateTimeOffset = [DateTimeOffset]::MinValue
+    if ( -not [DateTimeOffset]::TryParse( $datetime,
+                                         [Globalization.CultureInfo]::InvariantCulture,
+                                         [Globalization.DateTimeStyles]::AllowWhiteSpaces,
+                                         [ref]$dateTimeOffset ) ) {
+        throw "invalid 'datetime'"
+    }
+    [Int64]$unixTime64 = $dateTimeOffset.ToUniversalTime().ToUnixTimeSeconds()
+    if ( $unixTime64 -lt 500000000 -or $unixTime64 -gt [UInt32]::MaxValue ) {
+        throw "'datetime' is outside the valid timestamp locktime range"
+    }
+    [UInt32]$unixTime = $unixTime64
+    $lockTime = ConvertTo-ScriptNumHex $unixTime
 
     $script   = ( Push $lockTime ) + "b175" + ( Push $publicKey ) + "ac"   # PUSH(expiry time) OP_CHECKLOCKTIMEVERIFY OP_DROP PUSH(public key) OP_CHECKSIG
     $scriptHash_P2SH  = Hash160 $script
