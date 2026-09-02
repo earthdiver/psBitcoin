@@ -671,11 +671,24 @@ function Bech32_Decode {
 
 function NormalizeBitcoinAddress {
     param( [string]$address )
-    if ( $address -match '^(bc|tb)1' ) {
+    if ( $address -match '^(bc|tb|sp|tsp|spspend|tspspend|spscan|tspscan)1' ) {
         if ( $address -cmatch '[a-z]' -and $address -cmatch '[A-Z]' ) {
             throw "mixed-case Bech32 address"
         }
         return $address.ToLowerInvariant()
+    }
+    return $address
+}
+
+function AssertBitcoinAddress {
+    param( [Parameter(ValueFromPipeline=$True)][string]$address )
+    $address = NormalizeBitcoinAddress $address
+    if ( $address -cmatch '^[123mn]' ) {
+        [void]( Base58Address_Decode $address )
+    } elseif ( $address -cmatch '^(bc|tb|sp|tsp|spspend|tspspend|spscan|tspscan)1' ) {
+        [void]( Bech32_Decode $address )
+    } else {
+        throw "invalid bitcoin address"
     }
     return $address
 }
@@ -859,15 +872,31 @@ function GetURI { # BIP-0021
 # (qrcode.ps1: https://gist.github.com/mizar/a2d535c1b91a676cc20fd979043857be )
     param ( [Parameter(Mandatory=$true,ValueFromPipeline=$true)]
             [string]$address,
-            [double]$amount,
+            [decimal]$amount,
             [string]$label,
             [string]$message
           )
+    $address = AssertBitcoinAddress $address
+    $parameters = [List[string]]::new()
+    if ( $PSBoundParameters.ContainsKey( "amount" ) ) {
+        if ( $amount -lt 0 -or $amount -gt 21000000 ) {
+            throw "amount must be between 0 and 21000000 BTC"
+        }
+        $satoshis = $amount * [decimal]100000000
+        if ( $satoshis -ne [decimal]::Truncate( $satoshis ) ) {
+            throw "amount must not have more than 8 decimal places"
+        }
+        $amountString = $amount.ToString( "0.########", [Globalization.CultureInfo]::InvariantCulture )
+        $parameters.Add( "amount=" + $amountString )
+    }
+    if ( $label ) {
+        $parameters.Add( "label=" + [Uri]::EscapeDataString( $label ) )
+    }
+    if ( $message ) {
+        $parameters.Add( "message=" + [Uri]::EscapeDataString( $message ) )
+    }
     $uri = "bitcoin:" + $address
-    if ( $amount  ) { $uri += "?amount="  + $amount.ToString() }
-    if ( $label   ) { $uri += "?label="   + $label             }
-    if ( $message ) { $uri += "?message=" + $message           }
-    $uri = [uri]::EscapeUriString( $uri ) -replace '(?<=\?.*)\?','&'
+    if ( $parameters.Count ) { $uri += "?" + ( $parameters -join "&" ) }
     return $uri
 }
 
@@ -1434,12 +1463,15 @@ function descsum_check {
     param( [Parameter(ValueFromPipeline=$True)][string]$s )
     # Verify that the checksum is correct in a descriptor
     $CHECKSUM_CHARSET = "qpzry9x8gf2tvdw0s3jn54khce6mua7l"
+    if ( $s.Length -lt 9 ) { return $false }
     if ( $s[-9] -ne "#" ) { return $false }
     foreach ( $i in -8..-1 ) {
         if ( -not $CHECKSUM_CHARSET.Contains( $s[$i] ) ) { return $false }
     }
     $without = $s.Substring( 0, $s.Length - 9 )
-    $symbols = ( descsum_expand $without ) + ( -8..-1 | % { $CHECKSUM_CHARSET.IndexOf( $s[$_] ) } )
+    $expanded = descsum_expand $without
+    if ( $null -eq $expanded ) { return $false }
+    $symbols = $expanded + ( -8..-1 | % { $CHECKSUM_CHARSET.IndexOf( $s[$_] ) } )
     return ( descsum_polymod  $symbols ) -eq 1
 }
 
@@ -1447,7 +1479,9 @@ function descsum_create {
     param( [Parameter(ValueFromPipeline=$True)][string]$s )
     # Add a checksum to a descriptor without
     $CHECKSUM_CHARSET = "qpzry9x8gf2tvdw0s3jn54khce6mua7l"
-    $symbols  = ( descsum_expand $s ) + @( 0, 0, 0, 0, 0, 0, 0, 0 )
+    $expanded = descsum_expand $s
+    if ( $null -eq $expanded ) { throw "invalid descriptor character" }
+    $symbols  = $expanded + @( 0, 0, 0, 0, 0, 0, 0, 0 )
     $chk = ( descsum_polymod $symbols ) -bxor 1
     $checksum  = ( 0..7 | % { $CHECKSUM_CHARSET[ ( $chk -shr (5 * (7 - $_)) ) -band 31 ] } ) -join ""
     return $s + "#" + $checksum
