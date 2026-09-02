@@ -553,17 +553,20 @@ function GetBalance {
     }
     $uri1 = "https://blockchain.info/balance?active=" + $addr
     $uri2 = "https://api.blockcypher.com/v1/btc/$chain/addrs/$addr/balance"
-    try { return ( Invoke-RestMethod $uri1 )."$addr"                                             } catch {}
-    try { return ( Invoke-RestMethod $uri2 | Select-Object final_balance, n_tx, total_received ) } catch {}
+    try { return ( Invoke-RestMethod -Uri $uri1 -TimeoutSec 15 -ErrorAction Stop )."$addr"                                             } catch {}
+    try { return ( Invoke-RestMethod -Uri $uri2 -TimeoutSec 15 -ErrorAction Stop | Select-Object final_balance, n_tx, total_received ) } catch {}
     throw "failed to get the balance"
 }
 
 function Invoke-RestMethodWithRetry {
-    param ( [string]$Uri, [UInt32]$RetryCount = 5 )
+    param ( [string]$Uri,
+            [UInt32]$RetryCount = 5,
+            [ValidateRange(1,300)][UInt32]$TimeoutSec = 15
+          )
 
     for ( [UInt32]$attempt = 0; $attempt -le $RetryCount; $attempt++ ) {
         try {
-            $value = Invoke-RestMethod -Uri $Uri -ErrorAction Stop
+            $value = Invoke-RestMethod -Uri $Uri -TimeoutSec $TimeoutSec -ErrorAction Stop
             return [pscustomobject]@{ Succeeded = $true; Value = $value }
         } catch {
             if ( $attempt -lt $RetryCount ) { Start-Sleep -Milliseconds 500 }
@@ -572,14 +575,36 @@ function Invoke-RestMethodWithRetry {
     return [pscustomobject]@{ Succeeded = $false; Value = $null }
 }
 
+function ConvertAddressToScriptPubKey {
+    param ( [string]$addr )
+    $addr = AssertBitcoinAddress $addr
+    if ( $addr -cmatch '^[123mn]' ) {
+        $decoded = Base58Address_Decode $addr
+        $prefix  = $decoded.Substring( 0, 2 )
+        $hash    = $decoded.Substring( 2 )
+        if ( $prefix -in @( "00", "6f" ) ) {
+            return "76a914" + $hash + "88ac"
+        } else {
+            return "a914" + $hash + "87"
+        }
+    }
+    $isTaproot = $addr -cmatch '^(bc|tb)1p'
+    $program   = Bech32_Decode $addr $isTaproot
+    if ( $isTaproot ) {
+        return "5120" + $program
+    } elseif ( $program.Length -eq 40 ) {
+        return "0014" + $program
+    } else {
+        return "0020" + $program
+    }
+}
+
 function GetUTXO {
     param ( [Parameter(ValueFromPipeline=$True)][string]$addr )
     $addr = AssertBitcoinAddress $addr
     if ( $addr -cmatch '^([13]|bc1)' ) {
-        $chain   = "main"
         $network = ""
     } elseif ( $addr -cmatch '^([2mn]|tb1)' ) {
-        $chain   = "test3"
         $network = "testnet"
     } else {
         throw "invalid address"
@@ -592,6 +617,7 @@ function GetUTXO {
     $result = Invoke-RestMethodWithRetry $uri
     if ( -not $result.Succeeded ) { throw "failed to get utxo info from mempool.space." }
     $response = @( $result.Value )
+    $scriptPubKey = ConvertAddressToScriptPubKey $addr
     $value = @{ Expression = { $_.value             }; Descending = $true  }
     $btime = @{ Expression = { $_.status.block_time }; Descending = $false }
     $utxo  = @( 
@@ -599,16 +625,7 @@ function GetUTXO {
                   | Sort-Object $value, $btime                      `
                   | Select-Object txid, vout, value, script
     )
-    $utxo | % {
-        $uri2 = "https://api.blockcypher.com/v1/btc/$chain/txs/$($_.txid)"
-        $result = Invoke-RestMethodWithRetry $uri2
-        if ( -not $result.Succeeded ) { throw "failed to get utxo info from blockcypher.com." }
-        $outputs = @( $result.Value.outputs )
-        if ( $_.vout -ge $outputs.Length -or -not $outputs[$_.vout].script ) {
-            throw "invalid utxo info from blockcypher.com."
-        }
-        $_.script = $outputs[$_.vout].script
-    }
+    $utxo | % { $_.script = $scriptPubKey }
     return $utxo
 }
 
@@ -719,8 +736,6 @@ function RawTXfromLegacyAddress {
         $addressChange = $addressFrom
     }
 
-    $utxo = @( GetUTXO $addressFrom )
-
     $privateKey_in = ( DecodeWIF $wif ).PrivateKey
     $publicKey_in  = GetPublicKeyFromWIF $wif
     if ( $addressFrom -cmatch '^[1mn]' ) {
@@ -735,6 +750,10 @@ function RawTXfromLegacyAddress {
             $redeemScript = ( Push $publicKey_in ) + "ac"                  # PUSH(pubkey) OP_CHECKSIG
         }
     }
+    AssertLegacySource $addressFrom $publicKey_in $redeemScript
+
+    $utxo = @( GetUTXO $addressFrom )
+
     [UInt64]$sum = 0
     $txins_e = @(
         for ( $i=0; $i -lt $utxo.Length; $i++ ) {
@@ -894,14 +913,14 @@ function RawTXfromSegwitAddress {
         $addressChange = $addressFrom
     }
 
-    $utxo = @( GetUTXO $addressFrom )
-
     $privateKey_in = ( DecodeWIF $wif -Compressed ).PrivateKey
     $publicKey_in  = GetPublicKey $privateKey_in
     $pubkeyHash_in = Hash160 $publicKey_in
     if ( $witnessScript -eq "single" ) {
         $witnessScript = "21" + $publicKey_in + "ac"                       # PUSH(pubkey) OP_CHECKSIG
     }
+    AssertSegwitSource $addressFrom $publicKey_in $witnessScript
+
     if ( $addressFrom -cmatch '^[23]' ) {
         if ( $witnessScript ) {    # P2SH-P2WSH
             $scriptHash_in = i2h $SHA256.ComputeHash( ( h2i $witnessScript ) )
@@ -924,6 +943,8 @@ function RawTXfromSegwitAddress {
             $scriptCode = "1976a914" + $pubkeyHash_in + "88ac"             # PUSH( OP_DUP OP_HASH160 PUSH(pubkeyHash) OP_EQUALVERIFY OP_CHECKSIG )
         }
     }
+
+    $utxo = @( GetUTXO $addressFrom )
 
     [UInt64]$sum = 0
     $txins = @(
@@ -1259,8 +1280,6 @@ function NulldataTX {
         $addressChange = $addressFrom
     }
 
-    $utxo = @( GetUTXO $addressFrom )
-
     $privateKey_in = ( DecodeWIF $wif -Compressed ).PrivateKey
     $publicKey_in  = GetPublicKey $privateKey_in
     $pubkeyHash_in = Hash160 $publicKey_in
@@ -1268,6 +1287,8 @@ function NulldataTX {
     if ( $witnessScript -eq "single" ) {
         $witnessScript = "21" + $publicKey_in + "ac"                       # PUSH(pubkey) OP_CHECKSIG
     }
+    AssertSegwitSource $addressFrom $publicKey_in $witnessScript
+
     if ( $addressFrom -cmatch '^[23]' ) {
         if ( $witnessScript ) {    # P2SH-P2WSH
             $scriptHash_in = i2h $SHA256.ComputeHash( ( h2i $witnessScript ) )
@@ -1291,15 +1312,21 @@ function NulldataTX {
         }
     }
 
+    $utxo = @( GetUTXO $addressFrom )
+
     # The fee will be adjusted up to a maximum of 5% less than the specified value.
+    $minimumFee = [UInt64][Math]::Ceiling( [decimal]$fee * [decimal]0.95 )
     [UInt64]$sum = 0
     $txins = @(
         for ( $i=0; $i -lt $utxo.Length; $i++ ) {
             [TXin]::new( $utxo[$i].txid, $utxo[$i].vout, $scriptSig )
             $sum += $utxo[$i].value
-            if ( $sum -ge $fee * 0.95 ) { break }
+            if ( $sum -ge $minimumFee ) { break }
         }
     )
+    if ( $txins.Count -eq 0 -or $sum -eq 0 -or $sum -lt $minimumFee ) {
+        throw "insufficient balance"
+    }
     if ( $sum -gt $fee ) {
         if ( $addressChange -cmatch '^[1mn]' ) {
             $pubkeyHash_out1   = ( Base58Address_Decode $addressChange ).Substring( 2 )
