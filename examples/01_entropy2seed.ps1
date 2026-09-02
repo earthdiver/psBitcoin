@@ -3,8 +3,8 @@ $entropy   = @()                                                       # Entropy
 $entropy_h = "00000000000000000000000000000000"                        # Entropy (in hex string),    multiple of  8 greater than or equal to  32
 $entropy_b = ""                                                        # Entropy (in binary string), multiple of 32 greater than or equal to 128
 $entropy_d = ""                                                        # Entropy (in base 6 number, digits ranging from 1 to 6)
-#$entropy_d = "12345612345612345612345612345612345612345612345612345"  # Roll dice  50+α times (128 bits), where α is around 3
-                                                                       # Roll dice 100+α times (256 bits), where α is around 6
+#$entropy_d = "12345612345612345612345612345612345612345612345612345"  # Roll dice  53 times (128 bits)
+                                                                       # Roll dice 103 times (256 bits)
 
 $passphrase = ""
 
@@ -15,23 +15,29 @@ if ( $entropy ) {
 } elseif ( $entropy_b ) {
    $entropy = b2i $entropy_b
 } elseif ( $entropy_d ) {
-   $nbits   = if ( $entropy_d.Length -lt 100 ) { 128 } else { 256 }
+   if ( $entropy_d.Length -eq 53 ) {
+      $nbits = 128
+   } elseif ( $entropy_d.Length -eq 103 ) {
+      $nbits = 256
+   } else {
+      throw "dice entropy must contain exactly 53 or 103 rolls"
+   }
    $nbytes  = $nbits / 8
 #  $SHA256  = New-Object Security.Cryptography.SHA256CryptoServiceProvider                               # for compatibility with coldcard, seedsigner, 
 #  $entropy = $SHA256.ComputeHash( [Text.Encoding]::ASCII.GetBytes( $entropy_d ) )[0..($nbytes-1)]       #  krux, iancoleman, etc.
-   $ndigits = [Math]::Ceiling( [bigint]::Log( [bigint]::Pow( 2, $nbits ) - 1, 6 ) )
-   $n = 0
-   do {
-      if ( $entropy_d.Length -lt $n + $ndigits ) { throw "need more rolls" }
-      $i = [bigint]::Zero
-      foreach ( $c in $entropy_d.Substring( $n, $ndigits ).ToCharArray() ) {
-         $digit = "123456".IndexOf( $c )
-         if ( $digit -lt 0 ) { throw "invalid character '$c'" }
-         $i = $i * 6 + $digit
-      }
-      $n++
-   } while ( $i -ge [bigint]::Pow( 2, $nbits ) )
-   $entropy = h2i ( $i.ToString( "x" ) -replace '^0' ).PadLeft( "0", $nbytes )
+   $i = [bigint]::Zero
+   foreach ( $c in $entropy_d.ToCharArray() ) {
+      $digit = "123456".IndexOf( $c )
+      if ( $digit -lt 0 ) { throw "invalid character '$c'" }
+      $i = $i * 6 + $digit
+   }
+   $range = [bigint]::Pow( 2, $nbits )
+   $space = [bigint]::Pow( 6, $entropy_d.Length )
+   $limit = ( $space / $range ) * $range
+   if ( $i -ge $limit ) { throw "rolls fell in the rejection range; reroll the complete set" }
+   $i %= $range
+   $entropy_h = ( $i.ToString( "x" ) -replace '^0+', '' ).PadLeft( $nbytes * 2, "0" )
+   $entropy = h2i $entropy_h
 } else {
    # Generate entropy from random if not specified (change $nbits to 256 to get 24 words)
    $nbits   = 128
