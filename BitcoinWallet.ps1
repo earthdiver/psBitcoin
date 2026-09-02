@@ -114,16 +114,26 @@ function h2i {
     }
 }
 
+function GetBIP39Wordlist {
+    param( [Alias("j")][Switch]$Japanese )
+    $fileName = if ( $Japanese ) { "wordlist_jp.txt" } else { "wordlist.txt" }
+    $definitionFile = ( Get-Command GetBIP39Wordlist -CommandType Function ).ScriptBlock.File
+    $root = Split-Path -Parent $definitionFile
+    $path = Join-Path $root $fileName
+    if ( -not ( Test-Path -LiteralPath $path ) ) { throw "BIP39 wordlist not found: $path" }
+    $wordlist = @( Get-Content -LiteralPath $path -Encoding UTF8 )
+    if ( $Japanese ) {
+        $wordlist = @( $wordlist | % { $_.Normalize( [Text.NormalizationForm]::FormKD ) } )
+    }
+    return $wordlist
+}
+
 function GetMnemonic {
     param( [Parameter(ValueFromPipeline=$True)][byte[]]$i,
            [Alias("j" )][Switch]$Japanese
     )
     begin {
-        if ( $Japanese ) {
-            $wordlist = Get-Content "wordlist_jp.txt"
-        } else {
-            $wordlist = Get-Content "wordlist.txt"
-        }
+        $wordlist = GetBIP39Wordlist -Japanese:$Japanese
         $buffer = [List[byte]]::new()
     }
     process {
@@ -138,7 +148,8 @@ function GetMnemonic {
         $SHA256   = New-Object Cryptography.SHA256CryptoServiceProvider
         $checksum = ( i2b $SHA256.ComputeHash( $entropy ) ).Substring( 0, $entropy.Count / 4 )
         $full     = $binary + $checksum
-        $mnemonic = ( $full -split '(.{11})' -ne "" | % { [Convert]::ToInt32( $_, 2 ) } | % { $wordlist[$_] } ) -join " "
+        $separator = if ( $Japanese ) { [string][char]0x3000 } else { " " }
+        $mnemonic = ( $full -split '(.{11})' -ne "" | % { [Convert]::ToInt32( $_, 2 ) } | % { $wordlist[$_] } ) -join $separator
         return $mnemonic
     }
 }
@@ -147,11 +158,9 @@ function ValidateMnemonic {
     param( [Parameter(ValueFromPipeline=$True)][string]$mnemonic,
            [Alias("j" )][Switch]$Japanese
     )
-    if ( $Japanese ) {
-        $wordlist = Get-Content "wordlist_jp.txt"
-    } else {
-        $wordlist = Get-Content "wordlist.txt"
-    }
+    if ( -not $mnemonic ) { return $false }
+    $mnemonic = $mnemonic.Normalize( [Text.NormalizationForm]::FormKD ).Trim()
+    $wordlist = GetBIP39Wordlist -Japanese:$Japanese
     $words    = $mnemonic -split '\s+'
     if ( $words.Count -notin @(12, 15, 18, 21, 24) ) { return $false }
     foreach ( $w in $words ) { if ( $w -cnotin $wordlist ) { return $false } }
