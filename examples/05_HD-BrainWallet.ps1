@@ -16,8 +16,7 @@ if ( -not ( ValidateMnemonic $mnemonic ) ) { throw "invalid mnemonic phrase" }
 
 $passphrase = $BWPassphrase             # to enhance security, set the passphrase as a BIP39 passphrase
 
-$HMACSHA512 = New-Object Security.Cryptography.HMACSHA512
-$seed       = PBKDF2 $mnemonic "mnemonic$passphrase" 2048 64 $HMACSHA512
+$seed       = GetBIP39Seed $mnemonic $passphrase
 
 echo "Entropy(Binary) : $entropy_b"
 echo "Entropy(Hex)    : $entropy_h"

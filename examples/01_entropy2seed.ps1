@@ -49,8 +49,7 @@ $mnemonic  = GetMnemonic $entropy
 
 if ( -not ( ValidateMnemonic $mnemonic ) ) { throw "invalid mnemonic phrase" }
 
-$HMACSHA512 = New-Object Security.Cryptography.HMACSHA512
-$seed = PBKDF2 $mnemonic "mnemonic$passphrase" 2048 64 $HMACSHA512    # for Electrum, specify "electrum$passphrase" as the salt
+$seed = GetBIP39Seed $mnemonic $passphrase
 
 echo "Entropy(Binary) : $entropy_b"
 echo "Entropy(Hex)    : $entropy_h"
@@ -64,8 +63,13 @@ $version        = "0488ade4"     # BIP32 private key
 $depth          = "00"
 $pFingerprint   = "00000000"     # The first 4 bytes of the hash value of the parent public key, "00000000" for the root
 $childnumber    = "00000000"
-$HMACSHA512.Key = [Text.Encoding]::UTF8.GetBytes("Bitcoin seed")
-$extendedkey    = i2h $HMACSHA512.ComputeHash( ( h2i $seed ) )
+$BIP32HMAC = New-Object Security.Cryptography.HMACSHA512
+try {
+   $BIP32HMAC.Key = [Text.Encoding]::UTF8.GetBytes("Bitcoin seed")
+   $extendedkey   = i2h $BIP32HMAC.ComputeHash( ( h2i $seed ) )
+} finally {
+   $BIP32HMAC.Dispose()
+}
 $privatekey     = "00" + $extendedkey.Substring( 0, 64 )
 $chaincode      =        $extendedkey.Substring( 64 ,64 )
 $serialized     = $version + $depth + $pFingerprint + $childnumber + $chaincode + $privatekey

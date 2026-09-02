@@ -16,7 +16,7 @@ if ( $network -eq "mainnet" ) {
     $hrp_spend   = "tspspend"
     $hrp_scan    = "tspscan"
 }
-$seed = PBKDF2 $mnemonic "mnemonic$passphrase" 2048 64 (New-Object Security.Cryptography.HMACSHA512)
+$seed = GetBIP39Seed $mnemonic $passphrase
 $w = [HDWallet]::new( $seed )
 $B_Spend_priv = $w.Derive(352,$true).Derive($coinType,$true).Derive(0,$true).Derive(0,$true).Derive(0,$false).PrivateKey
 $B_Spend_pub  = $w.Derive(352,$true).Derive($coinType,$true).Derive(0,$true).Derive(0,$true).Derive(0,$false).PublicKey
