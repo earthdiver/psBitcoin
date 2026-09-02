@@ -443,19 +443,11 @@ function GetPublicKey {
 
 function GetPublicKeyFromWIF {
     param( [Parameter(ValueFromPipeline=$True)][string]$wif )
-    $buffer = Base58Check_Decode $wif
-    if ( $buffer ) {
-        if ( $buffer.Length -ne 66 -and $buffer.Length -ne 68 ) { throw "invalid length" }
-        if ( $buffer.Substring( 0, 2 ) -notin @( "80", "ef" ) ) { throw "invalid prefix" }
-        $suffix = $buffer.Substring( $buffer.Length - 2 )
-        if ( $buffer.Length -eq 68 -and $suffix -ne "01" )      { throw "invalid suffix" }
-        $privateKey = $buffer.Substring( 2, 64 )
-        if ( $buffer.Length -eq 68 ) {
-            $publicKey = GetPublicKey      $privateKey           # compressed
-        } else {
-            $publicKey = GetPublicKey -uc  $privateKey           # uncompressed
-        }
-        return $publicKey
+    $wifInfo = DecodeWIF $wif
+    if ( $wifInfo.Compressed ) {
+        return GetPublicKey     $wifInfo.PrivateKey
+    } else {
+        return GetPublicKey -uc $wifInfo.PrivateKey
     }
 }
 
@@ -480,7 +472,7 @@ function DecompressPublicKey {
 function Hash160 {
     param( [Parameter(ValueFromPipeline=$True)][string]$hex_string )
     if ( $hex_string -eq "" ) { throw "input is empty" }
-    if ( $hex_string.Length % 2 -ne 0 ) { $hex_string = "0" + $hex_string }
+    if ( $hex_string -notmatch '^(?:[0-9a-f]{2})+$' ) { throw "invalid hex string" }
     $SHA256 = New-Object Cryptography.SHA256CryptoServiceProvider
     $RIPEMD160 = New-Object Cryptography.RIPEMD160Managed
     $hash = i2h $RIPEMD160.ComputeHash( $SHA256.ComputeHash( ( h2i $hex_string ) ) )
@@ -490,7 +482,7 @@ function Hash160 {
 function Hash256 {
     param( [Parameter(ValueFromPipeline=$True)][string]$hex_string )
     if ( $hex_string -eq "" ) { throw "input is empty" }
-    if ( $hex_string.Length % 2 -ne 0 ) { $hex_string = "0" + $hex_string }
+    if ( $hex_string -notmatch '^(?:[0-9a-f]{2})+$' ) { throw "invalid hex string" }
     $SHA256 = New-Object Cryptography.SHA256CryptoServiceProvider
     $hash = i2h $SHA256.ComputeHash( $SHA256.ComputeHash( ( h2i $hex_string ) ) )
     return $hash
@@ -529,17 +521,46 @@ function Base58Check_Decode {
     $leading0s  = $base58check -replace '^(1*).*$','$1' -replace '1','00'
     $hex_string = $leading0s + $hex_string
     $expected   = ( Hash256 $hex_string ).Substring( 0, 8 )
-    if ( $checksum -eq $expected ) { return $hex_string }
+    if ( $checksum -ne $expected ) { throw "checksum mismatch" }
+    return $hex_string
+}
+
+function Base58Address_Decode {
+    param( [Parameter(ValueFromPipeline=$True)][string]$address )
+    $decoded = Base58Check_Decode $address
+    if ( $decoded -cnotmatch '^(00|05|6f|c4)[0-9a-f]{40}$' ) {
+        throw "invalid Base58 address payload"
+    }
+    return $decoded
 }
 
 function Bech32_Encode {
     param( [Parameter(ValueFromPipeline=$True)][string]$hex_string, [string]$hrp, [bool]$m, [int]$v )
-    if ( $hex_string.Length -ne 20*2 -and $hex_string.Length -ne 32*2 -and
-         $hex_string.Length -ne (32+32)*2 -and   # silent payment (spspend)
-         $hex_string.Length -ne (32+33)*2 -and   # silent payment (spscan)
-         $hex_string.Length -ne (33+33)*2      ) # silent payment (sp1)
-    {
-        throw "invalid length"
+    if ( $hex_string -notmatch '^(?:[0-9a-f]{2})+$' ) { throw "invalid hex string" }
+    if ( -not $hrp -or $hrp -cne $hrp.ToLowerInvariant() ) { throw "HRP must be lowercase" }
+    $validLengths = @{
+        "bc"       = @( 40, 64 )
+        "tb"       = @( 40, 64 )
+        "sp"       = @( 132 )
+        "tsp"      = @( 132 )
+        "spspend"  = @( 128 )
+        "tspspend" = @( 128 )
+        "spscan"   = @( 130 )
+        "tspscan"  = @( 130 )
+    }
+    if ( -not $validLengths.ContainsKey( $hrp ) -or $hex_string.Length -notin $validLengths[$hrp] ) {
+        if ( $hrp -notin @( "bc", "tb" ) ) { throw "invalid HRP or data length" }
+    }
+    if ( $hrp -in @( "bc", "tb" ) ) {
+        if ( $v -lt 0 -or $v -gt 16 ) { throw "invalid witness version" }
+        if ( $hex_string.Length -lt 4 -or $hex_string.Length -gt 80 ) { throw "invalid witness program length" }
+        if ( $v -eq 0 -and $hex_string.Length -notin @( 40, 64 ) ) { throw "invalid version 0 witness program length" }
+    } elseif ( $v -ne 0 ) {
+        throw "unsupported silent payment version"
+    }
+    $useBech32m = if ( $hrp -in @( "bc", "tb" ) ) { $v -ne 0 } else { $true }
+    if ( $m -ne $useBech32m ) {
+        throw "checksum encoding does not match address version"
     }
     $charset = "qpzry9x8gf2tvdw0s3jn54khce6mua7l"
     $separator = "1"
@@ -562,20 +583,34 @@ function Bech32_Encode {
         $chk = $chk -bxor 0x00000001
     }
     $chk = ( 0..5 | % { ( $chk -shr 5 * (5 - $_) ) -band 0x0000001f } | % { $charset[$_] } ) -join ""
-    return $hrp + $separator + $str + $chk
+    $result = $hrp + $separator + $str + $chk
+    if ( $hrp -in @( "bc", "tb" ) -and $result.Length -gt 90 ) { throw "Bech32 address exceeds 90 characters" }
+    return $result
 }
 
 function Bech32_Decode {
-    param( [Parameter(ValueFromPipeline=$True)][string]$bech32, [bool]$m )
+    param( [Parameter(ValueFromPipeline=$True)][string]$bech32, [bool]$m, [switch]$WithVersion )
     $charset = "qpzry9x8gf2tvdw0s3jn54khce6mua7l"
-    if ( $bech32 -cnotmatch '^((bc|tb)1(q|p)|t?sp1q)' ) { throw "invalid Bech32 address" }
-    if ( $bech32 -cmatch '^tsp1q' ) {
-        $hrp = $bech32.Substring( 0, 3 )
-        $str = $bech32.Substring( 4, $bech32.Length - 10 )
-    } else {
-        $hrp = $bech32.Substring( 0, 2 )
-        $str = $bech32.Substring( 3, $bech32.Length - 9 )
+    if ( $bech32 -cmatch '[a-z]' -and $bech32 -cmatch '[A-Z]' ) {
+        throw "mixed-case Bech32 address"
     }
+    $bech32 = $bech32.ToLowerInvariant()
+    $separator = $bech32.LastIndexOf( "1" )
+    if ( $separator -lt 1 -or $separator + 7 -ge $bech32.Length ) { throw "invalid Bech32 address" }
+    $hrp = $bech32.Substring( 0, $separator )
+    $allowedLengths = @{
+        "sp"       = @( 132 )
+        "tsp"      = @( 132 )
+        "spspend"  = @( 128 )
+        "tspspend" = @( 128 )
+        "spscan"   = @( 130 )
+        "tspscan"  = @( 130 )
+    }
+    if ( $hrp -notin @( "bc", "tb" ) -and -not $allowedLengths.ContainsKey( $hrp ) ) {
+        throw "invalid Bech32 address"
+    }
+    if ( $hrp -in @( "bc", "tb" ) -and $bech32.Length -gt 90 ) { throw "Bech32 address exceeds 90 characters" }
+    $str = $bech32.Substring( $separator + 1, $bech32.Length - $separator - 7 )
     $checksum = $bech32.Substring( $bech32.Length - 6 )
     $b_string = [Text.StringBuilder]::new()
     $data     = @(
@@ -587,9 +622,25 @@ function Bech32_Decode {
         }
     )
     $b_string = $b_string.ToString()
-    $h_string = $b_string.Substring( 5, [Math]::Floor( ($b_string.Length - 5)/ 8 ) * 8 ) | b2i | i2h
-    if ( $h_string.Length -ne 20*2 -and $h_string.Length -ne 32*2 -and $h_string.Length -ne 66*2 ) {
-        throw "invalid length"
+    if ( $b_string.Length -le 5 ) { throw "invalid data length" }
+    $programBits = $b_string.Substring( 5 )
+    $paddingLength = $programBits.Length % 8
+    if ( $paddingLength -gt 4 ) { throw "invalid padding length" }
+    if ( $paddingLength -gt 0 -and
+         $programBits.Substring( $programBits.Length - $paddingLength ) -match '1' ) {
+        throw "non-zero padding"
+    }
+    $programBits = $programBits.Substring( 0, $programBits.Length - $paddingLength )
+    $h_string = $programBits | b2i | i2h
+    $witnessVersion = $data[0]
+    if ( $hrp -in @( "bc", "tb" ) ) {
+        if ( $witnessVersion -lt 0 -or $witnessVersion -gt 16 ) { throw "invalid witness version" }
+        if ( $h_string.Length -lt 4 -or $h_string.Length -gt 80 ) { throw "invalid witness program length" }
+        if ( $witnessVersion -eq 0 -and $h_string.Length -notin @( 40, 64 ) ) {
+            throw "invalid version 0 witness program length"
+        }
+    } elseif ( $witnessVersion -ne 0 -or $h_string.Length -notin $allowedLengths[$hrp] ) {
+        throw "invalid silent payment data"
     }
     $hrp_expanded =           $hrp.ToCharArray() | % { [byte][char]$_ -shr 5 }
     $hrp_expanded += @( 0 ) + $hrp.ToCharArray() | % { [byte][char]$_ -band 0x1f }
@@ -601,14 +652,32 @@ function Bech32_Decode {
         $chk = ( ( $chk -band 0x01ffffff ) -shl 5 ) -bxor $_
         0..4 | % { $chk = $chk -bxor ( $gen[$_] * (( $b -shr $_ ) -band 0x00000001 ) ) }
     }
-    if ( $m ) {
+    $useBech32m = if ( $hrp -in @( "bc", "tb" ) ) { $data[0] -ne 0 } else { $true }
+    if ( $PSBoundParameters.ContainsKey( "m" ) -and $m -ne $useBech32m ) {
+        throw "checksum encoding does not match address version"
+    }
+    if ( $useBech32m ) {
         $chk = $chk -bxor 0x2bc830a3
     } else {
         $chk = $chk -bxor 0x00000001
     }
     $expected = ( 0..5 | % { ( $chk -shr 5 * (5 - $_) ) -band 0x0000001f } | % { $charset[$_] } ) -join ""
     if ( $checksum -ne $expected ) { throw "checksum mismatch" }
+    if ( $WithVersion ) {
+        return [pscustomobject]@{ Hrp = $hrp; Version = $witnessVersion; Program = $h_string }
+    }
     return $h_string
+}
+
+function NormalizeBitcoinAddress {
+    param( [string]$address )
+    if ( $address -match '^(bc|tb)1' ) {
+        if ( $address -cmatch '[a-z]' -and $address -cmatch '[A-Z]' ) {
+            throw "mixed-case Bech32 address"
+        }
+        return $address.ToLowerInvariant()
+    }
+    return $address
 }
 
 function AssertPrivateKey {
@@ -616,6 +685,46 @@ function AssertPrivateKey {
     if ( $privateKey -cnotmatch '^[0-9a-fA-F]{64}$' ) { throw "invalid private key" }
     $d = [bigint]::Parse( "0" + $privateKey, "AllowHexSpecifier" )
     if ( $d.IsZero -or $d -ge [ECDSA]::Order ) { throw "invalid private key" }
+}
+
+function DecodeWIF {
+    param( [string]$wif, [switch]$Compressed )
+    try {
+        $decoded = Base58Check_Decode $wif
+    } catch {
+        throw "invalid WIF"
+    }
+    if ( $decoded -cnotmatch '^(80|ef)[0-9a-f]{64}(01)?$' ) {
+        throw "invalid WIF"
+    }
+    $isCompressed = $decoded.Length -eq 68
+    if ( $Compressed -and -not $isCompressed ) {
+        throw "compressed WIF required"
+    }
+    $privateKey = $decoded.Substring( 2, 64 )
+    AssertPrivateKey $privateKey
+    return [pscustomobject]@{
+        PrivateKey = $privateKey
+        Compressed = $isCompressed
+        Testnet    = $decoded.StartsWith( "ef" )
+    }
+}
+
+function AssertPublicKey {
+    param( [string]$publicKey )
+    if ( $publicKey -match '^(02|03)[0-9a-f]{64}$' ) {
+        [void]( DecompressPublicKey $publicKey )
+        return
+    }
+    if ( $publicKey -match '^04[0-9a-f]{128}$' ) {
+        $x = [bigint]::Parse( "0" + $publicKey.Substring( 2, 64 ), "AllowHexSpecifier" )
+        $y = [bigint]::Parse( "0" + $publicKey.Substring( 66, 64 ), "AllowHexSpecifier" )
+        if ( $x -ge [ECDSA]::p -or $y -ge [ECDSA]::p -or ([ECDSA]::new( $x, $y )).Err ) {
+            throw "public key is not on secp256k1"
+        }
+        return
+    }
+    throw "invalid public key"
 }
 
 function AssertCompressedPublicKey {
@@ -639,6 +748,7 @@ function GetWIF {
 
 function GetAddressP2PKH {
     param( [Parameter(ValueFromPipeline=$True)][string]$publicKey, [Alias("t")][switch]$Testnet )
+    AssertPublicKey $publicKey
     $pubkeyHash = Hash160 $publicKey 
     $prefix = if ( -not $Testnet ) { "00" } else { "6f" }
     return ( Base58Check_Encode ( $prefix + $pubkeyHash ) )
@@ -646,6 +756,7 @@ function GetAddressP2PKH {
 
 function GetAddressP2WPKH {
     param( [Parameter(ValueFromPipeline=$True)][string]$publicKey, [Alias("t")][switch]$Testnet )
+    AssertCompressedPublicKey $publicKey
     $pubkeyHash = Hash160 $publicKey
     $hrp = if ( -not $Testnet ) { "bc" } else { "tb" }
     return ( Bech32_Encode $pubkeyHash $hrp $false 0 )
@@ -653,14 +764,17 @@ function GetAddressP2WPKH {
 
 function GetAddressP2SH {
     param( [Parameter(ValueFromPipeline=$True)][string]$publicKey, [Alias("t")][switch]$Testnet )
+    AssertPublicKey $publicKey
     $prefix = if ( -not $Testnet ) { "05" } else { "c4" }
-    $redeemScript = "21" + $publicKey + "ac"                          # PUSH(publickey) + OP_CHECKSIG
+    $pushOpcode = ( $publicKey.Length / 2 ).ToString( "x2" )
+    $redeemScript = $pushOpcode + $publicKey + "ac"                    # PUSH(publickey) + OP_CHECKSIG
     $scriptHash = Hash160 $redeemScript
     return ( Base58Check_Encode ( $prefix + $scriptHash ) )
 }
 
 function GetAddressP2SH-P2WPKH {
     param( [Parameter(ValueFromPipeline=$True)][string]$publicKey, [Alias("t")][switch]$Testnet )
+    AssertCompressedPublicKey $publicKey
     $prefix = if ( -not $Testnet ) { "05" } else { "c4" }
     $redeemScript = "0014" + ( Hash160 $publicKey )                   # 0014: witnessversion(0) + push20bytes
     $scriptHash = Hash160 $redeemScript
@@ -669,6 +783,7 @@ function GetAddressP2SH-P2WPKH {
 
 function GetAddressP2SH-P2WSH {
     param( [Parameter(ValueFromPipeline=$True)][string]$publicKey, [Alias("t")][switch]$Testnet )
+    AssertCompressedPublicKey $publicKey
     $prefix = if ( -not $Testnet ) { "05" } else { "c4" }
     $SHA256 = New-Object Cryptography.SHA256CryptoServiceProvider
     $witnessScript = "21" + $publicKey + "ac"                         # PUSH(publickey) + OP_CHECKSIG
@@ -679,6 +794,7 @@ function GetAddressP2SH-P2WSH {
 
 function GetAddressP2WSH {
     param( [Parameter(ValueFromPipeline=$True)][string]$publicKey, [Alias("t")][switch]$Testnet )
+    AssertCompressedPublicKey $publicKey
     $SHA256 = New-Object Cryptography.SHA256CryptoServiceProvider
     $witnessScript = "21" + $publicKey + "ac"                         # PUSH(publickey) + OP_CHECKSIG
     $scriptHash    = i2h $SHA256.ComputeHash( ( h2i $witnessScript ) )
@@ -695,8 +811,8 @@ function GetTweak {
     $tag = [Text.Encoding]::UTF8.GetBytes( "TapTweak" )
     $hash = $SHA256.ComputeHash( $SHA256.ComputeHash( $tag ) * 2 + ( h2i $publicKeyX ) )
     $tweak = [bigint]::new( $hash[31..0] + @(0x00) )
-    if ( $tweak.IsZero -or $tweak -ge [ECDSA]::Order ) {
-        throw "Tweak is zero or greater than ( the order of the curve - 1 )."
+    if ( $tweak -ge [ECDSA]::Order ) {
+        throw "Tweak is greater than ( the order of the curve - 1 )."
     }
     return $tweak
 }
@@ -706,14 +822,8 @@ function GetTweakedWIF {
     param( [Parameter(ValueFromPipeline=$True)][string]$wif )
     $n = [ECDSA]::Order
     $G = [ECDSA]::new()
-    $decodedWIF = Base58Check_Decode $wif
-    if ( -not $decodedWIF -or $decodedWIF.Length -ne 68 -or
-         $decodedWIF.Substring( 0, 2 ) -notin @( "80", "ef" ) -or
-         $decodedWIF.Substring( 66, 2 ) -ne "01"                    ) {
-        throw "invalid WIF"
-    }
-    $privateKey = $decodedWIF.Substring( 2, 64 )
-    AssertPrivateKey $privateKey
+    $wifInfo    = DecodeWIF $wif -Compressed
+    $privateKey = $wifInfo.PrivateKey
     $d          = [bigint]::Parse( "0" + $privateKey, "AllowHexSpecifier" )
     $P          = $G * $d
     if ( $P -eq $null ) { throw "arithmetic error" }
@@ -723,7 +833,7 @@ function GetTweakedWIF {
     $td         = ( $d + $t ) % $n
     if ( $td.IsZero ) { throw "invalid tweaked private key" }
     $td_hex     = $td.ToHexString64()
-    $prefix     = if ( $wif -cmatch '^[KL]' ) { "80" } else { "ef" }
+    $prefix     = if ( $wifInfo.Testnet ) { "ef" } else { "80" }
     return Base58Check_Encode ( $prefix + $td_hex + "01" )
 }
 
