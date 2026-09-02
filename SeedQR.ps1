@@ -1,16 +1,22 @@
 # Copyright (c) 2024 earthdiver1
 
+function GetValidatedMnemonicWords {
+    param( [string]$Mnemonic,
+           [Switch]$Japanese
+    )
+    $normalized = $Mnemonic.Normalize( [Text.NormalizationForm]::FormKD ).Trim()
+    if ( -not ( ValidateMnemonic $normalized -Japanese:$Japanese ) ) {
+        throw "invalid BIP39 mnemonic"
+    }
+    return @( $normalized -split '\s+' )
+}
+
 function Mnemonic2QRCode {
     param( [Parameter(ValueFromPipeline=$True)][string]$mnemonic,
            [Alias("j" )][Switch]$Japanese
     )
-    if ( $Japanese ) {
-        $wordlist = Get-Content "wordlist_jp.txt"
-    } else {
-        $wordlist = Get-Content "wordlist.txt"
-    }
-    $words = $mnemonic -split '\s+'
-    if ( $words.Count -eq 0 -or $words.Count % 3 -ne 0 ) { throw }
+    $wordlist = GetBIP39Wordlist -Japanese:$Japanese
+    $words = GetValidatedMnemonicWords $mnemonic -Japanese:$Japanese
     $payload = ( $words | % { $wordlist.IndexOf( $_ ).ToString( "d4" ) } ) -join ""
     QRCode $payload -ECCLevel M -Width 360 -Height 360
 }
@@ -19,17 +25,12 @@ function Mnemonic2CompactQRCode {
     param( [Parameter(ValueFromPipeline=$True)][string]$mnemonic,
            [Alias("j" )][Switch]$Japanese
     )
-    if ( $Japanese ) {
-        $wordlist = Get-Content "wordlist_jp.txt"
-    } else {
-        $wordlist = Get-Content "wordlist.txt"
-    }
-    $words = $mnemonic -split '\s+'
-    if ( $words.Count -eq 0 -or $words.Count % 3 -ne 0 ) { throw }
+    $wordlist = GetBIP39Wordlist -Japanese:$Japanese
+    $words = GetValidatedMnemonicWords $mnemonic -Japanese:$Japanese
     $full    = ( $words | % { [Convert]::ToString( $wordlist.IndexOf( $_ ), 2 ).PadLeft( 11, "0" ) } ) -join ""
     $len     = $full.Length / 33
     $entropy = $full.Substring( 0, $full.Length - $len )
-    $payload = ( $entropy -split '(.{8})' -ne "" | % { [char][Convert]::ToByte( $_, 2 ) } ) -join ""
+    [byte[]]$payload = $entropy -split '(.{8})' -ne "" | % { [Convert]::ToByte( $_, 2 ) }
     QRCode $payload -ECCLevel L -Width 360 -Height 360
 }
 
@@ -45,9 +46,9 @@ Function QRcode {
 # powershell.exe -Exec bypass -File qrcode.ps1 -Payload "日本語UTF8" -EccLevel Q -Encoding UTF-8
 
     Param(
-        # String to be embedded in QR Code
+        # String or binary data to be embedded in QR Code
         [Parameter(ValueFromPipeline=$True)]
-        [String]$Payload = "https://github.com/",
+        [Object]$Payload = "https://github.com/",
         # Error correction capability of QR Code "L":7%, "M":15%, "Q":25%, "H":30%
         [Parameter()]
         [ValidateSet("L","M","Q","H")]
@@ -88,7 +89,11 @@ Function QRcode {
         $byteArray = &{
             $generator = New-Object QRCoder.QRCodeGenerator;
             if ($Encoding) { $payload = [Text.Encoding]::GetEncoding($Encoding).GetBytes($payload); }
-            $data = $generator.CreateQrCode($payload,$eccLevel);
+            if ($payload -is [byte[]]) {
+                $data = $generator.CreateQrCode([byte[]]$payload,$eccLevel);
+            } else {
+                $data = $generator.CreateQrCode([string]$payload,$eccLevel);
+            }
             $code = New-Object QRCoder.PngByteQRCode($data);
             return $code.GetGraphic($CellSize);
         };
