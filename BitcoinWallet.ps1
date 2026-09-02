@@ -184,27 +184,30 @@ public class BAXOR {
 '@
 
 function PBKDF2 ([string]$password, [string]$salt, [int]$iterations, [int]$keyLength, [PSObject]$digest) {
+    if ( $iterations -lt 1 ) { throw "'iterations' must be greater than zero" }
+    if ( $keyLength  -lt 1 ) { throw "'keyLength' must be greater than zero" }
+    if ( $null -eq $digest -or $digest.HashSize -le 0 ) { throw "invalid digest" }
+
     if ( $PSVersionTable.PSVersion.Major -ge 7 ) {
         $result = [Security.Cryptography.Rfc2898DeriveBytes]::Pbkdf2(
-            $password.Normalize( "FormKD" ),
-            [Text.Encoding]::UTF8.GetBytes( $salt.Normalize( "FormKD" ) ),
+            $password,
+            [Text.Encoding]::UTF8.GetBytes( $salt ),
             $iterations,
             $digest.HashName,
             $KeyLength
         )
         return ( i2h $result )
     }
-    $password = $password.Trim() -replace '\s+',' '  # remove extra spaces
-    $digest.key = [Text.Encoding]::UTF8.GetBytes( $password.Normalize( "FormKD" ) )
-    $dkLen = $keyLength * 8
+    $digest.key = [Text.Encoding]::UTF8.GetBytes( $password )
+    [long]$dkLen = [long]$keyLength * 8
     $hLen  = $digest.HashSize
     $bSize = $hLen / 8
     $F0    = [byte[]]::new( $bSize )
     $nb    = [int][Math]::Ceiling( $dkLen / $hLen )
     $T     = [byte[]]@(
         for ( $ib=1; $ib -le $nb; $ib++ ) {
-            $U = [Text.Encoding]::UTF8.GetBytes( $salt.Normalize( "FormKD" ) ) + ( h2i $ib.ToString( "x8" ) )
-            $F = $F0
+            $U = [Text.Encoding]::UTF8.GetBytes( $salt ) + ( h2i $ib.ToString( "x8" ) )
+            [byte[]]$F = $F0.Clone()
             for ( $c = 0 ; $c -lt $iterations; $c++ ) {
                 $U = $digest.ComputeHash( $U )
                 [BAXOR]::Xor( $F, $U )
@@ -213,6 +216,24 @@ function PBKDF2 ([string]$password, [string]$salt, [int]$iterations, [int]$keyLe
         }
     )
     return ( i2h $T[0..($keyLength-1)] )
+}
+
+function GetBIP39Seed {
+    param( [Parameter(Mandatory=$True,ValueFromPipeline=$True)][string]$mnemonic,
+           [string]$passphrase = "",
+           [Alias("j")][Switch]$Japanese
+    )
+    $normalizedMnemonic = ( $mnemonic.Normalize( [Text.NormalizationForm]::FormKD ).Trim() -replace '\s+', ' ' )
+    if ( -not ( ValidateMnemonic $normalizedMnemonic -Japanese:$Japanese ) ) {
+        throw "invalid BIP39 mnemonic"
+    }
+    $salt = ( "mnemonic" + $passphrase ).Normalize( [Text.NormalizationForm]::FormKD )
+    $HMACSHA512 = New-Object Security.Cryptography.HMACSHA512
+    try {
+        return PBKDF2 $normalizedMnemonic $salt 2048 64 $HMACSHA512
+    } finally {
+        $HMACSHA512.Dispose()
+    }
 }
 
 class ECDSAJ {
@@ -866,7 +887,7 @@ class HDWallet {
 
         $il = [bigint]::new( $extendedKey[31..0]  + @(0x00) )
 
-        if ( $il -ge [ECDSA]::Order ) {
+        if ( $il.IsZero -or $il -ge [ECDSA]::Order ) {
             Write-Host "The resulting key is invalid. Try the next index." -Fore Red
             return $null
         }

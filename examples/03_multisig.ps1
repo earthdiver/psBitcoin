@@ -1,10 +1,9 @@
-$HMACSHA512 = New-Object Security.Cryptography.HMACSHA512
 $SHA256     = New-Object Security.Cryptography.SHA256CryptoServiceProvider
 
 $mnemonic1   = "abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about"
 $passphrase1 = ""
 if ( -not ( ValidateMnemonic $mnemonic1 ) ) { throw "invalid mnemonic phrase (1)" }
-$seed1   = PBKDF2 $mnemonic1 "mnemonic$passphrase1" 2048 64 $HMACSHA512
+$seed1   = GetBIP39Seed $mnemonic1 $passphrase1
 $wallet1 = [HDWallet]::new( $seed1 )
 $fp1     = $wallet1.FingerPrint
 
@@ -14,7 +13,7 @@ Write-Host "seed1            : $seed1"
 $mnemonic2   = "zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo zoo wrong"
 $passphrase2 = ""
 if ( -not ( ValidateMnemonic $mnemonic2 ) ) { throw "invalid mnemonic phrase (2)" }
-$seed2   = PBKDF2 $mnemonic2 "mnemonic$passphrase2" 2048 64 $HMACSHA512
+$seed2   = GetBIP39Seed $mnemonic2 $passphrase2
 $wallet2 = [HDWallet]::new( $seed2 )
 $fp2     = $wallet2.FingerPrint
 write-Host "mnemonic2        : $mnemonic2"
