@@ -533,10 +533,21 @@ function GetBalance {
     param( [Parameter(ValueFromPipeline=$True)][string]$addr )
     $addr = NormalizeBitcoinAddress $addr
     if ( $addr -cmatch '^[xyzYZ]prv' ) { return }
-    if ( $addr -cmatch '^([13]|bc1|[xyzYZ]p(rv|ub))' ) {
+    if ( $addr -cmatch '^([13]|bc1)' ) {
+        $addr = AssertBitcoinAddress $addr
         $chain   = "main"
-    } elseif ( $addr -cmatch '^([2mn]|tb1|[tuvUV]p(rv|ub))' ) {
+    } elseif ( $addr -cmatch '^([2mn]|tb1)' ) {
+        $addr = AssertBitcoinAddress $addr
         $chain   = "test3"
+    } elseif ( $addr -cmatch '^[xyzYZtuvUV]pub' ) {
+        $serialized = Base58Check_Decode $addr
+        $version = if ( $serialized.Length -ge 8 ) { $serialized.Substring( 0, 8 ) } else { "" }
+        $mainnetVersions = @("0295b43f","02aa7ed3","0488b21e","049d7cb2","04b24746")
+        $testnetVersions = @("024289ef","02575483","043587cf","044a5262","045f1cf6")
+        if ( $serialized.Length -ne 156 -or $version -notin ( $mainnetVersions + $testnetVersions ) ) {
+            throw "invalid extended public key"
+        }
+        $chain = if ( $version -in $mainnetVersions ) { "main" } else { "test3" }
     } else {
         throw "invalid address"
     }
@@ -563,7 +574,7 @@ function Invoke-RestMethodWithRetry {
 
 function GetUTXO {
     param ( [Parameter(ValueFromPipeline=$True)][string]$addr )
-    $addr = NormalizeBitcoinAddress $addr
+    $addr = AssertBitcoinAddress $addr
     if ( $addr -cmatch '^([13]|bc1)' ) {
         $chain   = "main"
         $network = ""
@@ -573,7 +584,11 @@ function GetUTXO {
     } else {
         throw "invalid address"
     }
-    $uri = "https://mempool.space/$network/api/address/$addr/utxo"
+    if ( $network ) {
+        $uri = "https://mempool.space/$network/api/address/$addr/utxo"
+    } else {
+        $uri = "https://mempool.space/api/address/$addr/utxo"
+    }
     $result = Invoke-RestMethodWithRetry $uri
     if ( -not $result.Succeeded ) { throw "failed to get utxo info from mempool.space." }
     $response = @( $result.Value )
