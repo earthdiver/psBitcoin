@@ -453,7 +453,9 @@ function EcdsaSig {
     $kG  = $G * $k
     if ( $kG -eq $null ) { throw "arithmetic error" }
     $r   = $kG.X                                            % $n
+    if ( $r.IsZero ) { throw "invalid ECDSA nonce result (r = 0)" }
     $s   = ( ( $z + $d * $r ) * [ECDSA]::ModInv( $k, $n ) ) % $n
+    if ( $s.IsZero ) { throw "invalid ECDSA nonce result (s = 0)" }
     if ( $s -gt $n / 2 ) { $s = $n - $s }
     $r_h = $r.ToString( "x" ) -replace '^(.(?:..)*)$', '0$1'
     $s_h = $s.ToString( "x" ) -replace '^(.(?:..)*)$', '0$1'
@@ -509,6 +511,7 @@ function GetAddressP2TR-SP {
     param( [Parameter(ValueFromPipeline=$True)][string]$publicKey, [Alias("t")][switch]$Testnet )
 # Taproot address for a single-key script path spend.
 # Internal key 0x50929b74c1a04954b78b4b6035e97a5e078a5a0f28ec96d547bfee9ace803ac0 ( = SHA256( G ) ) is used as an unspendable key path.
+    AssertCompressedPublicKey $publicKey
     $internalKey = "50929b74c1a04954b78b4b6035e97a5e078a5a0f28ec96d547bfee9ace803ac0"
     $x           = [bigint]::Parse( "0" + $internalKey, "AllowHexSpecifier" )
     $H           = [ECDSA]::new( $x )  # lift_x( x )
@@ -520,7 +523,7 @@ function GetAddressP2TR-SP {
     $t           = [bigint]::Parse( "0" + $tapTweak, "AllowHexSpecifier" )
     if ( $t -ge [ECDSA]::Order ) { throw "You are unlucky!" }
     $Q           = $H + $G * $t
-    if ( $Q -eq $null ) { throw "The resulting address is invalid." }
+    if ( $Q -eq $null -or $Q.Err ) { throw "The resulting address is invalid." }
     $outputKey   = $Q.X.ToHexString64()
     $hrp = if ( -not $Testnet ) { "bc" } else { "tb" }
     return ( Bech32_Encode $outputKey $hrp $true 1 )
@@ -1307,17 +1310,27 @@ function SignMessage {
            [string]$message,
              [bool]$deterministic = $true,
            [switch]$electrum = $false,
+           [switch]$_taprootExtension = $false,
            [switch]$verbose = $false
     )
-    $decodedWIF = Base58Check_Decode $wif
-    if ( $decodedWIF ) {
-        $privateKey = $decodedWIF.Substring( 2, 64 )
-        $compressed = $decodedWIF.Length -eq 68 -and $decodedWIF.SubString( 66, 2 ) -eq "01"
-    } elseif ( $wif.Length -eq 64 ) {
-        $privateKey = $wif
+    $isEncodedWIF = $false
+    if ( $wif -cmatch '^[0-9a-fA-F]{64}$' ) {
+        AssertPrivateKey $wif
+        $privateKey = $wif.ToLowerInvariant()
         $compressed = $true
     } else {
-        throw "invalid wif"
+        try {
+            $decodedWIF = Base58Check_Decode $wif
+        } catch {
+            throw "invalid WIF"
+        }
+        if ( $decodedWIF -cnotmatch '^(80|ef)[0-9a-f]{64}(01)?$' ) {
+            throw "invalid WIF"
+        }
+        $isEncodedWIF = $true
+        $wifTestnet   = $decodedWIF.StartsWith( "ef" )
+        $privateKey   = $decodedWIF.Substring( 2, 64 )
+        $compressed   = $decodedWIF.Length -eq 68
     }
     if ( $address -cmatch '^([13]|bc1)' ) {
         $Testnet = $false
@@ -1325,6 +1338,9 @@ function SignMessage {
         $Testnet = $true
     } else {
         throw "invalid address"
+    }
+    if ( $isEncodedWIF -and $wifTestnet -ne $Testnet ) {
+        throw "WIF and address network mismatch"
     }
     $n = [ECDSA]::Order
     $p = [ECDSA]::p
@@ -1381,18 +1397,33 @@ function SignMessage {
             }
          }
     }
-    if ( $electrum ) {
-        $recId += 27
-    } elseif ( -not $compressed -and $address -eq ( GetAddressP2PKH ( GetPublicKey -uc $privateKey ) -Testnet:$Testnet ) ) {
-        $recId += 27
-    } elseif ( $compressed -and $address -eq ( GetAddressP2PKH       $publicKey -Testnet:$Testnet ) ) {
-        $recId += 27
-    } elseif ( $compressed -and $address -eq ( GetAddressP2SH-P2WPKH $publicKey -Testnet:$Testnet ) ) {
-        $recId += 35
-    } elseif ( $compressed -and $address -eq ( GetAddressP2WPKH      $publicKey -Testnet:$Testnet ) ) {
+    if ( $_taprootExtension ) {
+        if ( $electrum ) { throw "incompatible message signature options" }
+        if ( -not $compressed -or $address -cne ( GetAddressP2TR $publicKey -Testnet:$Testnet ) ) {
+            throw "address mismatch"
+        }
+        # 43..46 is an existing psBitcoin extension. BIP137 ends at header 42.
         $recId += 39
-    } elseif ( $compressed -and $address -eq ( GetAddressP2TR        $publicKey -Testnet:$Testnet ) ) {
-        $recId += 43
+    } elseif ( $electrum ) {
+        if ( $compressed ) {
+            $validAddresses = @(
+                GetAddressP2PKH        $publicKey -Testnet:$Testnet
+                GetAddressP2SH-P2WPKH  $publicKey -Testnet:$Testnet
+                GetAddressP2WPKH       $publicKey -Testnet:$Testnet
+            )
+        } else {
+            $validAddresses = @( GetAddressP2PKH ( GetPublicKey -uc $privateKey ) -Testnet:$Testnet )
+        }
+        if ( $validAddresses -cnotcontains $address ) { throw "address mismatch" }
+        $recId += 27
+    } elseif ( -not $compressed -and $address -ceq ( GetAddressP2PKH ( GetPublicKey -uc $privateKey ) -Testnet:$Testnet ) ) {
+        $recId += 27
+    } elseif ( $compressed -and $address -ceq ( GetAddressP2PKH       $publicKey -Testnet:$Testnet ) ) {
+        $recId += 27
+    } elseif ( $compressed -and $address -ceq ( GetAddressP2SH-P2WPKH $publicKey -Testnet:$Testnet ) ) {
+        $recId += 31
+    } elseif ( $compressed -and $address -ceq ( GetAddressP2WPKH      $publicKey -Testnet:$Testnet ) ) {
+        $recId += 35
     } else {
         throw "address mismatch"
     }
@@ -1406,11 +1437,22 @@ function SignMessage {
     }
 }
 
+function SignMessageP2TR {
+    param( [string]$wif,
+           [string]$address,
+           [string]$message,
+             [bool]$deterministic = $true,
+           [switch]$verbose = $false
+    )
+    SignMessage $wif $address $message $deterministic -_taprootExtension -verbose:$verbose
+}
+
 function VerifyMessage {
     param( [string]$sig,
            [string]$address,
            [string]$message,
-           [switch]$electrum = $false
+           [switch]$electrum = $false,
+           [switch]$_taprootExtension = $false
     )
     $sig_h  = i2h ( [Convert]::FromBase64String( $sig ) )
     if ( $sig_h.Length -ne 130 ) {
@@ -1438,16 +1480,24 @@ function VerifyMessage {
     $z = [bigint]::Parse( "0" + $msgHash, "AllowHexSpecifier" )
     $r = [bigint]::Parse( "0" + $r_h    , "AllowHexSpecifier" )
     $s = [bigint]::Parse( "0" + $s_h    , "AllowHexSpecifier" )
+    if ( $_taprootExtension ) {
+        if ( $electrum -or $header -lt 43 -or $header -ge 47 ) { return $false }
+    } elseif ( $header -lt 27 -or $header -ge 43 ) {
+        return $false
+    }
+    if ( $r -le [bigint]::Zero -or $r -ge $n -or
+         $s -le [bigint]::Zero -or $s -ge $n     ) { return $false }
     $recId = ( $header - 27 ) -band 0x03
     if ( ( $recId -band 0x02 ) -eq 0 ) {
         $x = $r
     } else {
         $x = $r + $n
     }
+    if ( $x -ge $p ) { return $false }
     $yy = ( [bigint]::ModPow( $x, 3, $p ) + 7 ) % $p
     $ya = [bigint]::ModPow( $yy, ($p + 1)/4, $p )
     if ( $yy -ne ( $ya * $ya ) % $p ) {
-        throw "not on curve"
+        return $false
     }
     if ( (      $ya.IsEven -and ( $recId -band 0x01 ) -eq 0 ) -or `
          ( -not $ya.IsEven -and ( $recId -band 0x01 ) -ne 0 )     ) {
@@ -1456,6 +1506,7 @@ function VerifyMessage {
         $kG = [ECDSA]::new( $x, ( $p - $ya ) % $p )
     }
     $Q = ( ( $kG * $s ) + $G * ( (-$z) % $n ) ) * [ECDSA]::ModInv( $r, $n )
+    if ( $null -eq $Q -or $Q.Err ) { return $false }
     if ( $header -lt 31 ) {
         $publicKey = "04" + $Q.X.ToHexString64() + $Q.Y.ToHexString64()
     } elseif ( $Q.Y.IsEven ) {
@@ -1464,23 +1515,30 @@ function VerifyMessage {
         $publicKey = "03" + $Q.X.ToHexString64()
     }
     if (       $header -ge 27 -and $header -lt 31 ) {
-        return $address -eq ( GetAddressP2PKH       $publicKey -Testnet:$Testnet )
+        return $address -ceq ( GetAddressP2PKH       $publicKey -Testnet:$Testnet )
     } elseif ( $header -ge 31 -and $header -lt 35 ) {
         if ( $address -match '^[1mn]' ) {
-            return $address -eq ( GetAddressP2PKH   $publicKey -Testnet:$Testnet )
+            return $address -ceq ( GetAddressP2PKH   $publicKey -Testnet:$Testnet )
         } elseif ( $electrum ) {
-            if ( $address -match '^[23]' )      { return $address -eq ( GetAddressP2SH-P2WPKH $publicKey -Testnet:$Testnet ) }
-            if ( $address -match '^(bc|tb)1q' ) { return $address -eq ( GetAddressP2WPKH      $publicKey -Testnet:$Testnet ) }
-            if ( $address -match '^(bc|tb)1p' ) { return $address -eq ( GetAddressP2TR        $publicKey -Testnet:$Testnet ) }
+            if ( $address -match '^[23]' )      { return $address -ceq ( GetAddressP2SH-P2WPKH $publicKey -Testnet:$Testnet ) }
+            if ( $address -match '^(bc|tb)1q' ) { return $address -ceq ( GetAddressP2WPKH      $publicKey -Testnet:$Testnet ) }
         }
         return $false
     } elseif ( $header -ge 35 -and $header -lt 39 ) {
-        return $address -eq ( GetAddressP2SH-P2WPKH $publicKey -Testnet:$Testnet )
+        return $address -ceq ( GetAddressP2SH-P2WPKH $publicKey -Testnet:$Testnet )
     } elseif ( $header -ge 39 -and $header -lt 43 ) {
-        return $address -eq ( GetAddressP2WPKH      $publicKey -Testnet:$Testnet )
+        return $address -ceq ( GetAddressP2WPKH      $publicKey -Testnet:$Testnet )
     } elseif ( $header -ge 43 -and $header -lt 47 ) {
-        return $address -eq ( GetAddressP2TR        $publicKey -Testnet:$Testnet )
+        return $_taprootExtension -and $address -ceq ( GetAddressP2TR $publicKey -Testnet:$Testnet )
     } else {
         throw "invalid header"
     }
+}
+
+function VerifyMessageP2TR {
+    param( [string]$sig,
+           [string]$address,
+           [string]$message
+    )
+    VerifyMessage $sig $address $message -_taprootExtension
 }

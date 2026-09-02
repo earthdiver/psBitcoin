@@ -328,10 +328,10 @@ class ECDSA {
     }
 
     static [ECDSA] op_Multiply( [ECDSA]$left, [bigint]$right ) {
-        if ( $right -eq [bigint]::Zero ) { return $null }
-        if ( $right -eq [bigint]::One  ) { return $left }
         $right %= [ECDSA]::Order
         if ( $right.Sign -eq -1 ) { $right += [ECDSA]::Order }
+        if ( $right -eq [bigint]::Zero ) { return $null }
+        if ( $right -eq [bigint]::One  ) { return $left }
         $buffer = [List[char]]::new()
         while ( $right -ne [bigint]::One ) {
             if ( $right.IsEven ) {
@@ -581,11 +581,27 @@ function Bech32_Decode {
     return $h_string
 }
 
+function AssertPrivateKey {
+    param( [string]$privateKey )
+    if ( $privateKey -cnotmatch '^[0-9a-fA-F]{64}$' ) { throw "invalid private key" }
+    $d = [bigint]::Parse( "0" + $privateKey, "AllowHexSpecifier" )
+    if ( $d.IsZero -or $d -ge [ECDSA]::Order ) { throw "invalid private key" }
+}
+
+function AssertCompressedPublicKey {
+    param( [string]$publicKey )
+    if ( $publicKey -cnotmatch '^(02|03)[0-9a-fA-F]{64}$' ) {
+        throw "compressed public key required"
+    }
+    [void]( DecompressPublicKey $publicKey )
+}
+
 function GetWIF {
     param( [Parameter(ValueFromPipeline=$True)][string]$privateKey,
            [Alias("uc")][switch]$UnCompressed,
            [Alias("t") ][switch]$Testnet
          )
+    AssertPrivateKey $privateKey
     $prefix = if ( -not $Testnet ) { "80" } else { "ef" }
     $suffix = if ( $UnCompressed ) { ""   } else { "01" }
     return ( Base58Check_Encode ( $prefix + $privateKey + $suffix ) )
@@ -643,6 +659,7 @@ function GetAddressP2WSH {
 function GetTweak {
 # Tweak for an unspendable script path (BIP-0086)
     param( [Parameter(ValueFromPipeline=$True)][string]$publicKey )
+    AssertCompressedPublicKey $publicKey
     $SHA256 = New-Object Cryptography.SHA256CryptoServiceProvider
     $publicKeyX = $publicKey.Substring( 2 )
     $tag = [Text.Encoding]::UTF8.GetBytes( "TapTweak" )
@@ -659,19 +676,22 @@ function GetTweakedWIF {
     param( [Parameter(ValueFromPipeline=$True)][string]$wif )
     $n = [ECDSA]::Order
     $G = [ECDSA]::new()
-    $privateKey = ( Base58Check_Decode $wif ).Substring( 2 )
-    if ( $privateKey.Length -ne 66 -or $privateKey.Substring( 64, 2 ) -ne "01" ) {
+    $decodedWIF = Base58Check_Decode $wif
+    if ( -not $decodedWIF -or $decodedWIF.Length -ne 68 -or
+         $decodedWIF.Substring( 0, 2 ) -notin @( "80", "ef" ) -or
+         $decodedWIF.Substring( 66, 2 ) -ne "01"                    ) {
         throw "invalid WIF"
     }
-    $privateKey = $privateKey.Substring( 0, 64 )
+    $privateKey = $decodedWIF.Substring( 2, 64 )
+    AssertPrivateKey $privateKey
     $d          = [bigint]::Parse( "0" + $privateKey, "AllowHexSpecifier" )
-    if ( $d.IsZero -or $d -ge $n ) { throw "invalid private key" }
     $P          = $G * $d
     if ( $P -eq $null ) { throw "arithmetic error" }
     if ( -not $P.Y.IsEven ) { $d = $n - $d }
     $publicKey  = GetPublicKey $privateKey
     $t          = GetTweak $publicKey
     $td         = ( $d + $t ) % $n
+    if ( $td.IsZero ) { throw "invalid tweaked private key" }
     $td_hex     = $td.ToHexString64()
     $prefix     = if ( $wif -cmatch '^[KL]' ) { "80" } else { "ef" }
     return Base58Check_Encode ( $prefix + $td_hex + "01" )
@@ -680,13 +700,15 @@ function GetTweakedWIF {
 function GetAddressP2TR {
 # Taproot address for a single key (BIP-0086)
     param( [Parameter(ValueFromPipeline=$True)][string]$publicKey, [Alias("t")][switch]$Testnet )
+    AssertCompressedPublicKey $publicKey
     $internalKey = $publicKey.Substring( 2 )
     $x = [bigint]::Parse( "0" + $internalKey, "AllowHexSpecifier" )
     $P = [ECDSA]::new( $x )
+    if ( $P.Err ) { throw "invalid internal public key" }
     $G = [ECDSA]::new()
     $tweak = GetTweak $publicKey
     $Q = $P + $G * $tweak
-    if ( $Q -eq $null ) { throw "The resulting address is invalid." }
+    if ( $Q -eq $null -or $Q.Err ) { throw "The resulting address is invalid." }
     $outputKey  = $Q.X.ToHexString64()
     $hrp = if ( -not $Testnet ) { "bc" } else { "tb" }
     return ( Bech32_Encode $outputKey $hrp $true 1 )
