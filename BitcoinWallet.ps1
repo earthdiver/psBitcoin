@@ -1285,16 +1285,16 @@ class HDWallet {
         $version_e = ""
         if ( -not $testnet ) {
             switch -Regex ( $this.Path ) {
-                "^m/48'/0'/0'/1'" { $version_e = "0295b005" } # P2SH-P2WSH multisig (SLIP-0132)
-                "^m/48'/0'/0'/2'" { $version_e = "02aa7a99" } # P2WSH multisig (SLIP-0132)
+                "^m/48'/0'/\d+'/1'(?:/|$)" { $version_e = "0295b005" } # P2SH-P2WSH multisig (SLIP-0132)
+                "^m/48'/0'/\d+'/2'(?:/|$)" { $version_e = "02aa7a99" } # P2WSH multisig (SLIP-0132)
                 "^m/49'"          { $version_e = "049d7878" } # P2SH-P2WPKH (BIP-0049)
                 "^m/(84|0)'"      { $version_e = "04b2430c" } # P2WPKH (BIP-0084), electrum
                 default           { $version_e = "0488ade4" } # BIP-0044
             }
         } else {
             switch -Regex ( $this.Path ) {
-                "^m/48'/1'/0'/1'" { $version_e = "024285b5" } # P2SH-P2WSH multisig (SLIP-0132)
-                "^m/48'/1'/0'/2'" { $version_e = "02575048" } # P2WSH multisig (SLIP-0132)
+                "^m/48'/1'/\d+'/1'(?:/|$)" { $version_e = "024285b5" } # P2SH-P2WSH multisig (SLIP-0132)
+                "^m/48'/1'/\d+'/2'(?:/|$)" { $version_e = "02575048" } # P2WSH multisig (SLIP-0132)
                 "^m/49'"          { $version_e = "044a4e28" } # P2SH-P2WPKH (BIP-0049)
                 "^m/(84|0)'"      { $version_e = "045f18bc" } # P2WPKH (BIP-0084), electrum
                 default           { $version_e = "04358394" } # BIP-0044
@@ -1328,16 +1328,16 @@ class HDWallet {
         $version_e = ""
         if ( -not $testnet ) {
             switch -Regex ( $this.Path ) {
-                "^m/48'/0'/0'/1'" { $version_e = "0295b43f" } # P2SH-P2WSH multisig (SLIP-0132)
-                "^m/48'/0'/0'/2'" { $version_e = "02aa7ed3" } # P2WSH multisig (SLIP-0132)
+                "^m/48'/0'/\d+'/1'(?:/|$)" { $version_e = "0295b43f" } # P2SH-P2WSH multisig (SLIP-0132)
+                "^m/48'/0'/\d+'/2'(?:/|$)" { $version_e = "02aa7ed3" } # P2WSH multisig (SLIP-0132)
                 '^m/49'''         { $version_e = "049d7cb2" } # P2SH-P2WPKH (BIP-0049)
                 '^m/(84|0)'''     { $version_e = "04b24746" } # P2WPKH (BIP-0084), electrum
                 default           { $version_e = "0488b21e" } # BIP-0044
             }
         } else {
             switch -Regex ( $this.Path ) {
-                "^m/48'/1'/0'/1'" { $version_e = "024289ef" } # P2SH-P2WSH multisig (SLIP-0132)
-                "^m/48'/1'/0'/2'" { $version_e = "02575483" } # P2WSH multisig (SLIP-0132)
+                "^m/48'/1'/\d+'/1'(?:/|$)" { $version_e = "024289ef" } # P2SH-P2WSH multisig (SLIP-0132)
+                "^m/48'/1'/\d+'/2'(?:/|$)" { $version_e = "02575483" } # P2WSH multisig (SLIP-0132)
                 '^m/49'''         { $version_e = "044a5262" } # P2SH-P2WPKH (BIP-0049)
                 '^m/(84|0)'''     { $version_e = "045f1cf6" } # P2WPKH (BIP-0084), electrum
                 default           { $version_e = "043587cf" } # BIP-0044
