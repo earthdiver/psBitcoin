@@ -619,7 +619,9 @@ function GetAddressP2TR-SP {
 function GetBalance {
     param( [Parameter(ValueFromPipeline=$True)][string]$addr )
     $addr = NormalizeBitcoinAddress $addr
-    if ( $addr -cmatch '^[xyzYZ]prv' ) { return }
+    if ( $addr -cmatch '^[xyztuvYZUV]prv' ) {
+        throw "extended private keys must not be supplied to an online balance service"
+    }
     if ( $addr -cmatch '^([13]|bc1)' ) {
         $addr = AssertBitcoinAddress $addr
         $chain   = "main"
