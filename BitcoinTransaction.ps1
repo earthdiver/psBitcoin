@@ -112,8 +112,8 @@ class TXin {
         $this.Init( $txid, $index, $scriptSig, $sequence )
     }
     hidden [void] Init ( [string]$txid, [UInt32]$index, [string]$scriptSig, [UInt32]$sequence ) {
-        if ( $txid -cnotmatch '^[0-9a-fA-F]{64}$' ) { throw "invalid txid" }
-        if ( $scriptSig -cnotmatch '^(?:[0-9a-fA-F]{2})*$' ) { throw "invalid scriptSig" }
+        if ( $txid -notmatch '^[0-9a-f]{64}$' ) { throw "invalid txid" }
+        if ( $scriptSig -notmatch '^(?:[0-9a-f]{2})*$' ) { throw "invalid scriptSig" }
         $sb = [Text.StringBuilder]::new( $txid.Length )
         for ( $i = ($txid.Length - 1); $i -ge 0; $i-=2 ) {
             [void]$sb.Append( $txid.Chars($i-1) )
@@ -133,7 +133,7 @@ class TXout {
     [string]$scriptPubKey
     TXout ( [UInt64]$value, [string]$scriptPubKey ) {
         if ( $value -gt [UInt64]2100000000000000 ) { throw "transaction output exceeds MAX_MONEY" }
-        if ( $scriptPubKey -cnotmatch '^(?:[0-9a-fA-F]{2})*$' ) { throw "invalid scriptPubKey" }
+        if ( $scriptPubKey -notmatch '^(?:[0-9a-f]{2})*$' ) { throw "invalid scriptPubKey" }
         $this.value        = UInt64toStr $value
         $this.SPLen        = VarInttoStr ( $scriptPubKey.Length / 2 )
         $this.scriptPubKey = $scriptPubKey
@@ -633,10 +633,10 @@ function GetBalance {
         $version = if ( $serialized.Length -ge 8 ) { $serialized.Substring( 0, 8 ) } else { "" }
         $mainnetVersions = @("0295b43f","02aa7ed3","0488b21e","049d7cb2","04b24746")
         $testnetVersions = @("024289ef","02575483","043587cf","044a5262","045f1cf6")
-        if ( $serialized.Length -ne 156 -or $version -notin ( $mainnetVersions + $testnetVersions ) ) {
+        if ( $serialized.Length -ne 156 -or $version -cnotin ( $mainnetVersions + $testnetVersions ) ) {
             throw "invalid extended public key"
         }
-        $chain = if ( $version -in $mainnetVersions ) { "main" } else { "test3" }
+        $chain = if ( $version -cin $mainnetVersions ) { "main" } else { "test3" }
     } else {
         throw "invalid address"
     }
@@ -742,7 +742,7 @@ function AssertTaprootKeySource {
     $address = NormalizeBitcoinAddress $address
     $testnet = $address -cmatch '^tb1p'
     $expected = GetAddressP2TR $publicKey -Testnet:$testnet
-    if ( $address -ine $expected ) {
+    if ( $address -cne $expected ) {
         throw "private key does not match 'addressFrom'"
     }
 }
@@ -759,7 +759,7 @@ function ConvertAddressToScriptPubKey {
         return "a914" + $payload + "87"
     }
     $decoded = Bech32_Decode $address -WithVersion
-    if ( $decoded.Hrp -notin @( "bc", "tb" ) ) { throw "invalid bitcoin address" }
+    if ( $decoded.Hrp -cnotin @( "bc", "tb" ) ) { throw "invalid bitcoin address" }
     $opcode = if ( $decoded.Version -eq 0 ) { "00" } else { ( 0x50 + $decoded.Version ).ToString( "x2" ) }
     $pushLength = ( $decoded.Program.Length / 2 ).ToString( "x2" )
     return $opcode + $pushLength + $decoded.Program
@@ -1358,7 +1358,7 @@ function CLTVScript {
     param( [string]$datetime, [string]$publicKey, [Alias("t")][switch]$Testnet )
     AssertCompressedPublicKey $publicKey
     $SHA256 = New-Object Cryptography.SHA256CryptoServiceProvider
-    if ( $datetime -cnotmatch '(?:Z|[+-]\d{2}:\d{2})$' ) {
+    if ( $datetime -notmatch '(?:z|[+-]\d{2}:\d{2})$' ) {
         throw "'datetime' must include an explicit UTC offset"
     }
     [DateTimeOffset]$dateTimeOffset = [DateTimeOffset]::MinValue
@@ -1419,7 +1419,7 @@ function SignMessage {
     $address = NormalizeBitcoinAddress $address
 
     $isEncodedWIF = $false
-    if ( $wif -cmatch '^[0-9a-fA-F]{64}$' ) {
+    if ( $wif -match '^[0-9a-f]{64}$' ) {
         AssertPrivateKey $wif
         $privateKey = $wif.ToLowerInvariant()
         $compressed = $true
@@ -1496,7 +1496,7 @@ function SignMessage {
     for ( $i = 0 ; $i -lt $Rcand.Length; $i++ ) {
         if ( -not $Rcand[$i].Err ) {
             $Q = ( ( $Rcand[$i] * $s ) + $G * ( (-$z) % $n ) ) * [ECDSA]::ModInv( $r, $n )
-            if ( $publicKey.SubString(2, 64) -eq $Q.X.ToHexString64() ) {
+            if ( $publicKey.SubString(2, 64) -ceq $Q.X.ToHexString64() ) {
                 $recId += $i
                 break
             }
@@ -1624,11 +1624,11 @@ function VerifyMessage {
     if (       $header -ge 27 -and $header -lt 31 ) {
         return $address -ceq ( GetAddressP2PKH       $publicKey -Testnet:$Testnet )
     } elseif ( $header -ge 31 -and $header -lt 35 ) {
-        if ( $address -match '^[1mn]' ) {
+        if ( $address -cmatch '^[1mn]' ) {
             return $address -ceq ( GetAddressP2PKH   $publicKey -Testnet:$Testnet )
         } elseif ( $electrum ) {
             if ( $address -match '^[23]' )      { return $address -ceq ( GetAddressP2SH-P2WPKH $publicKey -Testnet:$Testnet ) }
-            if ( $address -match '^(bc|tb)1q' ) { return $address -ceq ( GetAddressP2WPKH      $publicKey -Testnet:$Testnet ) }
+            if ( $address -cmatch '^(bc|tb)1q' ) { return $address -ceq ( GetAddressP2WPKH      $publicKey -Testnet:$Testnet ) }
         }
         return $false
     } elseif ( $header -ge 35 -and $header -lt 39 ) {

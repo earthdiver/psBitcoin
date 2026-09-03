@@ -455,7 +455,7 @@ function DecompressPublicKey {
     param( [Parameter(ValueFromPipeline=$True)][string]$publicKey )
     if ( $publicKey.Length -ne 33 * 2 ) { throw "invalid length" }
     $prefix     = $publicKey.Substring( 0, 2 )
-    if ( $prefix -cnotmatch '^0[23]$' ) { throw "invalid prefix" }
+    if ( $prefix -notmatch '^0[23]$' ) { throw "invalid prefix" }
     $publicKeyX = $publicKey.Substring( 2 )
     if ( $publicKeyX -notmatch '^[0-9a-f]{64}$' ) { throw "invalid public key" }
     $x  = [bigint]::Parse( "0" + $publicKeyX, "AllowHexSpecifier" )
@@ -521,7 +521,7 @@ function Base58Check_Decode {
     $leading0s  = $base58check -replace '^(1*).*$','$1' -replace '1','00'
     $hex_string = $leading0s + $hex_string
     $expected   = ( Hash256 $hex_string ).Substring( 0, 8 )
-    if ( $checksum -ne $expected ) { throw "checksum mismatch" }
+    if ( $checksum -cne $expected ) { throw "checksum mismatch" }
     return $hex_string
 }
 
@@ -549,16 +549,16 @@ function Bech32_Encode {
         "tspscan"  = @( 130 )
     }
     if ( -not $validLengths.ContainsKey( $hrp ) -or $hex_string.Length -notin $validLengths[$hrp] ) {
-        if ( $hrp -notin @( "bc", "tb" ) ) { throw "invalid HRP or data length" }
+        if ( $hrp -cnotin @( "bc", "tb" ) ) { throw "invalid HRP or data length" }
     }
-    if ( $hrp -in @( "bc", "tb" ) ) {
+    if ( $hrp -cin @( "bc", "tb" ) ) {
         if ( $v -lt 0 -or $v -gt 16 ) { throw "invalid witness version" }
         if ( $hex_string.Length -lt 4 -or $hex_string.Length -gt 80 ) { throw "invalid witness program length" }
         if ( $v -eq 0 -and $hex_string.Length -notin @( 40, 64 ) ) { throw "invalid version 0 witness program length" }
     } elseif ( $v -ne 0 ) {
         throw "unsupported silent payment version"
     }
-    $useBech32m = if ( $hrp -in @( "bc", "tb" ) ) { $v -ne 0 } else { $true }
+    $useBech32m = if ( $hrp -cin @( "bc", "tb" ) ) { $v -ne 0 } else { $true }
     if ( $m -ne $useBech32m ) {
         throw "checksum encoding does not match address version"
     }
@@ -584,7 +584,7 @@ function Bech32_Encode {
     }
     $chk = ( 0..5 | % { ( $chk -shr 5 * (5 - $_) ) -band 0x0000001f } | % { $charset[$_] } ) -join ""
     $result = $hrp + $separator + $str + $chk
-    if ( $hrp -in @( "bc", "tb" ) -and $result.Length -gt 90 ) { throw "Bech32 address exceeds 90 characters" }
+    if ( $hrp -cin @( "bc", "tb" ) -and $result.Length -gt 90 ) { throw "Bech32 address exceeds 90 characters" }
     return $result
 }
 
@@ -606,10 +606,10 @@ function Bech32_Decode {
         "spscan"   = @( 130 )
         "tspscan"  = @( 130 )
     }
-    if ( $hrp -notin @( "bc", "tb" ) -and -not $allowedLengths.ContainsKey( $hrp ) ) {
+    if ( $hrp -cnotin @( "bc", "tb" ) -and -not $allowedLengths.ContainsKey( $hrp ) ) {
         throw "invalid Bech32 address"
     }
-    if ( $hrp -in @( "bc", "tb" ) -and $bech32.Length -gt 90 ) { throw "Bech32 address exceeds 90 characters" }
+    if ( $hrp -cin @( "bc", "tb" ) -and $bech32.Length -gt 90 ) { throw "Bech32 address exceeds 90 characters" }
     $str = $bech32.Substring( $separator + 1, $bech32.Length - $separator - 7 )
     $checksum = $bech32.Substring( $bech32.Length - 6 )
     $b_string = [Text.StringBuilder]::new()
@@ -633,7 +633,7 @@ function Bech32_Decode {
     $programBits = $programBits.Substring( 0, $programBits.Length - $paddingLength )
     $h_string = $programBits | b2i | i2h
     $witnessVersion = $data[0]
-    if ( $hrp -in @( "bc", "tb" ) ) {
+    if ( $hrp -cin @( "bc", "tb" ) ) {
         if ( $witnessVersion -lt 0 -or $witnessVersion -gt 16 ) { throw "invalid witness version" }
         if ( $h_string.Length -lt 4 -or $h_string.Length -gt 80 ) { throw "invalid witness program length" }
         if ( $witnessVersion -eq 0 -and $h_string.Length -notin @( 40, 64 ) ) {
@@ -652,7 +652,7 @@ function Bech32_Decode {
         $chk = ( ( $chk -band 0x01ffffff ) -shl 5 ) -bxor $_
         0..4 | % { $chk = $chk -bxor ( $gen[$_] * (( $b -shr $_ ) -band 0x00000001 ) ) }
     }
-    $useBech32m = if ( $hrp -in @( "bc", "tb" ) ) { $data[0] -ne 0 } else { $true }
+    $useBech32m = if ( $hrp -cin @( "bc", "tb" ) ) { $data[0] -ne 0 } else { $true }
     if ( $PSBoundParameters.ContainsKey( "m" ) -and $m -ne $useBech32m ) {
         throw "checksum encoding does not match address version"
     }
@@ -662,7 +662,7 @@ function Bech32_Decode {
         $chk = $chk -bxor 0x00000001
     }
     $expected = ( 0..5 | % { ( $chk -shr 5 * (5 - $_) ) -band 0x0000001f } | % { $charset[$_] } ) -join ""
-    if ( $checksum -ne $expected ) { throw "checksum mismatch" }
+    if ( $checksum -cne $expected ) { throw "checksum mismatch" }
     if ( $WithVersion ) {
         return [pscustomobject]@{ Hrp = $hrp; Version = $witnessVersion; Program = $h_string }
     }
@@ -695,7 +695,7 @@ function AssertBitcoinAddress {
 
 function AssertPrivateKey {
     param( [string]$privateKey )
-    if ( $privateKey -cnotmatch '^[0-9a-fA-F]{64}$' ) { throw "invalid private key" }
+    if ( $privateKey -notmatch '^[0-9a-f]{64}$' ) { throw "invalid private key" }
     $d = [bigint]::Parse( "0" + $privateKey, "AllowHexSpecifier" )
     if ( $d.IsZero -or $d -ge [ECDSA]::Order ) { throw "invalid private key" }
 }
@@ -742,7 +742,7 @@ function AssertPublicKey {
 
 function AssertCompressedPublicKey {
     param( [string]$publicKey )
-    if ( $publicKey -cnotmatch '^(02|03)[0-9a-fA-F]{64}$' ) {
+    if ( $publicKey -notmatch '^(02|03)[0-9a-f]{64}$' ) {
         throw "compressed public key required"
     }
     [void]( DecompressPublicKey $publicKey )
@@ -1154,7 +1154,7 @@ class HDWallet {
             "024285b5", "02575048", "04358394", "044a4e28", "045f18bc",
             "024289ef", "02575483", "043587cf", "044a5262", "045f1cf6"
         )
-        $this.ImportExtendedKey( $extendedKey, $path, $version -in $testnetVersions )
+        $this.ImportExtendedKey( $extendedKey, $path, $version -cin $testnetVersions )
     }
 
     [void] ImportExtendedKey( [string]$extendedKey, [string]$path, [bool]$testnet ) {
@@ -1178,24 +1178,24 @@ class HDWallet {
         $prefixes_prv = $prefixes_prv_main + $prefixes_prv_test
         $prefixes_pub = $prefixes_pub_main + $prefixes_pub_test
 
-        if ( $version_e -notin ( $prefixes_prv + $prefixes_pub ) ) {
+        if ( $version_e -cnotin ( $prefixes_prv + $prefixes_pub ) ) {
             throw "invalid extended-key prefix"
         }
-        $encodedTestnet = $version_e -in ( $prefixes_prv_test + $prefixes_pub_test )
+        $encodedTestnet = $version_e -cin ( $prefixes_prv_test + $prefixes_pub_test )
         if ( $testnet -ne $encodedTestnet ) { throw "extended-key network mismatch" }
 
         $expectedPath = switch ( $version_e ) {
-            { $_ -in @( "049d7878", "049d7cb2" ) } { "^m/49'/0'(?:/|$)"       ; break }
-            { $_ -in @( "044a4e28", "044a5262" ) } { "^m/49'/1'(?:/|$)"       ; break }
-            { $_ -in @( "04b2430c", "04b24746" ) } { "^m/84'/0'(?:/|$)"       ; break }
-            { $_ -in @( "045f18bc", "045f1cf6" ) } { "^m/84'/1'(?:/|$)"       ; break }
+            { $_ -cin @( "049d7878", "049d7cb2" ) } { "^m/49'/0'(?:/|$)"       ; break }
+            { $_ -cin @( "044a4e28", "044a5262" ) } { "^m/49'/1'(?:/|$)"       ; break }
+            { $_ -cin @( "04b2430c", "04b24746" ) } { "^m/84'/0'(?:/|$)"       ; break }
+            { $_ -cin @( "045f18bc", "045f1cf6" ) } { "^m/84'/1'(?:/|$)"       ; break }
             default                                  { $null }
         }
 
         $importedPrivateKey = $null
         $importedPublicKey  = ""
         $importedPublicKeyUC = ""
-        if ( $version_e -in $prefixes_prv ) {
+        if ( $version_e -cin $prefixes_prv ) {
             if ( $extendedKey_e -cnotmatch '^00[0-9a-f]{64}$' ) {
                 throw "invalid extended private key data"
             }
@@ -1203,7 +1203,7 @@ class HDWallet {
             $importedPublicKeyUC = GetPublicKey -uc $importedPrivateKey
             $prefix = if ( $importedPublicKeyUC -cmatch '[02468ace]$' ) { "02" } else { "03" }
             $importedPublicKey = $prefix + $importedPublicKeyUC.Substring( 2, 64 )
-        } elseif ( $version_e -in $prefixes_pub ) {
+        } elseif ( $version_e -cin $prefixes_pub ) {
             if ( $extendedKey_e -cnotmatch '^(02|03)[0-9a-f]{64}$' ) {
                 throw "invalid extended public key data"
             }
@@ -1222,7 +1222,7 @@ class HDWallet {
         if ( $parsedDepth -ne ( $path -replace '[^/]' ).Length ) {
             throw "the depths in the extended key and the path are inconsistent"
         }
-        if ( $path -eq "m" ) {
+        if ( $path -ceq "m" ) {
             [UInt32]$idx = 0
         } else {
             [UInt64]$pathIndex = $path -replace '^.+/(\d+)''?$','$1'
@@ -1238,7 +1238,7 @@ class HDWallet {
              -not $isHardened -and $path[-1] -eq "'"     ) {
             throw "the types (normal/hardened) in the extended key and the path are inconsistent"
         }
-        if ( $parsedDepth -eq 0 -and ( $pFingerprint_e -cne "00000000" -or $parsedIndex -ne 0 ) ) {
+        if ( $parsedDepth -eq 0 -and ( $pFingerprint_e -ne "00000000" -or $parsedIndex -ne 0 ) ) {
             throw "root extended key must have zero parent fingerprint and child number"
         }
         if ( $expectedPath -and $path -cnotmatch $expectedPath ) {
@@ -1261,7 +1261,7 @@ class HDWallet {
         $cacheKey = "$($this.Path)|$([int]$this.Testnet)"
         $this.Dict.Add( $cacheKey, $this )
 
-        if ( $path -eq "m" ) {
+        if ( $path -ceq "m" ) {
             $this.Parent = $null
         } else {
             $this.Parent             = [HDWallet]::new()
