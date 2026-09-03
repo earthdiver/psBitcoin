@@ -88,7 +88,7 @@ function i2h {
         } else {
             $hex_string = [Bitconverter]::ToString( $buffer.ToArray() ).Replace( "-", "" )
         }
-        return $hex_string.ToLower().PadLeft( $PadLeft, "0" )
+        return $hex_string.ToLowerInvariant().PadLeft( $PadLeft, "0" )
     }
 }
 

@@ -11,7 +11,7 @@ function UInt32toStr( [UInt32]$int ) {
     if ( -not [BitConverter]::IsLittleEndian ) {
         [Array]::Reverse( $bytes )
     }
-    return [BitConverter]::ToString( $bytes ).Replace("-","").ToLower()
+    return [BitConverter]::ToString( $bytes ).Replace("-","").ToLowerInvariant()
 }
 
 function UInt64toStr( [UInt64]$int ) {
@@ -19,7 +19,7 @@ function UInt64toStr( [UInt64]$int ) {
     if ( -not [BitConverter]::IsLittleEndian ) {
         [Array]::Reverse( $bytes )
     }
-    return [BitConverter]::ToString( $bytes ).Replace("-","").ToLower()
+    return [BitConverter]::ToString( $bytes ).Replace("-","").ToLowerInvariant()
 }
 
 function VarInttoStr( [UInt64]$int ) {
