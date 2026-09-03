@@ -992,8 +992,7 @@ class HDWallet {
 
     [HDWallet] Derive ( [int]$index, [bool]$hardened, [bool]$testnet ) {
         if ( $index -lt 0 ) {
-            Write-Host "Index must be between 0 and 2^31 - 1." -Fore Red
-            return $null
+            throw "index must be between 0 and 2^31 - 1"
         }
 
         if ( $this.Depth -ge 255 ) {
@@ -1001,8 +1000,7 @@ class HDWallet {
         }
 
         if ( -not $this.PrivateKey -and $hardened ) {
-            Write-Host "Not possible to derive a child without the private key." -Fore Red
-            return $null
+            throw "cannot derive a hardened child from a public-only wallet"
         }
 
         $child_path = $this.Path + "/" + $index.ToString( "d" )
@@ -1011,8 +1009,7 @@ class HDWallet {
 
         if (( $child_path -cmatch "^m/(?!0')\d+'/0'" -and $testnet -eq $true  ) -or `
             ( $child_path -cmatch "^m/(?!0')\d+'/1'" -and $testnet -eq $false )     ) {
-            Write-Host "Coin type is inconsistent." -Fore Red
-            return $null
+            throw "coin type in the derivation path is inconsistent with the selected network"
         }
 
         $child_depth   = $this.Depth + 1
