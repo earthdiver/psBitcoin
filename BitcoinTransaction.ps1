@@ -664,30 +664,6 @@ function Invoke-RestMethodWithRetry {
     return [pscustomobject]@{ Succeeded = $false; Value = $null }
 }
 
-function ConvertAddressToScriptPubKey {
-    param ( [string]$addr )
-    $addr = AssertBitcoinAddress $addr
-    if ( $addr -cmatch '^[123mn]' ) {
-        $decoded = Base58Address_Decode $addr
-        $prefix  = $decoded.Substring( 0, 2 )
-        $hash    = $decoded.Substring( 2 )
-        if ( $prefix -in @( "00", "6f" ) ) {
-            return "76a914" + $hash + "88ac"
-        } else {
-            return "a914" + $hash + "87"
-        }
-    }
-    $isTaproot = $addr -cmatch '^(bc|tb)1p'
-    $program   = Bech32_Decode $addr $isTaproot
-    if ( $isTaproot ) {
-        return "5120" + $program
-    } elseif ( $program.Length -eq 40 ) {
-        return "0014" + $program
-    } else {
-        return "0020" + $program
-    }
-}
-
 function GetUTXO {
     param ( [Parameter(ValueFromPipeline=$True)][string]$addr )
     $addr = AssertBitcoinAddress $addr
