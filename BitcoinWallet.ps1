@@ -455,7 +455,7 @@ function DecompressPublicKey {
     param( [Parameter(ValueFromPipeline=$True)][string]$publicKey )
     if ( $publicKey.Length -ne 33 * 2 ) { throw "invalid length" }
     $prefix     = $publicKey.Substring( 0, 2 )
-    if ( $prefix -cnotmatch '^0[23]$' ) { throw "invalid prefix" }
+    if ( $prefix -notmatch '^0[23]$' ) { throw "invalid prefix" }
     $publicKeyX = $publicKey.Substring( 2 )
     if ( $publicKeyX -notmatch '^[0-9a-f]{64}$' ) { throw "invalid public key" }
     $x  = [bigint]::Parse( "0" + $publicKeyX, "AllowHexSpecifier" )
@@ -528,7 +528,7 @@ function Base58Check_Decode {
 function Base58Address_Decode {
     param( [Parameter(ValueFromPipeline=$True)][string]$address )
     $decoded = Base58Check_Decode $address
-    if ( $decoded -cnotmatch '^(00|05|6f|c4)[0-9a-f]{40}$' ) {
+    if ( $decoded -notmatch '^(00|05|6f|c4)[0-9a-f]{40}$' ) {
         throw "invalid Base58 address payload"
     }
     return $decoded
@@ -685,7 +685,7 @@ function AssertBitcoinAddress {
     $address = NormalizeBitcoinAddress $address
     if ( $address -cmatch '^[123mn]' ) {
         [void]( Base58Address_Decode $address )
-    } elseif ( $address -cmatch '^(bc|tb|sp|tsp|spspend|tspspend|spscan|tspscan)1' ) {
+    } elseif ( $address -match '^(bc|tb|sp|tsp|spspend|tspspend|spscan|tspscan)1' ) {
         [void]( Bech32_Decode $address )
     } else {
         throw "invalid bitcoin address"
@@ -695,7 +695,7 @@ function AssertBitcoinAddress {
 
 function AssertPrivateKey {
     param( [string]$privateKey )
-    if ( $privateKey -cnotmatch '^[0-9a-fA-F]{64}$' ) { throw "invalid private key" }
+    if ( $privateKey -notmatch '^[0-9a-f]{64}$' ) { throw "invalid private key" }
     $d = [bigint]::Parse( "0" + $privateKey, "AllowHexSpecifier" )
     if ( $d.IsZero -or $d -ge [ECDSA]::Order ) { throw "invalid private key" }
 }
@@ -707,7 +707,7 @@ function DecodeWIF {
     } catch {
         throw "invalid WIF"
     }
-    if ( $decoded -cnotmatch '^(80|ef)[0-9a-f]{64}(01)?$' ) {
+    if ( $decoded -notmatch '^(80|ef)[0-9a-f]{64}(01)?$' ) {
         throw "invalid WIF"
     }
     $isCompressed = $decoded.Length -eq 68
@@ -742,7 +742,7 @@ function AssertPublicKey {
 
 function AssertCompressedPublicKey {
     param( [string]$publicKey )
-    if ( $publicKey -cnotmatch '^(02|03)[0-9a-fA-F]{64}$' ) {
+    if ( $publicKey -notmatch '^(02|03)[0-9a-f]{64}$' ) {
         throw "compressed public key required"
     }
     [void]( DecompressPublicKey $publicKey )
@@ -964,7 +964,7 @@ class HDWallet {
         $this.PrivateKey  = i2h $extendedKey[0..31]
         $this.ChainCode   = i2h $extendedKey[32..63]
         $this.PublicKeyUC = GetPublicKey -uc $this.PrivateKey
-        $prefix           = if ( $this.PublicKeyUC -cmatch '[02468ace]$' ) { "02" } else { "03" }
+        $prefix           = if ( $this.PublicKeyUC -match '[02468ace]$' ) { "02" } else { "03" }
         $this.PublicKey   = $prefix + $this.PublicKeyUC.Substring( 2, 64 )
         $this.Path        = "m"
         $this.Hardened    = $false
@@ -1063,7 +1063,7 @@ class HDWallet {
 
                     $child_privateKey  = $kc.ToHexString64()
                     $child_publicKeyUC = GetPublicKey -uc $child_privateKey
-                    $prefix            = if ( $child_publicKeyUC -cmatch '[02468ace]$' ) { "02" } else { "03" }
+                    $prefix            = if ( $child_publicKeyUC -match '[02468ace]$' ) { "02" } else { "03" }
                     $child_publicKey   = $prefix + $child_publicKeyUC.Substring( 2, 64 )
                 } else {
                     $Pc = $G * $il + $Kp
@@ -1196,15 +1196,15 @@ class HDWallet {
         $importedPublicKey  = ""
         $importedPublicKeyUC = ""
         if ( $version_e -in $prefixes_prv ) {
-            if ( $extendedKey_e -cnotmatch '^00[0-9a-f]{64}$' ) {
+            if ( $extendedKey_e -notmatch '^00[0-9a-f]{64}$' ) {
                 throw "invalid extended private key data"
             }
             $importedPrivateKey = $extendedkey_e.Substring( 2 )
             $importedPublicKeyUC = GetPublicKey -uc $importedPrivateKey
-            $prefix = if ( $importedPublicKeyUC -cmatch '[02468ace]$' ) { "02" } else { "03" }
+            $prefix = if ( $importedPublicKeyUC -match '[02468ace]$' ) { "02" } else { "03" }
             $importedPublicKey = $prefix + $importedPublicKeyUC.Substring( 2, 64 )
         } elseif ( $version_e -in $prefixes_pub ) {
-            if ( $extendedKey_e -cnotmatch '^(02|03)[0-9a-f]{64}$' ) {
+            if ( $extendedKey_e -notmatch '^(02|03)[0-9a-f]{64}$' ) {
                 throw "invalid extended public key data"
             }
             $importedPublicKeyUC = DecompressPublicKey $extendedKey_e
@@ -1222,7 +1222,7 @@ class HDWallet {
         if ( $parsedDepth -ne ( $path -replace '[^/]' ).Length ) {
             throw "the depths in the extended key and the path are inconsistent"
         }
-        if ( $path -eq "m" ) {
+        if ( $path -ceq "m" ) {
             [UInt32]$idx = 0
         } else {
             [UInt64]$pathIndex = $path -replace '^.+/(\d+)''?$','$1'
@@ -1238,7 +1238,7 @@ class HDWallet {
              -not $isHardened -and $path[-1] -eq "'"     ) {
             throw "the types (normal/hardened) in the extended key and the path are inconsistent"
         }
-        if ( $parsedDepth -eq 0 -and ( $pFingerprint_e -cne "00000000" -or $parsedIndex -ne 0 ) ) {
+        if ( $parsedDepth -eq 0 -and ( $pFingerprint_e -ne "00000000" -or $parsedIndex -ne 0 ) ) {
             throw "root extended key must have zero parent fingerprint and child number"
         }
         if ( $expectedPath -and $path -cnotmatch $expectedPath ) {
@@ -1261,7 +1261,7 @@ class HDWallet {
         $cacheKey = "$($this.Path)|$([int]$this.Testnet)"
         $this.Dict.Add( $cacheKey, $this )
 
-        if ( $path -eq "m" ) {
+        if ( $path -ceq "m" ) {
             $this.Parent = $null
         } else {
             $this.Parent             = [HDWallet]::new()
