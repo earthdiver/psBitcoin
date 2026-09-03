@@ -766,6 +766,8 @@ function ConvertAddressToScriptPubKey {
 }
 
 #===================================================================================================================================
+# Custom script spending is limited to scripts satisfied by a single signature
+# without additional stack items. Script compatibility is not validated.
 function RawTXfromLegacyAddress {
     param ( [string]$wif, 
             [string]$addressFrom, 
@@ -1054,6 +1056,8 @@ function RawTXfromSegwitAddress {
 }
 
 #===================================================================================================================================
+# Taproot script-path spending additionally supports only a single-leaf tree,
+# SIGHASH_DEFAULT, no annex, and no executed OP_CODESEPARATOR before CHECKSIG.
 function RawTXfromTaprootAddress {
     param ( [string]$wif, 
             [string]$addressFrom, 
