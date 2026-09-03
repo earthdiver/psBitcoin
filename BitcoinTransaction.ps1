@@ -112,8 +112,8 @@ class TXin {
         $this.Init( $txid, $index, $scriptSig, $sequence )
     }
     hidden [void] Init ( [string]$txid, [UInt32]$index, [string]$scriptSig, [UInt32]$sequence ) {
-        if ( $txid -notmatch '^[0-9a-f]{64}$' ) { throw "invalid txid" }
-        if ( $scriptSig -notmatch '^(?:[0-9a-f]{2})*$' ) { throw "invalid scriptSig" }
+        if ( $txid -cnotmatch '^[0-9a-fA-F]{64}$' ) { throw "invalid txid" }
+        if ( $scriptSig -cnotmatch '^(?:[0-9a-fA-F]{2})*$' ) { throw "invalid scriptSig" }
         $sb = [Text.StringBuilder]::new( $txid.Length )
         for ( $i = ($txid.Length - 1); $i -ge 0; $i-=2 ) {
             [void]$sb.Append( $txid.Chars($i-1) )
@@ -133,7 +133,7 @@ class TXout {
     [string]$scriptPubKey
     TXout ( [UInt64]$value, [string]$scriptPubKey ) {
         if ( $value -gt [UInt64]2100000000000000 ) { throw "transaction output exceeds MAX_MONEY" }
-        if ( $scriptPubKey -notmatch '^(?:[0-9a-f]{2})*$' ) { throw "invalid scriptPubKey" }
+        if ( $scriptPubKey -cnotmatch '^(?:[0-9a-fA-F]{2})*$' ) { throw "invalid scriptPubKey" }
         $this.value        = UInt64toStr $value
         $this.SPLen        = VarInttoStr ( $scriptPubKey.Length / 2 )
         $this.scriptPubKey = $scriptPubKey
@@ -705,7 +705,7 @@ function AssertLegacySource {
     } else {
         Hash160 $redeemScript
     }
-    if ( $actual -ne $expected ) {
+    if ( $actual -cne $expected ) {
         throw "private key or redeem script does not match 'addressFrom'"
     }
 }
@@ -723,14 +723,14 @@ function AssertSegwitSource {
     } else {
         $witnessProgram = "0014" + $pubkeyHash
     }
-    if ( $address -match '^[23]' ) {
+    if ( $address -cmatch '^[23]' ) {
         $actual = ( Base58Address_Decode $address ).Substring( 2 )
         $expected = Hash160 $witnessProgram
     } else {
         $actual = Bech32_Decode $address $false
         $expected = $witnessProgram.Substring( 4 )
     }
-    if ( $actual -ne $expected ) {
+    if ( $actual -cne $expected ) {
         throw "private key or witness script does not match 'addressFrom'"
     }
 }
@@ -740,9 +740,9 @@ function AssertTaprootKeySource {
            [string]$publicKey
     )
     $address = NormalizeBitcoinAddress $address
-    $testnet = $address -match '^tb1p'
+    $testnet = $address -cmatch '^tb1p'
     $expected = GetAddressP2TR $publicKey -Testnet:$testnet
-    if ( $address -ne $expected ) {
+    if ( $address -ine $expected ) {
         throw "private key does not match 'addressFrom'"
     }
 }
@@ -785,7 +785,7 @@ function RawTXfromLegacyAddress {
     $addressTo = NormalizeBitcoinAddress $addressTo
     if ( $addressChange ) { $addressChange = NormalizeBitcoinAddress $addressChange }
 
-    if ( $addressTo -match '^script:' ) {
+    if ( $addressTo -cmatch '^script:' ) {
         $scriptHash = Hash160 $addressTo.Substring( 7 )
         if ( $wif -cmatch '^[5KL]' ) {
             $addressTo = Base58Check_Encode ( "05" + $scriptHash )
@@ -922,7 +922,7 @@ function RawTXfromSegwitAddress {
 
     $SHA256 = New-Object Cryptography.SHA256CryptoServiceProvider
 
-    if ( $addressTo -match '^script:' ) {
+    if ( $addressTo -cmatch '^script:' ) {
         $scriptHash = i2h $SHA256.ComputeHash( ( h2i $addressTo.Substring( 7 ) ) )
         if ( $wif -cmatch '^[KL]' ) {
             $hrp = "bc"
@@ -944,7 +944,7 @@ function RawTXfromSegwitAddress {
     } elseif ( $addressFrom -cnotmatch '^([23]|bc1|tb1)' ) {
         throw "invalid 'addressFrom'"
     }
-    if ( $addressFrom -match '^(bc|tb)1p' ) { throw "Taproot address is not supported for 'addressFrom'" }
+    if ( $addressFrom -cmatch '^(bc|tb)1p' ) { throw "Taproot address is not supported for 'addressFrom'" }
     if ( $addressFrom -cmatch '^(3|bc1)' -and $addressTo -cnotmatch '^([13]|bc1)' -or
          $addressFrom -cmatch '^(2|tb1)' -and $addressTo -cnotmatch '^([2mn]|tb1)' ) {
          throw "inconsistent networks between 'WIF/addressFrom' and 'addressTo'"
@@ -979,7 +979,7 @@ function RawTXfromSegwitAddress {
             $scriptSig  = "160014"   + $pubkeyHash_in                      # PUSH( OP_0 PUSH(pubkeyHash) )
             $scriptCode = "1976a914" + $pubkeyHash_in + "88ac"             # PUSH( OP_DUP OP_HASH160 PUSH(pubkeyHash) OP_EQUALVERIFY OP_CHECKSIG )
         }
-    } elseif ( $addressFrom -match '^(bc1|tb1)' ) {
+    } elseif ( $addressFrom -cmatch '^(bc1|tb1)' ) {
         $hash_in = Bech32_Decode $addressFrom
         if ( ( $hash_in.Length -eq 40 -and $witnessScript -ne "" ) -or
              ( $hash_in.Length -eq 64 -and $witnessScript -eq "" )     ) {
@@ -1075,7 +1075,7 @@ function RawTXfromTaprootAddress {
     $addressTo = NormalizeBitcoinAddress $addressTo
     if ( $addressChange ) { $addressChange = NormalizeBitcoinAddress $addressChange }
 
-    if ( $addressTo -match '^script:' ) {
+    if ( $addressTo -cmatch '^script:' ) {
 # Internal key 0x50929b74c1a04954b78b4b6035e97a5e078a5a0f28ec96d547bfee9ace803ac0 ( = SHA256( G ) ) is used as an unspendable key path.
         $internalKey = "50929b74c1a04954b78b4b6035e97a5e078a5a0f28ec96d547bfee9ace803ac0"
         $x           = [bigint]::Parse( "0" + $internalKey, "AllowHexSpecifier" )
@@ -1097,24 +1097,24 @@ function RawTXfromTaprootAddress {
         Write-Host
     }
 
-    if ( $wif -cmatch '^[KL]' -and $addressFrom -notmatch '^bc1p' ) {
+    if ( $wif -cmatch '^[KL]' -and $addressFrom -cnotmatch '^bc1p' ) {
         throw "inconsistent networks between 'WIF' and 'addressFrom'"
-    } elseif ( $wif -cmatch '^c'  -and $addressFrom -notmatch '^tb1p' ) {
+    } elseif ( $wif -cmatch '^c'  -and $addressFrom -cnotmatch '^tb1p' ) { 
         throw "inconsistent networks between 'WIF' and 'addressFrom'"
     } elseif ( $wif -cnotmatch '^[KLc]' ) {
         throw "invalid 'WIF'"
-    } elseif ( $addressFrom -notmatch '^(bc|tb)1p' ) {
+    } elseif ( $addressFrom -cnotmatch '^(bc|tb)1p' ) {
         throw "invalid 'addressFrom'"
     }
-    if ( $addressFrom -match '^bc1p' -and $addressTo -cnotmatch '^([13]|bc1)' -or
-         $addressFrom -match '^tb1p' -and $addressTo -cnotmatch '^([2mn]|tb1)' ) {
+    if ( $addressFrom -cmatch '^bc1p' -and $addressTo -cnotmatch '^([13]|bc1)' -or
+         $addressFrom -cmatch '^tb1p' -and $addressTo -cnotmatch '^([2mn]|tb1)' ) {
          throw "inconsistent networks between 'WIF/addressFrom' and 'addressTo'"
     } elseif ( $addressTo -cnotmatch '^([123mn]|bc1|tb1)' ) {
          throw "invalid 'addressTo'"
     }
     if ( $addressChange ) {
-        if ( $addressFrom -match '^bc1p' -and $addressChange -cnotmatch '^([13]|bc1)' -or
-             $addressFrom -match '^tb1p' -and $addressChange -cnotmatch '^([2mn]|tb1)' ) {
+        if ( $addressFrom -cmatch '^bc1p' -and $addressChange -cnotmatch '^([13]|bc1)' -or
+             $addressFrom -cmatch '^tb1p' -and $addressChange -cnotmatch '^([2mn]|tb1)' ) {
             throw "inconsistent networks between 'WIF/addressFrom/addressTo' and 'addressChange'"
         } elseif ( $addressChange -cnotmatch '^([123mn]|bc1|tb1)' ) {
              throw "invalid 'addressChange'"
@@ -1185,7 +1185,7 @@ function RawTXfromTaprootAddress {
         $H = [ECDSA]::new( [bigint]::Parse( "0" + $internalKey, "AllowHexSpecifier" ) )
         $Q = $H + [ECDSA]::new() * $t
         if ( $Q -eq $null ) { throw "The resulting 'addressFrom' is invalid." }
-        if ( ( Bech32_Decode $addressFrom $true ) -ne $Q.X.ToHexString64() ) {
+        if ( ( Bech32_Decode $addressFrom $true ) -cne $Q.X.ToHexString64() ) {
             throw "inconsistent 'addressFrom' and 'tapScript'"
         }
         $controlByte  = if ( $Q.Y.IsEven ) { "c0" } else { "c1" }
@@ -1251,7 +1251,7 @@ function NulldataTX {
     } elseif ( $addressFrom -cnotmatch '^([23]|bc1|tb1)' ) {
         throw "invalid 'addressFrom'"
     }
-    if ( $addressFrom -match '^(bc|tb)1p' ) { throw "Taproot address is not supported for 'addressFrom'" }
+    if ( $addressFrom -cmatch '^(bc|tb)1p' ) { throw "Taproot address is not supported for 'addressFrom'" }
     if ( $addressChange ) {
         if ( $addressFrom -cmatch '^(3|bc1)' -and $addressChange -cnotmatch '^([13]|bc1)' -or
              $addressFrom -cmatch '^(2|tb1)' -and $addressChange -cnotmatch '^([2mn]|tb1)' ) {
@@ -1281,7 +1281,7 @@ function NulldataTX {
             $scriptSig  = "160014"   + $pubkeyHash_in                      # PUSH( OP_0 PUSH(pubkeyHash) )
             $scriptCode = "1976a914" + $pubkeyHash_in + "88ac"             # PUSH( OP_DUP OP_HASH160 PUSH(pubkeyHash) OP_EQUALVERIFY OP_CHECKSIG )
         }
-    } elseif ( $addressFrom -match '^(bc1|tb1)' ) {
+    } elseif ( $addressFrom -cmatch '^(bc1|tb1)' ) {
         $hash_in = Bech32_Decode $addressFrom
         if ( ( $hash_in.Length -eq 40 -and $witnessScript -ne "" ) -or
              ( $hash_in.Length -eq 64 -and $witnessScript -eq "" )     ) {
@@ -1358,7 +1358,7 @@ function CLTVScript {
     param( [string]$datetime, [string]$publicKey, [Alias("t")][switch]$Testnet )
     AssertCompressedPublicKey $publicKey
     $SHA256 = New-Object Cryptography.SHA256CryptoServiceProvider
-    if ( $datetime -notmatch '(?:z|[+-]\d{2}:\d{2})$' ) {
+    if ( $datetime -cnotmatch '(?:Z|[+-]\d{2}:\d{2})$' ) {
         throw "'datetime' must include an explicit UTC offset"
     }
     [DateTimeOffset]$dateTimeOffset = [DateTimeOffset]::MinValue
@@ -1419,7 +1419,7 @@ function SignMessage {
     $address = NormalizeBitcoinAddress $address
 
     $isEncodedWIF = $false
-    if ( $wif -match '^[0-9a-f]{64}$' ) {
+    if ( $wif -cmatch '^[0-9a-fA-F]{64}$' ) {
         AssertPrivateKey $wif
         $privateKey = $wif.ToLowerInvariant()
         $compressed = $true
@@ -1429,7 +1429,7 @@ function SignMessage {
         } catch {
             throw "invalid WIF"
         }
-        if ( $decodedWIF -notmatch '^(80|ef)[0-9a-f]{64}(01)?$' ) {
+        if ( $decodedWIF -cnotmatch '^(80|ef)[0-9a-f]{64}(01)?$' ) {
             throw "invalid WIF"
         }
         $isEncodedWIF = $true
@@ -1624,7 +1624,7 @@ function VerifyMessage {
     if (       $header -ge 27 -and $header -lt 31 ) {
         return $address -ceq ( GetAddressP2PKH       $publicKey -Testnet:$Testnet )
     } elseif ( $header -ge 31 -and $header -lt 35 ) {
-        if ( $address -cmatch '^[1mn]' ) {
+        if ( $address -match '^[1mn]' ) {
             return $address -ceq ( GetAddressP2PKH   $publicKey -Testnet:$Testnet )
         } elseif ( $electrum ) {
             if ( $address -match '^[23]' )      { return $address -ceq ( GetAddressP2SH-P2WPKH $publicKey -Testnet:$Testnet ) }
