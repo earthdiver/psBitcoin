@@ -1,7 +1,7 @@
 ﻿#
 # classes and functions for bitcoin transactions
 #
-# Copyright (c) 2023-2025 earthdiver1
+# Copyright (c) 2023-2026 earthdiver1
 #
 # This work is licensed under the Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0).
 #
