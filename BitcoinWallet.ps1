@@ -1185,10 +1185,10 @@ class HDWallet {
         if ( $testnet -ne $encodedTestnet ) { throw "extended-key network mismatch" }
 
         $expectedPath = switch ( $version_e ) {
-            { $_ -cin @( "049d7878", "049d7cb2" ) } { "^m/49'/0'(?:/|$)"       ; break }
-            { $_ -cin @( "044a4e28", "044a5262" ) } { "^m/49'/1'(?:/|$)"       ; break }
-            { $_ -cin @( "04b2430c", "04b24746" ) } { "^m/84'/0'(?:/|$)"       ; break }
-            { $_ -cin @( "045f18bc", "045f1cf6" ) } { "^m/84'/1'(?:/|$)"       ; break }
+            { $_ -cin @( "049d7878", "049d7cb2" ) } { "^m/49'(?:/0'(?:/|$)|$)"       ; break }
+            { $_ -cin @( "044a4e28", "044a5262" ) } { "^m/49'(?:/1'(?:/|$)|$)"       ; break }
+            { $_ -cin @( "04b2430c", "04b24746" ) } { "^m/(?:84'(?:/0'(?:/|$)|$)|0'(?:/|$))"       ; break }
+            { $_ -cin @( "045f18bc", "045f1cf6" ) } { "^m/(?:84'(?:/1'(?:/|$)|$)|0'(?:/|$))"       ; break }
             default                                  { $null }
         }
 
