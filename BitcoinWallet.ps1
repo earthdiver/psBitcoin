@@ -1055,7 +1055,7 @@ class HDWallet {
 
                 $extendedKey = $HMACSHA512.ComputeHash( $bytes )
                 $il = [bigint]::new( $extendedKey[31..0] + @(0x00) )
-                if ( $il.IsZero -or $il -ge [ECDSA]::Order ) { continue }
+                if ( $il -ge [ECDSA]::Order ) { continue }
 
                 if ( $this.PrivateKey ) {
                     $kc = ( $il + $kp ) % [ECDSA]::Order
