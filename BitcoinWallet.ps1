@@ -980,9 +980,9 @@ class HDWallet {
     [HDWallet] Derive ( [int]$index, [bool]$hardened ) {
         $child_path  = $this.Path + "/" + $index.ToString( "d" )
         if ( $hardened ) {  $child_path  += "'" }
-        if (       $child_path -cmatch "^m/(?!0')\d+'/0'" ) {
+        if (       $child_path -cmatch "^m/(44|48|49|84|86)'/0'(?:/|$)" ) {
             $child_Testnet = $false                                   # Mainnet Bitcoin
-        } elseif ( $child_path -cmatch "^m/(?!0')\d+'/1'" ) {
+        } elseif ( $child_path -cmatch "^m/(44|48|49|84|86)'/1'(?:/|$)" ) {
             $child_Testnet = $true                                    # Testnet Bitcoin
         } else {
             $child_Testnet = $this.Testnet                            # inherit from the parent object
@@ -1007,8 +1007,8 @@ class HDWallet {
 
         if ( $hardened ) {  $child_path  += "'" }
 
-        if (( $child_path -cmatch "^m/(?!0')\d+'/0'" -and $testnet -eq $true  ) -or `
-            ( $child_path -cmatch "^m/(?!0')\d+'/1'" -and $testnet -eq $false )     ) {
+        if (( $child_path -cmatch "^m/(44|48|49|84|86)'/0'(?:/|$)" -and $testnet -eq $true  ) -or `
+            ( $child_path -cmatch "^m/(44|48|49|84|86)'/1'(?:/|$)" -and $testnet -eq $false )     ) {
             throw "coin type in the derivation path is inconsistent with the selected network"
         }
 
