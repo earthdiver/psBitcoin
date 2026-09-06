@@ -25,9 +25,9 @@ function UInt64toStr( [UInt64]$int ) {
 function VarInttoStr( [UInt64]$int ) {
     $xstr = UInt64toStr $int
     switch ( $int ) {
-        { $_ -le 0x000000fc } { $result =        $xstr.Substring( 0, 2 ) ; break }
-        { $_ -le 0x0000ffff } { $result = "fd" + $xstr.Substring( 0, 4 ) ; break }
-        { $_ -le 0xffffffff } { $result = "fe" + $xstr.Substring( 0, 8 ) ; break }
+        { $_ -le [UInt32]'0x000000fc' } { $result =        $xstr.Substring( 0, 2 ) ; break }
+        { $_ -le [UInt32]'0x0000ffff' } { $result = "fd" + $xstr.Substring( 0, 4 ) ; break }
+        { $_ -le [UInt32]'0xffffffff' } { $result = "fe" + $xstr.Substring( 0, 8 ) ; break }
         default               { $result = "ff" + $xstr                        }
     }
     return $result
