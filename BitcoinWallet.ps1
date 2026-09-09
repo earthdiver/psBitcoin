@@ -158,19 +158,21 @@ function ValidateMnemonic {
     param( [Parameter(ValueFromPipeline=$True)][string]$mnemonic,
            [Alias("j" )][Switch]$Japanese
     )
-    if ( -not $mnemonic ) { return $false }
-    $mnemonic = $mnemonic.Normalize( [Text.NormalizationForm]::FormKD ).Trim()
-    $wordlist = GetBIP39Wordlist -Japanese:$Japanese
-    $words    = $mnemonic -split '\s+'
-    if ( $words.Count -notin @(12, 15, 18, 21, 24) ) { return $false }
-    foreach ( $w in $words ) { if ( $w -cnotin $wordlist ) { return $false } }
-    $full     = ( $words | % { [Convert]::ToString( $wordlist.IndexOf( $_ ),2).PadLeft( 11, "0" ) } ) -join ""
-    $len      = $full.Length / 33
-    $checksum = $full.Substring( $full.Length - $len )
-    $entropy  = $full.Substring( 0, $full.Length - $len ) | b2i
-    $SHA256   = New-Object Cryptography.SHA256CryptoServiceProvider
-    $expected = ( i2b $SHA256.ComputeHash( $entropy ) ).Substring( 0, $entropy.Count / 4 )
-    return $checksum -eq $expected
+    process {
+        if ( -not $mnemonic ) { return $false }
+        $mnemonic = $mnemonic.Normalize( [Text.NormalizationForm]::FormKD ).Trim()
+        $wordlist = GetBIP39Wordlist -Japanese:$Japanese
+        $words    = $mnemonic -split '\s+'
+        if ( $words.Count -notin @(12, 15, 18, 21, 24) ) { return $false }
+        foreach ( $w in $words ) { if ( $w -cnotin $wordlist ) { return $false } }
+        $full     = ( $words | % { [Convert]::ToString( $wordlist.IndexOf( $_ ),2).PadLeft( 11, "0" ) } ) -join ""
+        $len      = $full.Length / 33
+        $checksum = $full.Substring( $full.Length - $len )
+        $entropy  = $full.Substring( 0, $full.Length - $len ) | b2i
+        $SHA256   = New-Object Cryptography.SHA256CryptoServiceProvider
+        $expected = ( i2b $SHA256.ComputeHash( $entropy ) ).Substring( 0, $entropy.Count / 4 )
+        return $checksum -eq $expected
+    }
 }
 
 Add-Type @'
@@ -223,16 +225,18 @@ function GetBIP39Seed {
            [string]$passphrase = "",
            [Alias("j")][Switch]$Japanese
     )
-    $normalizedMnemonic = ( $mnemonic.Normalize( [Text.NormalizationForm]::FormKD ).Trim() -replace '\s+', ' ' )
-    if ( -not ( ValidateMnemonic $normalizedMnemonic -Japanese:$Japanese ) ) {
-        throw "invalid BIP39 mnemonic"
-    }
-    $salt = ( "mnemonic" + $passphrase ).Normalize( [Text.NormalizationForm]::FormKD )
-    $HMACSHA512 = New-Object Security.Cryptography.HMACSHA512
-    try {
-        return PBKDF2 $normalizedMnemonic $salt 2048 64 $HMACSHA512
-    } finally {
-        $HMACSHA512.Dispose()
+    process {
+        $normalizedMnemonic = ( $mnemonic.Normalize( [Text.NormalizationForm]::FormKD ).Trim() -replace '\s+', ' ' )
+        if ( -not ( ValidateMnemonic $normalizedMnemonic -Japanese:$Japanese ) ) {
+            throw "invalid BIP39 mnemonic"
+        }
+        $salt = ( "mnemonic" + $passphrase ).Normalize( [Text.NormalizationForm]::FormKD )
+        $HMACSHA512 = New-Object Security.Cryptography.HMACSHA512
+        try {
+            return PBKDF2 $normalizedMnemonic $salt 2048 64 $HMACSHA512
+        } finally {
+            $HMACSHA512.Dispose()
+        }
     }
 }
 
@@ -1158,6 +1162,9 @@ class HDWallet {
     }
 
     [void] ImportExtendedKey( [string]$extendedKey, [string]$path, [bool]$testnet ) {
+        if ( $null -ne $this.Dict ) {
+            throw "wallet is already initialized; import into a new HDWallet object"
+        }
 
         $serialized = Base58Check_Decode $extendedKey
 

@@ -63,6 +63,7 @@ Please place the wordlists in the same folder.
 ./examples/05_HD-BrainWallet.ps1
 ./examples/06_nested-BIP85.ps1
 ./examples/07_SilentPaymentAddresses_BIP352.ps1
+./examples/08_satscard.ps1
 ```
 
 ## Other Tools
