@@ -1,9 +1,9 @@
 {
   "date": "2026-09-11",
   "platform": "Windows",
-  "method": "Full run of all 16 suites on Windows PowerShell 5.1 and 7. AssertBitcoinAddress, GetTweak, Base58Address_Decode, and ConvertAddressToScriptPubKey accept explicit arguments without pipeline processing. Both runs exited 0. QR pipeline processing is checked structurally; GUI rendering is not exercised.",
+  "method": "All 16 suites on Windows PowerShell 5.1 and 7. GeneratorTable checks all 256 stored X/Y pairs against independent affine doubling, their initialized values and power-of-two products, sparse/dense scalars, lazy initialization, and memory reuse. Both runs exit 0.",
   "sourceSHA256": {
-    "BitcoinWallet.ps1": "0cc47cd3ba854fb74c7c327fa2f5fd5db3c125cdcbed9769d7a4c6fafa2cf2a0",
+    "BitcoinWallet.ps1": "714aa0f622be52c7c8b7de033d8f908f4d6b9225d82fa5ced5e345837d7017c3",
     "BitcoinTransaction.ps1": "c45cd20ce62daa70ae7f6f0cbe2a924cccfadb1df02b4b6055d3671c0c7122a5",
     "SeedQR.ps1": "db0de889d1d02301bad930ba6814c92f78b247b800594460f78d863f1737a992"
   },
@@ -11,105 +11,105 @@
     {
       "powershell": "5.1.26100.9444",
       "wallet": "BitcoinWallet.ps1",
-      "total": 987,
-      "passed": 987,
+      "total": 1234,
+      "passed": 1234,
       "failed": 0,
       "suites": [
         {
           "name": "Addresses.Tests.ps1",
           "total": 139,
           "failed": 0,
-          "run": "94643a1c96734235a163a10d95b8949e"
+          "run": "657bc7cad71c40d0b4f68e0bce4bd625"
         },
         {
           "name": "Aezeed.Tests.ps1",
           "total": 32,
           "failed": 0,
-          "run": "94643a1c96734235a163a10d95b8949e"
+          "run": "657bc7cad71c40d0b4f68e0bce4bd625"
         },
         {
           "name": "Builders.Tests.ps1",
           "total": 68,
           "failed": 0,
-          "run": "94643a1c96734235a163a10d95b8949e"
+          "run": "657bc7cad71c40d0b4f68e0bce4bd625"
         },
         {
           "name": "CurveAndHash.Tests.ps1",
           "total": 20,
           "failed": 0,
-          "run": "94643a1c96734235a163a10d95b8949e"
+          "run": "657bc7cad71c40d0b4f68e0bce4bd625"
         },
         {
           "name": "DerivationFaults.Tests.ps1",
           "total": 9,
           "failed": 0,
-          "run": "94643a1c96734235a163a10d95b8949e"
+          "run": "657bc7cad71c40d0b4f68e0bce4bd625"
         },
         {
           "name": "Encoding.Tests.ps1",
           "total": 58,
           "failed": 0,
-          "run": "94643a1c96734235a163a10d95b8949e"
+          "run": "657bc7cad71c40d0b4f68e0bce4bd625"
         },
         {
           "name": "Examples.Tests.ps1",
           "total": 14,
           "failed": 0,
-          "run": "94643a1c96734235a163a10d95b8949e"
+          "run": "657bc7cad71c40d0b4f68e0bce4bd625"
         },
         {
-          "name": "GeneratorCache.Tests.ps1",
-          "total": 14,
+          "name": "GeneratorTable.Tests.ps1",
+          "total": 261,
           "failed": 0,
-          "run": "94643a1c96734235a163a10d95b8949e"
+          "run": "657bc7cad71c40d0b4f68e0bce4bd625"
         },
         {
           "name": "Harness.Tests.ps1",
           "total": 13,
           "failed": 0,
-          "run": "94643a1c96734235a163a10d95b8949e"
+          "run": "657bc7cad71c40d0b4f68e0bce4bd625"
         },
         {
           "name": "HDWallet.Tests.ps1",
           "total": 108,
           "failed": 0,
-          "run": "94643a1c96734235a163a10d95b8949e"
+          "run": "657bc7cad71c40d0b4f68e0bce4bd625"
         },
         {
           "name": "Mnemonic.Tests.ps1",
           "total": 181,
           "failed": 0,
-          "run": "94643a1c96734235a163a10d95b8949e"
+          "run": "657bc7cad71c40d0b4f68e0bce4bd625"
         },
         {
           "name": "Network.Tests.ps1",
           "total": 18,
           "failed": 0,
-          "run": "94643a1c96734235a163a10d95b8949e"
+          "run": "657bc7cad71c40d0b4f68e0bce4bd625"
         },
         {
           "name": "Pipeline.Tests.ps1",
           "total": 60,
           "failed": 0,
-          "run": "94643a1c96734235a163a10d95b8949e"
+          "run": "657bc7cad71c40d0b4f68e0bce4bd625"
         },
         {
           "name": "SeedQR.Tests.ps1",
           "total": 99,
           "failed": 0,
-          "run": "94643a1c96734235a163a10d95b8949e"
+          "run": "657bc7cad71c40d0b4f68e0bce4bd625"
         },
         {
           "name": "Signatures.Tests.ps1",
           "total": 50,
           "failed": 0,
-          "run": "94643a1c96734235a163a10d95b8949e"
+          "run": "657bc7cad71c40d0b4f68e0bce4bd625"
         },
         {
           "name": "Transactions.Tests.ps1",
           "total": 104,
           "failed": 0,
-          "run": "94643a1c96734235a163a10d95b8949e"
+          "run": "657bc7cad71c40d0b4f68e0bce4bd625"
         }
       ],
       "failures": []
@@ -117,132 +117,108 @@
     {
       "powershell": "7.6.5",
       "wallet": "BitcoinWallet.ps1",
-      "total": 987.0,
-      "passed": 987.0,
+      "total": 1234.0,
+      "passed": 1234.0,
       "failed": 0,
       "suites": [
         {
           "name": "Addresses.Tests.ps1",
           "total": 139,
           "failed": 0,
-          "run": "dd067aa7874c4fb580bc9af10c0cbddb"
+          "run": "efa36fddadfc45ebb119008fc60e3aa9"
         },
         {
           "name": "Aezeed.Tests.ps1",
           "total": 32,
           "failed": 0,
-          "run": "dd067aa7874c4fb580bc9af10c0cbddb"
+          "run": "efa36fddadfc45ebb119008fc60e3aa9"
         },
         {
           "name": "Builders.Tests.ps1",
           "total": 68,
           "failed": 0,
-          "run": "dd067aa7874c4fb580bc9af10c0cbddb"
+          "run": "efa36fddadfc45ebb119008fc60e3aa9"
         },
         {
           "name": "CurveAndHash.Tests.ps1",
           "total": 20,
           "failed": 0,
-          "run": "dd067aa7874c4fb580bc9af10c0cbddb"
+          "run": "efa36fddadfc45ebb119008fc60e3aa9"
         },
         {
           "name": "DerivationFaults.Tests.ps1",
           "total": 9,
           "failed": 0,
-          "run": "dd067aa7874c4fb580bc9af10c0cbddb"
+          "run": "efa36fddadfc45ebb119008fc60e3aa9"
         },
         {
           "name": "Encoding.Tests.ps1",
           "total": 58,
           "failed": 0,
-          "run": "dd067aa7874c4fb580bc9af10c0cbddb"
+          "run": "efa36fddadfc45ebb119008fc60e3aa9"
         },
         {
           "name": "Examples.Tests.ps1",
           "total": 14,
           "failed": 0,
-          "run": "dd067aa7874c4fb580bc9af10c0cbddb"
+          "run": "efa36fddadfc45ebb119008fc60e3aa9"
         },
         {
-          "name": "GeneratorCache.Tests.ps1",
-          "total": 14,
+          "name": "GeneratorTable.Tests.ps1",
+          "total": 261,
           "failed": 0,
-          "run": "dd067aa7874c4fb580bc9af10c0cbddb"
+          "run": "efa36fddadfc45ebb119008fc60e3aa9"
         },
         {
           "name": "Harness.Tests.ps1",
           "total": 13,
           "failed": 0,
-          "run": "dd067aa7874c4fb580bc9af10c0cbddb"
+          "run": "efa36fddadfc45ebb119008fc60e3aa9"
         },
         {
           "name": "HDWallet.Tests.ps1",
           "total": 108,
           "failed": 0,
-          "run": "dd067aa7874c4fb580bc9af10c0cbddb"
+          "run": "efa36fddadfc45ebb119008fc60e3aa9"
         },
         {
           "name": "Mnemonic.Tests.ps1",
           "total": 181,
           "failed": 0,
-          "run": "dd067aa7874c4fb580bc9af10c0cbddb"
+          "run": "efa36fddadfc45ebb119008fc60e3aa9"
         },
         {
           "name": "Network.Tests.ps1",
           "total": 18,
           "failed": 0,
-          "run": "dd067aa7874c4fb580bc9af10c0cbddb"
+          "run": "efa36fddadfc45ebb119008fc60e3aa9"
         },
         {
           "name": "Pipeline.Tests.ps1",
           "total": 60,
           "failed": 0,
-          "run": "dd067aa7874c4fb580bc9af10c0cbddb"
+          "run": "efa36fddadfc45ebb119008fc60e3aa9"
         },
         {
           "name": "SeedQR.Tests.ps1",
           "total": 99,
           "failed": 0,
-          "run": "dd067aa7874c4fb580bc9af10c0cbddb"
+          "run": "efa36fddadfc45ebb119008fc60e3aa9"
         },
         {
           "name": "Signatures.Tests.ps1",
           "total": 50,
           "failed": 0,
-          "run": "dd067aa7874c4fb580bc9af10c0cbddb"
+          "run": "efa36fddadfc45ebb119008fc60e3aa9"
         },
         {
           "name": "Transactions.Tests.ps1",
           "total": 104,
           "failed": 0,
-          "run": "dd067aa7874c4fb580bc9af10c0cbddb"
+          "run": "efa36fddadfc45ebb119008fc60e3aa9"
         }
       ],
       "failures": []
-    }
-  ],
-  "sensitivity": [
-    {
-      "mutation": "CompactSize 32-bit prefix fe -> ff",
-      "run": "5bc23d8ef6dd4723a3f2491fa13c5234",
-      "total": 7,
-      "failed": 2,
-      "exitCode": 1,
-      "note": "Historical run before CompactSize cases were merged into Encoding.Tests.ps1."
-    },
-    {
-      "mutation": "Taproot sighash locktime forced to zero",
-      "run": "2b45e2680dc3459bb9026607e6cffcb3",
-      "total": 104,
-      "failed": 63,
-      "exitCode": 1
-    },
-    {
-      "mutation": "Temporary example copy: trailing space in 01 snapshot, incorrect 99 wallet line, incremented IL constant, incorrect IL ordinal",
-      "run": "514b8d8107844469956059d70d88ab6c",
-      "total": 14,
-      "failed": 6,
-      "exitCode": 1
     }
   ]
 }

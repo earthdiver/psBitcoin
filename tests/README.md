@@ -31,13 +31,16 @@ use an option such as `-TimeoutSeconds 600` for slower environments.
 ./tests/Benchmark-Examples.ps1 -Repetitions 3
 ```
 
-The benchmark measures initial table generation and loading a saved table in separate processes, run sequentially.
+The benchmark measures embedded table initialization in fresh processes, run sequentially.
 It also measures a second execution in each process to compare memory cache reuse.
-Only example execution is timed, and all output is checked against the `.out` snapshots.
+Example execution and the initial wallet import are timed separately, and all example output is checked against the `.out` snapshots.
 Raw measurements are saved under `tests/results/`.
 
 To compare implementations, specify a directory containing the baseline source files.
 The wallet must be named `BitcoinWallet.ps1` in both source directories.
+The comparison runner detects external-cache implementations and measures both generation and saved-file loading;
+embedded implementations use a single initialization mode. Every mode also measures memory reuse.
+Scenario order rotates across trials. Process startup is excluded from the timings.
 
 ```powershell
 ./tests/Benchmark-GeneratorVariants.ps1 -BaselineRoot 'C:\path\to\baseline' -Repetitions 3
@@ -63,7 +66,7 @@ The wallet must be named `BitcoinWallet.ps1` in both source directories.
 | SeedQR | Standard and compact payloads for all 48 English/Japanese vectors, entropy, checksums, ECC options, invalid mnemonics | SeedQR |
 | aezeed | LND/btcd reference data, passphrases, authentication, Unicode, versions, corruption, BIP39 confusion and coexistence | Aezeed |
 | Examples | Output snapshots for all examples except 08, including spaces, blank lines, and final newlines; example 99 source references, IL constants, and recovered keys | Examples |
-| Fixed-base cache | Lazy generation, binary format, loading in another process without generation, memory reuse, regeneration after corruption, continued operation when writes fail | GeneratorCache |
+| Fixed-base table | Lazy initialization, all 256 X/Y pairs and their order against independent affine doubling, each power-of-two multiplication, sparse/dense scalars, memory reuse | GeneratorTable |
 | Test harness | Assertion failure handling, fixture SHA256 values, official vector counts | Harness |
 
 Suites use the shared `Test` and `Assert-*` helpers in `TestSupport.ps1`.
@@ -113,11 +116,15 @@ python3 tests/reference/generate-core-vectors.py
 Review and update the corresponding manifest SHA256 values as well.
 Do not replace expected values by copying production implementation output.
 
-Check the independent fixed-base table SHA256 with:
+Print all fixed-base coordinates using independent affine arithmetic:
 
 ```sh
 python3 tests/reference/generate-generator-table.py
 ```
+
+Standalone PowerShell code for generating the same pairs is included in the comment of `Secp256k1GeneratorData` at the end of `BitcoinWallet.ps1`.
+Tests compute expected coordinates independently in PowerShell, so running them does not require Python.
+Each of the 256 pairs has a separate test covering stored X/Y, initialization, and multiplication by its power of two.
 
 ## Limits
 

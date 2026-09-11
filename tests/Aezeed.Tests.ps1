@@ -1,22 +1,9 @@
 param(
     [string]$SourceRoot = (Split-Path -Parent $PSScriptRoot),
     [string]$ResultPath = '',
-    [string]$WalletFile = 'BitcoinWallet.ps1',
-    [switch]$PreloadLegacyDecoder
+    [string]$WalletFile = 'BitcoinWallet.ps1'
 )
 . (Join-Path $PSScriptRoot 'TestSupport.ps1')
-if ($PreloadLegacyDecoder) {
-    # Reproduce an old Add-Type class remaining in the user's PowerShell session.
-    Add-Type @'
-namespace PsBitcoin {
-    public static class AezeedDecoder {
-        public static byte[] Decode(byte[] encoded, byte[] passphrase) {
-            throw new System.ArgumentException("Unsupported aezeed internal seed version; only LND version 0 is supported.");
-        }
-    }
-}
-'@
-}
 . (Join-Path $SourceRoot 'examples/09_aezeed2seed.ps1') | Out-Null
 . (Join-Path $SourceRoot $WalletFile)
 # Public, deterministic fixtures from LND v0.19.3-beta and btcd hdkeychain.
@@ -87,7 +74,7 @@ Test 'Reject BIP39 as aezeed' {
     $bip39 = ((@('abandon') * 23) + @('art')) -join ' '
     Assert-Throws { GetAezeedSeed $bip39 } 'checksum'
 }
-Test 'BIP39 seed derivation still matches the published TREZOR vector' {
+Test 'BIP39 and aezeed coexist in the same session' {
     $bip39 = ((@('abandon') * 11) + @('about')) -join ' '
     Assert-Equal (GetBIP39Seed $bip39 -passphrase 'TREZOR') (
         'c55257c360c07c72029aebc1b53c05ed0362ada38ead3e3e9efa3708e5349553' +
