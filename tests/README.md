@@ -90,7 +90,7 @@ When an output change is intentional, regenerate the snapshots and review the di
 ./tests/Update-ExampleSnapshots.ps1
 ```
 
-Tests and CI do not update snapshots automatically.
+Tests do not update snapshots automatically.
 
 ## Expected values and independence
 
@@ -137,4 +137,3 @@ Line and branch coverage percentages are not measured. The following require sep
 - Randomness quality, timing attacks, secret erasure from memory, and performance limits.
 
 Example 08 requires a physical SATSCARD and is excluded from output comparisons.
-CI is configured for Windows PowerShell 5.1, Windows PowerShell 7, and Linux PowerShell 7.
