@@ -289,6 +289,11 @@ class ECDSA {
     static $p     = [bigint]::Parse( "0fffffffffffffffffffffffffffffffffffffffffffffffffffffffefffffc2f", "AllowHexSpecifier" )
     static $Order = [bigint]::Parse( "0fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141", "AllowHexSpecifier" )
 
+    # BEGIN fixed-generator cache fields
+    hidden static [ECDSAJ[]] $GeneratorTable = $null
+    hidden static [object] $GeneratorTableLock = [object]::new()
+    # END fixed-generator cache fields
+
     ECDSA() {
         $this.X   = [bigint]::Parse( "079be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798", "AllowHexSpecifier" )
         $this.Y   = [bigint]::Parse( "0483ada7726a3c4655da4fbfc0e1108a8fd17b448a68554199c47d08ffb10d4b8", "AllowHexSpecifier" )
@@ -361,11 +366,157 @@ class ECDSA {
         return $result;
     }
 
+    # BEGIN fixed-generator cache methods
+    hidden static [string] GetGeneratorCachePath() {
+        $override = [Environment]::GetEnvironmentVariable( 'PSBITCOIN_GENERATOR_CACHE' )
+        if ( -not [string]::IsNullOrEmpty( $override ) ) { return [IO.Path]::GetFullPath( $override ) }
+        $directory = [Environment]::GetFolderPath( [Environment+SpecialFolder]::LocalApplicationData )
+        return [IO.Path]::Combine( $directory, 'psBitcoin', 'secp256k1-generator-v1.bin' )
+    }
+
+    hidden static [bool] IsGeneratorDataValid( [byte[]]$data ) {
+        if ( $data.Length -ne 16392 ) { return $false }
+        $sha = [Security.Cryptography.SHA256]::Create()
+        try {
+            $digest = [BitConverter]::ToString( $sha.ComputeHash( $data ) ).Replace( '-', '' ).ToLowerInvariant()
+            # Independent affine-coordinate generator; includes header/version and every point.
+            return $digest -ceq '917b9bd028bddb20bb6d301b8d87fb37c34b35d100fc2f94cc15f77227808853'
+        } finally { $sha.Dispose() }
+    }
+
+    hidden static [void] EnsureGeneratorTable() {
+        if ( $null -ne [ECDSA]::GeneratorTable ) { return }
+        [Threading.Monitor]::Enter( [ECDSA]::GeneratorTableLock )
+        try {
+            if ( $null -ne [ECDSA]::GeneratorTable ) { return }
+            [string]$path = ''
+            [byte[]]$data = $null
+            try {
+                $path = [ECDSA]::GetGeneratorCachePath()
+                # Bound reads even if a cache file has been replaced by an oversized file.
+                $stream = [IO.File]::Open( $path, [IO.FileMode]::Open, [IO.FileAccess]::Read, [IO.FileShare]::ReadWrite -bor [IO.FileShare]::Delete )
+                try {
+                    if ( $stream.Length -eq 16392 ) {
+                        $data = [byte[]]::new( 16392 )
+                        [int]$offset = 0
+                        while ( $offset -lt $data.Length ) {
+                            [int]$count = $stream.Read( $data, $offset, $data.Length - $offset )
+                            if ( $count -eq 0 ) { break }
+                            $offset += $count
+                        }
+                        if ( $offset -ne $data.Length ) { $data = $null }
+                    }
+                } finally { $stream.Dispose() }
+            } catch { $data = $null } # Missing/unreadable cache is an optimization miss.
+            if ( $null -ne $data -and [ECDSA]::IsGeneratorDataValid( $data ) ) {
+                [ECDSAJ[]]$loaded = [ECDSAJ[]]::new( 256 )
+                for ( [int]$i = 0; $i -lt 256; $i++ ) {
+                    # BigInteger's legacy constructor is signed little-endian; append a zero byte.
+                    [byte[]]$xb = [byte[]]::new( 33 )
+                    [byte[]]$yb = [byte[]]::new( 33 )
+                    [Array]::Copy( $data, 8 + 64 * $i, $xb, 0, 32 )
+                    [Array]::Copy( $data, 40 + 64 * $i, $yb, 0, 32 )
+                    $loaded[$i] = [ECDSAJ]::new( [bigint]::new( $xb ), [bigint]::new( $yb ), [bigint]::One )
+                }
+                [ECDSA]::GeneratorTable = $loaded
+                return
+            }
+            [ECDSAJ[]]$generated = [ECDSA]::GenerateGeneratorTable()
+            # PSBG0001 + 256 pairs of unsigned 32-byte little-endian X/Y coordinates.
+            $data = [byte[]]::new( 16392 )
+            [Array]::Copy( [Text.Encoding]::ASCII.GetBytes( 'PSBG0001' ), $data, 8 )
+            for ( [int]$i = 0; $i -lt 256; $i++ ) {
+                [byte[]]$xb = $generated[$i].X.ToByteArray()
+                [byte[]]$yb = $generated[$i].Y.ToByteArray()
+                [Array]::Copy( $xb, 0, $data, 8 + 64 * $i, [Math]::Min( 32, $xb.Length ) )
+                [Array]::Copy( $yb, 0, $data, 40 + 64 * $i, [Math]::Min( 32, $yb.Length ) )
+            }
+            if ( -not [ECDSA]::IsGeneratorDataValid( $data ) ) {
+                [ECDSA]::GeneratorTable = $null
+                throw 'Generated secp256k1 table does not match the reference digest'
+            }
+            [ECDSA]::GeneratorTable = $generated
+            [string]$temporary = ''
+            try {
+                if ( $path ) {
+                    $null = [IO.Directory]::CreateDirectory( [IO.Path]::GetDirectoryName( $path ) )
+                    $temporary = $path + '.' + [guid]::NewGuid().ToString( 'N' ) + '.tmp'
+                    [IO.File]::WriteAllBytes( $temporary, $data )
+                    # Publish a complete file atomically. Concurrent creators may race safely.
+                    if ( [IO.File]::Exists( $path ) ) { [IO.File]::Replace( $temporary, $path, [System.Management.Automation.Language.NullString]::Value ) }
+                    else { [IO.File]::Move( $temporary, $path ) }
+                }
+            } catch { } # Read-only storage still permits a session-local table.
+            finally {
+                if ( $temporary -and [IO.File]::Exists( $temporary ) ) {
+                    try { [IO.File]::Delete( $temporary ) } catch { }
+                }
+            }
+        } finally { [Threading.Monitor]::Exit( [ECDSA]::GeneratorTableLock ) }
+    }
+
+    hidden static [ECDSAJ[]] GenerateGeneratorTable() {
+
+        # Build G, 2G, 4G, ... in Jacobian coordinates and normalize all
+        # entries with one batch inversion.
+        [ECDSAJ[]]$jacobian = [ECDSAJ[]]::new( 256 )
+        [bigint[]]$products = [bigint[]]::new( 256 )
+        [ECDSAJ[]]$table    = [ECDSAJ[]]::new( 256 )
+        $generator = [ECDSA]::new()
+        $jacobian[0] = [ECDSAJ]::new( $generator.X, $generator.Y, [bigint]::One )
+        $products[0] = [bigint]::One
+        for ( [int]$i = 1; $i -lt 256; $i++ ) {
+            $jacobian[$i] = $jacobian[$i - 1].Double()
+            $products[$i] = ( $products[$i - 1] * $jacobian[$i].Z ) % [ECDSA]::p
+        }
+
+        [bigint]$inverse = [ECDSA]::ModInv( $products[255], [ECDSA]::p )
+        for ( [int]$i = 255; $i -ge 0; $i-- ) {
+            [bigint]$before = if ( $i -eq 0 ) { [bigint]::One } else { $products[$i - 1] }
+            [bigint]$zi = ( $inverse * $before ) % [ECDSA]::p
+            $inverse = ( $inverse * $jacobian[$i].Z ) % [ECDSA]::p
+            [bigint]$zz = ( $zi * $zi ) % [ECDSA]::p
+            [bigint]$normalizedX = ( $jacobian[$i].X * $zz ) % [ECDSA]::p
+            [bigint]$normalizedY = ( $jacobian[$i].Y * $zz * $zi ) % [ECDSA]::p
+            if ( $normalizedX.Sign -eq -1 ) { $normalizedX += [ECDSA]::p }
+            if ( $normalizedY.Sign -eq -1 ) { $normalizedY += [ECDSA]::p }
+            $table[$i] = [ECDSAJ]::new( $normalizedX, $normalizedY, [bigint]::One )
+        }
+        return $table
+    }
+
+    hidden static [ECDSA] MultiplyGenerator( [bigint]$scalar ) {
+        [ECDSA]::EnsureGeneratorTable()
+        [ECDSAJ]$result = $null
+        [int]$bit = 0
+        while ( -not $scalar.IsZero ) {
+            if ( -not $scalar.IsEven ) {
+                $point = [ECDSA]::GeneratorTable[$bit]
+                if ( $null -eq $result ) {
+                    $result = [ECDSAJ]::new( $point.X, $point.Y, [bigint]::One )
+                } else {
+                    $result = $result.Add( $point.X, $point.Y )
+                }
+            }
+            $scalar = $scalar -shr 1
+            $bit++
+        }
+        return [ECDSA]::new( $result )
+    }
+
+    # END fixed-generator cache methods
+
     static [ECDSA] op_Multiply( [ECDSA]$left, [bigint]$right ) {
         $right %= [ECDSA]::Order
         if ( $right.Sign -eq -1 ) { $right += [ECDSA]::Order }
         if ( $right -eq [bigint]::Zero ) { return $null }
         if ( $right -eq [bigint]::One  ) { return $left }
+        # BEGIN fixed-generator dispatch
+        $generator = [ECDSA]::new()
+        if ( $null -ne $left -and $left.X -eq $generator.X -and $left.Y -eq $generator.Y ) {
+            return [ECDSA]::MultiplyGenerator( $right )
+        }
+        # END fixed-generator dispatch
         $buffer = [List[char]]::new()
         while ( $right -ne [bigint]::One ) {
             if ( $right.IsEven ) {

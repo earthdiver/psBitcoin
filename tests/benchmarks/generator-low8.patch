@@ -1,0 +1,113 @@
+--- a/BitcoinWallet.ps1
++++ b/BitcoinWallet.ps1
+@@ -371,16 +371,16 @@
+         $override = [Environment]::GetEnvironmentVariable( 'PSBITCOIN_GENERATOR_CACHE' )
+         if ( -not [string]::IsNullOrEmpty( $override ) ) { return [IO.Path]::GetFullPath( $override ) }
+         $directory = [Environment]::GetFolderPath( [Environment+SpecialFolder]::LocalApplicationData )
+-        return [IO.Path]::Combine( $directory, 'psBitcoin', 'secp256k1-generator-v1.bin' )
++        return [IO.Path]::Combine( $directory, 'psBitcoin', 'secp256k1-generator-v2.bin' )
+     }
+ 
+     hidden static [bool] IsGeneratorDataValid( [byte[]]$data ) {
+-        if ( $data.Length -ne 16392 ) { return $false }
++        if ( $data.Length -ne 32200 ) { return $false }
+         $sha = [Security.Cryptography.SHA256]::Create()
+         try {
+             $digest = [BitConverter]::ToString( $sha.ComputeHash( $data ) ).Replace( '-', '' ).ToLowerInvariant()
+             # Independent affine-coordinate generator; includes header/version and every point.
+-            return $digest -ceq '917b9bd028bddb20bb6d301b8d87fb37c34b35d100fc2f94cc15f77227808853'
++            return $digest -ceq '947612b6073b42b629f8bb6bf84e502bf09a25002b34b8fae87aae903fbe1d89'
+         } finally { $sha.Dispose() }
+     }
+ 
+@@ -396,8 +396,8 @@
+                 # Bound reads even if a cache file has been replaced by an oversized file.
+                 $stream = [IO.File]::Open( $path, [IO.FileMode]::Open, [IO.FileAccess]::Read, [IO.FileShare]::ReadWrite -bor [IO.FileShare]::Delete )
+                 try {
+-                    if ( $stream.Length -eq 16392 ) {
+-                        $data = [byte[]]::new( 16392 )
++                    if ( $stream.Length -eq 32200 ) {
++                        $data = [byte[]]::new( 32200 )
+                         [int]$offset = 0
+                         while ( $offset -lt $data.Length ) {
+                             [int]$count = $stream.Read( $data, $offset, $data.Length - $offset )
+@@ -409,8 +409,8 @@
+                 } finally { $stream.Dispose() }
+             } catch { $data = $null } # Missing/unreadable cache is an optimization miss.
+             if ( $null -ne $data -and [ECDSA]::IsGeneratorDataValid( $data ) ) {
+-                [ECDSAJ[]]$loaded = [ECDSAJ[]]::new( 256 )
+-                for ( [int]$i = 0; $i -lt 256; $i++ ) {
++                [ECDSAJ[]]$loaded = [ECDSAJ[]]::new( 503 )
++                for ( [int]$i = 0; $i -lt 503; $i++ ) {
+                     # BigInteger's legacy constructor is signed little-endian; append a zero byte.
+                     [byte[]]$xb = [byte[]]::new( 33 )
+                     [byte[]]$yb = [byte[]]::new( 33 )
+@@ -422,10 +422,10 @@
+                 return
+             }
+             [ECDSAJ[]]$generated = [ECDSA]::GenerateGeneratorTable()
+-            # PSBG0001 + 256 pairs of unsigned 32-byte little-endian X/Y coordinates.
+-            $data = [byte[]]::new( 16392 )
+-            [Array]::Copy( [Text.Encoding]::ASCII.GetBytes( 'PSBG0001' ), $data, 8 )
+-            for ( [int]$i = 0; $i -lt 256; $i++ ) {
++            # PSBG0002 + 503 pairs of unsigned 32-byte little-endian X/Y coordinates.
++            $data = [byte[]]::new( 32200 )
++            [Array]::Copy( [Text.Encoding]::ASCII.GetBytes( 'PSBG0002' ), $data, 8 )
++            for ( [int]$i = 0; $i -lt 503; $i++ ) {
+                 [byte[]]$xb = $generated[$i].X.ToByteArray()
+                 [byte[]]$yb = $generated[$i].Y.ToByteArray()
+                 [Array]::Copy( $xb, 0, $data, 8 + 64 * $i, [Math]::Min( 32, $xb.Length ) )
+@@ -457,21 +457,29 @@
+ 
+     hidden static [ECDSAJ[]] GenerateGeneratorTable() {
+ 
+-        # Build G, 2G, 4G, ... in Jacobian coordinates and normalize all
+-        # entries with one batch inversion.
+-        [ECDSAJ[]]$jacobian = [ECDSAJ[]]::new( 256 )
+-        [bigint[]]$products = [bigint[]]::new( 256 )
+-        [ECDSAJ[]]$table    = [ECDSAJ[]]::new( 256 )
++        # Entries 0..254: G..255G for the low byte.
++        # Entries 255..502: 2^8G..2^255G for the remaining individual bits.
++        # Normalize all 503 points with one batch inversion.
++        [ECDSAJ[]]$jacobian = [ECDSAJ[]]::new( 503 )
++        [bigint[]]$products = [bigint[]]::new( 503 )
++        [ECDSAJ[]]$table    = [ECDSAJ[]]::new( 503 )
+         $generator = [ECDSA]::new()
+         $jacobian[0] = [ECDSAJ]::new( $generator.X, $generator.Y, [bigint]::One )
++        $jacobian[1] = $jacobian[0].Double()
++        for ( [int]$i = 2; $i -lt 255; $i++ ) {
++            $jacobian[$i] = $jacobian[$i - 1].Add( $generator.X, $generator.Y )
++        }
++        $jacobian[255] = $jacobian[127].Double()
++        for ( [int]$i = 256; $i -lt 503; $i++ ) {
++            $jacobian[$i] = $jacobian[$i - 1].Double()
++        }
+         $products[0] = [bigint]::One
+-        for ( [int]$i = 1; $i -lt 256; $i++ ) {
+-            $jacobian[$i] = $jacobian[$i - 1].Double()
++        for ( [int]$i = 1; $i -lt 503; $i++ ) {
+             $products[$i] = ( $products[$i - 1] * $jacobian[$i].Z ) % [ECDSA]::p
+         }
+ 
+-        [bigint]$inverse = [ECDSA]::ModInv( $products[255], [ECDSA]::p )
+-        for ( [int]$i = 255; $i -ge 0; $i-- ) {
++        [bigint]$inverse = [ECDSA]::ModInv( $products[502], [ECDSA]::p )
++        for ( [int]$i = 502; $i -ge 0; $i-- ) {
+             [bigint]$before = if ( $i -eq 0 ) { [bigint]::One } else { $products[$i - 1] }
+             [bigint]$zi = ( $inverse * $before ) % [ECDSA]::p
+             $inverse = ( $inverse * $jacobian[$i].Z ) % [ECDSA]::p
+@@ -488,7 +496,13 @@
+     hidden static [ECDSA] MultiplyGenerator( [bigint]$scalar ) {
+         [ECDSA]::EnsureGeneratorTable()
+         [ECDSAJ]$result = $null
+-        [int]$bit = 0
++        [int]$lowByte = [int]( $scalar -band [bigint]255 )
++        if ( $lowByte -ne 0 ) {
++            $point = [ECDSA]::GeneratorTable[$lowByte - 1]
++            $result = [ECDSAJ]::new( $point.X, $point.Y, [bigint]::One )
++        }
++        $scalar = $scalar -shr 8
++        [int]$bit = 255
+         while ( -not $scalar.IsZero ) {
+             if ( -not $scalar.IsEven ) {
+                 $point = [ECDSA]::GeneratorTable[$bit]
