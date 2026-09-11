@@ -1,0 +1,2568 @@
+{
+  "baselineCommit": "2c4da5d",
+  "method": "Serial fresh Windows processes; three trials with rotating scenario order; wallet import and example execution timed separately; process startup excluded. All first/repeat outputs checked against .out. Files copied to Windows temporary directories before measurement. OS caches are not flushed. Engines measured sequentially without concurrent test runs.",
+  "sizes": {
+    "baseline": {
+      "bytes": 77140,
+      "lines": 1689,
+      "sha256": "0cc47cd3ba854fb74c7c327fa2f5fd5db3c125cdcbed9769d7a4c6fafa2cf2a0"
+    },
+    "candidate": {
+      "bytes": 105051,
+      "lines": 1848,
+      "sha256": "44aa91fb89606a5f12b71ed26420215ac01f10edb77f7e96db3db52541e65d80"
+    }
+  },
+  "toolSHA256": {
+    "Benchmark-GeneratorVariants.ps1": "68790dd208098a2194124191007f13a017bbb7e3b2b4f3791819cac7b2d24bbd",
+    "BenchmarkExampleWorker.ps1": "102b7486096b5996022c62efbdfcdec2c73dd32b89a42d299ea3b0c363146c51"
+  },
+  "runs": [
+    {
+      "RunId": "generator-variants-d6829c2b9fc449ec97a2da4c2fc0cabe",
+      "PowerShell": "5.1.26100.9444",
+      "OS": "Microsoft Windows NT 10.0.26200.0",
+      "Processor": "Intel64 Family 6 Model 189 Stepping 1, GenuineIntel",
+      "Repetitions": 3,
+      "VariantSHA256": {
+        "candidate": "44aa91fb89606a5f12b71ed26420215ac01f10edb77f7e96db3db52541e65d80",
+        "baseline": "0cc47cd3ba854fb74c7c327fa2f5fd5db3c125cdcbed9769d7a4c6fafa2cf2a0"
+      },
+      "Records": [
+        {
+          "Example": "01_entropy2seed",
+          "Mode": "generate",
+          "ImportMilliseconds": 296.3998,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 351.838,
+              "TablePresent": false
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 29.666800000000002,
+              "TablePresent": false
+            }
+          ],
+          "Trial": 1,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "01_entropy2seed",
+          "Mode": "load",
+          "ImportMilliseconds": 284.176,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 371.0982,
+              "TablePresent": false
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 30.9963,
+              "TablePresent": false
+            }
+          ],
+          "Trial": 1,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "01_entropy2seed",
+          "Mode": "embedded",
+          "ImportMilliseconds": 283.5476,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 349.45210000000003,
+              "TablePresent": false
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 31.6154,
+              "TablePresent": false
+            }
+          ],
+          "Trial": 1,
+          "Variant": "candidate"
+        },
+        {
+          "Example": "02_seed2addresses",
+          "Mode": "generate",
+          "ImportMilliseconds": 287.64820000000003,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 1379.2015000000001,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 439.56530000000004,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 1,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "02_seed2addresses",
+          "Mode": "load",
+          "ImportMilliseconds": 288.7416,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 1304.4581,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 428.9139,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 1,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "02_seed2addresses",
+          "Mode": "embedded",
+          "ImportMilliseconds": 287.8358,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 1293.9108,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 439.37940000000003,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 1,
+          "Variant": "candidate"
+        },
+        {
+          "Example": "03_multisig",
+          "Mode": "generate",
+          "ImportMilliseconds": 284.0698,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 1735.8102000000001,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 605.2271000000001,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 1,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "03_multisig",
+          "Mode": "load",
+          "ImportMilliseconds": 291.968,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 1664.4248,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 639.315,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 1,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "03_multisig",
+          "Mode": "embedded",
+          "ImportMilliseconds": 284.1469,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 1651.9132000000002,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 630.6118,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 1,
+          "Variant": "candidate"
+        },
+        {
+          "Example": "04_BrainWallet",
+          "Mode": "generate",
+          "ImportMilliseconds": 303.7047,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 409.3398,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 25.000500000000002,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 1,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "04_BrainWallet",
+          "Mode": "load",
+          "ImportMilliseconds": 306.612,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 334.0808,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 21.713800000000003,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 1,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "04_BrainWallet",
+          "Mode": "embedded",
+          "ImportMilliseconds": 292.6796,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 279.5908,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 47.3557,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 1,
+          "Variant": "candidate"
+        },
+        {
+          "Example": "05_HD-BrainWallet",
+          "Mode": "generate",
+          "ImportMilliseconds": 293.0142,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 867.2379000000001,
+              "TablePresent": false
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 532.2132,
+              "TablePresent": false
+            }
+          ],
+          "Trial": 1,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "05_HD-BrainWallet",
+          "Mode": "load",
+          "ImportMilliseconds": 291.62190000000004,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 841.5553,
+              "TablePresent": false
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 522.8116,
+              "TablePresent": false
+            }
+          ],
+          "Trial": 1,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "05_HD-BrainWallet",
+          "Mode": "embedded",
+          "ImportMilliseconds": 304.40090000000004,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 846.6705000000001,
+              "TablePresent": false
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 537.4898000000001,
+              "TablePresent": false
+            }
+          ],
+          "Trial": 1,
+          "Variant": "candidate"
+        },
+        {
+          "Example": "06_nested-BIP85",
+          "Mode": "generate",
+          "ImportMilliseconds": 291.952,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 1009.3058000000001,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 378.30010000000004,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 1,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "06_nested-BIP85",
+          "Mode": "load",
+          "ImportMilliseconds": 289.914,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 927.743,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 371.233,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 1,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "06_nested-BIP85",
+          "Mode": "embedded",
+          "ImportMilliseconds": 296.3591,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 904.4635000000001,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 361.6564,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 1,
+          "Variant": "candidate"
+        },
+        {
+          "Example": "07_SilentPaymentAddresses_BIP352",
+          "Mode": "generate",
+          "ImportMilliseconds": 295.7866,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 1129.2968,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 306.8677,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 1,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "07_SilentPaymentAddresses_BIP352",
+          "Mode": "load",
+          "ImportMilliseconds": 292.5597,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 1048.5202000000002,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 301.17560000000003,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 1,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "07_SilentPaymentAddresses_BIP352",
+          "Mode": "embedded",
+          "ImportMilliseconds": 293.969,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 1019.2706000000001,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 312.3712,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 1,
+          "Variant": "candidate"
+        },
+        {
+          "Example": "01_entropy2seed",
+          "Mode": "load",
+          "ImportMilliseconds": 304.6746,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 367.009,
+              "TablePresent": false
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 31.8273,
+              "TablePresent": false
+            }
+          ],
+          "Trial": 2,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "01_entropy2seed",
+          "Mode": "embedded",
+          "ImportMilliseconds": 296.5017,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 354.50730000000004,
+              "TablePresent": false
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 31.764000000000003,
+              "TablePresent": false
+            }
+          ],
+          "Trial": 2,
+          "Variant": "candidate"
+        },
+        {
+          "Example": "01_entropy2seed",
+          "Mode": "generate",
+          "ImportMilliseconds": 290.6196,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 354.9768,
+              "TablePresent": false
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 31.2907,
+              "TablePresent": false
+            }
+          ],
+          "Trial": 2,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "02_seed2addresses",
+          "Mode": "load",
+          "ImportMilliseconds": 293.81510000000003,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 1382.3484,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 454.69550000000004,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 2,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "02_seed2addresses",
+          "Mode": "embedded",
+          "ImportMilliseconds": 290.547,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 1331.7125,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 445.3086,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 2,
+          "Variant": "candidate"
+        },
+        {
+          "Example": "02_seed2addresses",
+          "Mode": "generate",
+          "ImportMilliseconds": 291.39660000000003,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 1402.8411,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 443.35790000000003,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 2,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "03_multisig",
+          "Mode": "load",
+          "ImportMilliseconds": 296.3127,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 1680.2851,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 647.6270000000001,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 2,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "03_multisig",
+          "Mode": "embedded",
+          "ImportMilliseconds": 299.4973,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 1661.6173000000001,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 637.9181,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 2,
+          "Variant": "candidate"
+        },
+        {
+          "Example": "03_multisig",
+          "Mode": "generate",
+          "ImportMilliseconds": 300.1741,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 1796.4839000000002,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 696.7111,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 2,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "04_BrainWallet",
+          "Mode": "load",
+          "ImportMilliseconds": 312.4811,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 350.72040000000004,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 24.9523,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 2,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "04_BrainWallet",
+          "Mode": "embedded",
+          "ImportMilliseconds": 304.32390000000004,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 281.94980000000004,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 47.9842,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 2,
+          "Variant": "candidate"
+        },
+        {
+          "Example": "04_BrainWallet",
+          "Mode": "generate",
+          "ImportMilliseconds": 296.55940000000004,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 388.18780000000004,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 24.718500000000002,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 2,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "05_HD-BrainWallet",
+          "Mode": "load",
+          "ImportMilliseconds": 293.1105,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 842.9225,
+              "TablePresent": false
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 503.7543,
+              "TablePresent": false
+            }
+          ],
+          "Trial": 2,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "05_HD-BrainWallet",
+          "Mode": "embedded",
+          "ImportMilliseconds": 288.36330000000004,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 852.4914,
+              "TablePresent": false
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 546.6056,
+              "TablePresent": false
+            }
+          ],
+          "Trial": 2,
+          "Variant": "candidate"
+        },
+        {
+          "Example": "05_HD-BrainWallet",
+          "Mode": "generate",
+          "ImportMilliseconds": 306.9041,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 935.6434,
+              "TablePresent": false
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 593.2611,
+              "TablePresent": false
+            }
+          ],
+          "Trial": 2,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "06_nested-BIP85",
+          "Mode": "load",
+          "ImportMilliseconds": 323.7346,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 992.8533000000001,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 371.7794,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 2,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "06_nested-BIP85",
+          "Mode": "embedded",
+          "ImportMilliseconds": 352.7796,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 1078.1941000000002,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 379.9298,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 2,
+          "Variant": "candidate"
+        },
+        {
+          "Example": "06_nested-BIP85",
+          "Mode": "generate",
+          "ImportMilliseconds": 302.48740000000004,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 1135.8970000000002,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 409.9827,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 2,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "07_SilentPaymentAddresses_BIP352",
+          "Mode": "load",
+          "ImportMilliseconds": 324.4313,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 1280.7561,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 359.528,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 2,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "07_SilentPaymentAddresses_BIP352",
+          "Mode": "embedded",
+          "ImportMilliseconds": 327.4706,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 1093.834,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 311.4757,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 2,
+          "Variant": "candidate"
+        },
+        {
+          "Example": "07_SilentPaymentAddresses_BIP352",
+          "Mode": "generate",
+          "ImportMilliseconds": 308.6378,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 1156.6498000000001,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 307.3838,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 2,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "01_entropy2seed",
+          "Mode": "embedded",
+          "ImportMilliseconds": 301.9361,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 357.5051,
+              "TablePresent": false
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 32.9407,
+              "TablePresent": false
+            }
+          ],
+          "Trial": 3,
+          "Variant": "candidate"
+        },
+        {
+          "Example": "01_entropy2seed",
+          "Mode": "generate",
+          "ImportMilliseconds": 299.30690000000004,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 374.95210000000003,
+              "TablePresent": false
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 32.593,
+              "TablePresent": false
+            }
+          ],
+          "Trial": 3,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "01_entropy2seed",
+          "Mode": "load",
+          "ImportMilliseconds": 302.0624,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 379.6359,
+              "TablePresent": false
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 32.1657,
+              "TablePresent": false
+            }
+          ],
+          "Trial": 3,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "02_seed2addresses",
+          "Mode": "embedded",
+          "ImportMilliseconds": 301.2189,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 1312.2946000000002,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 441.0212,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 3,
+          "Variant": "candidate"
+        },
+        {
+          "Example": "02_seed2addresses",
+          "Mode": "generate",
+          "ImportMilliseconds": 299.2917,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 1439.4408,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 432.1428,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 3,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "02_seed2addresses",
+          "Mode": "load",
+          "ImportMilliseconds": 291.2296,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 1329.6585,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 436.4888,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 3,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "03_multisig",
+          "Mode": "embedded",
+          "ImportMilliseconds": 295.0156,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 1623.0978,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 622.2767,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 3,
+          "Variant": "candidate"
+        },
+        {
+          "Example": "03_multisig",
+          "Mode": "generate",
+          "ImportMilliseconds": 292.7044,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 1720.5546000000002,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 618.592,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 3,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "03_multisig",
+          "Mode": "load",
+          "ImportMilliseconds": 291.8553,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 1691.0258000000001,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 629.6105,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 3,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "04_BrainWallet",
+          "Mode": "embedded",
+          "ImportMilliseconds": 295.2034,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 291.39910000000003,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 50.905100000000004,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 3,
+          "Variant": "candidate"
+        },
+        {
+          "Example": "04_BrainWallet",
+          "Mode": "generate",
+          "ImportMilliseconds": 290.47900000000004,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 381.4778,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 22.8485,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 3,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "04_BrainWallet",
+          "Mode": "load",
+          "ImportMilliseconds": 292.2841,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 328.02840000000003,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 23.9294,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 3,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "05_HD-BrainWallet",
+          "Mode": "embedded",
+          "ImportMilliseconds": 289.9599,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 837.3222000000001,
+              "TablePresent": false
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 521.0883,
+              "TablePresent": false
+            }
+          ],
+          "Trial": 3,
+          "Variant": "candidate"
+        },
+        {
+          "Example": "05_HD-BrainWallet",
+          "Mode": "generate",
+          "ImportMilliseconds": 288.1307,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 850.4042000000001,
+              "TablePresent": false
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 517.0349,
+              "TablePresent": false
+            }
+          ],
+          "Trial": 3,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "05_HD-BrainWallet",
+          "Mode": "load",
+          "ImportMilliseconds": 284.8752,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 831.4926,
+              "TablePresent": false
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 516.3112,
+              "TablePresent": false
+            }
+          ],
+          "Trial": 3,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "06_nested-BIP85",
+          "Mode": "embedded",
+          "ImportMilliseconds": 305.2747,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 916.768,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 366.7701,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 3,
+          "Variant": "candidate"
+        },
+        {
+          "Example": "06_nested-BIP85",
+          "Mode": "generate",
+          "ImportMilliseconds": 302.7439,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 990.9365,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 379.5158,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 3,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "06_nested-BIP85",
+          "Mode": "load",
+          "ImportMilliseconds": 290.5942,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 965.4453000000001,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 383.6499,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 3,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "07_SilentPaymentAddresses_BIP352",
+          "Mode": "embedded",
+          "ImportMilliseconds": 307.9261,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 1069.5140000000001,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 305.8435,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 3,
+          "Variant": "candidate"
+        },
+        {
+          "Example": "07_SilentPaymentAddresses_BIP352",
+          "Mode": "generate",
+          "ImportMilliseconds": 299.2194,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 1124.9659000000001,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 304.8293,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 3,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "07_SilentPaymentAddresses_BIP352",
+          "Mode": "load",
+          "ImportMilliseconds": 299.5984,
+          "PowerShell": "5.1.26100.9444",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 1056.5802,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 293.0387,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 3,
+          "Variant": "baseline"
+        }
+      ]
+    },
+    {
+      "RunId": "generator-variants-c494f69c47564f03a2fc4563f6af0a3c",
+      "PowerShell": "7.6.5",
+      "OS": "Microsoft Windows NT 10.0.26200.0",
+      "Processor": "Intel64 Family 6 Model 189 Stepping 1, GenuineIntel",
+      "Repetitions": 3,
+      "VariantSHA256": {
+        "baseline": "0cc47cd3ba854fb74c7c327fa2f5fd5db3c125cdcbed9769d7a4c6fafa2cf2a0",
+        "candidate": "44aa91fb89606a5f12b71ed26420215ac01f10edb77f7e96db3db52541e65d80"
+      },
+      "Records": [
+        {
+          "Example": "01_entropy2seed",
+          "Mode": "generate",
+          "ImportMilliseconds": 445.7992,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 327.6122,
+              "TablePresent": false
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 36.0766,
+              "TablePresent": false
+            }
+          ],
+          "Trial": 1,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "01_entropy2seed",
+          "Mode": "load",
+          "ImportMilliseconds": 430.341,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 293.3975,
+              "TablePresent": false
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 34.8227,
+              "TablePresent": false
+            }
+          ],
+          "Trial": 1,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "01_entropy2seed",
+          "Mode": "embedded",
+          "ImportMilliseconds": 428.4946,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 300.362,
+              "TablePresent": false
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 36.376,
+              "TablePresent": false
+            }
+          ],
+          "Trial": 1,
+          "Variant": "candidate"
+        },
+        {
+          "Example": "02_seed2addresses",
+          "Mode": "generate",
+          "ImportMilliseconds": 435.5892,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 1204.6702,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 408.8733,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 1,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "02_seed2addresses",
+          "Mode": "load",
+          "ImportMilliseconds": 426.993,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 1170.4668,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 439.3487,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 1,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "02_seed2addresses",
+          "Mode": "embedded",
+          "ImportMilliseconds": 430.8214,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 1135.1766,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 422.6645,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 1,
+          "Variant": "candidate"
+        },
+        {
+          "Example": "03_multisig",
+          "Mode": "generate",
+          "ImportMilliseconds": 435.2449,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 1499.2893,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 676.2091,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 1,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "03_multisig",
+          "Mode": "load",
+          "ImportMilliseconds": 429.8967,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 1480.0395,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 615.0021,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 1,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "03_multisig",
+          "Mode": "embedded",
+          "ImportMilliseconds": 444.5356,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 1452.7421,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 643.5287,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 1,
+          "Variant": "candidate"
+        },
+        {
+          "Example": "04_BrainWallet",
+          "Mode": "generate",
+          "ImportMilliseconds": 451.5099,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 362.1609,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 29.8872,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 1,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "04_BrainWallet",
+          "Mode": "load",
+          "ImportMilliseconds": 440.1085,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 283.8701,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 25.3447,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 1,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "04_BrainWallet",
+          "Mode": "embedded",
+          "ImportMilliseconds": 457.7681,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 259.8006,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 25.5222,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 1,
+          "Variant": "candidate"
+        },
+        {
+          "Example": "05_HD-BrainWallet",
+          "Mode": "generate",
+          "ImportMilliseconds": 456.5201,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 835.5673,
+              "TablePresent": false
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 301.4429,
+              "TablePresent": false
+            }
+          ],
+          "Trial": 1,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "05_HD-BrainWallet",
+          "Mode": "load",
+          "ImportMilliseconds": 441.6338,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 850.8166,
+              "TablePresent": false
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 355.8097,
+              "TablePresent": false
+            }
+          ],
+          "Trial": 1,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "05_HD-BrainWallet",
+          "Mode": "embedded",
+          "ImportMilliseconds": 443.8508,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 823.7363,
+              "TablePresent": false
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 336.5241,
+              "TablePresent": false
+            }
+          ],
+          "Trial": 1,
+          "Variant": "candidate"
+        },
+        {
+          "Example": "06_nested-BIP85",
+          "Mode": "generate",
+          "ImportMilliseconds": 434.758,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 842.7855,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 344.7521,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 1,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "06_nested-BIP85",
+          "Mode": "load",
+          "ImportMilliseconds": 439.405,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 774.6367,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 336.506,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 1,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "06_nested-BIP85",
+          "Mode": "embedded",
+          "ImportMilliseconds": 450.2122,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 768.0448,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 368.5402,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 1,
+          "Variant": "candidate"
+        },
+        {
+          "Example": "07_SilentPaymentAddresses_BIP352",
+          "Mode": "generate",
+          "ImportMilliseconds": 463.8917,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 1059.9791,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 347.7026,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 1,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "07_SilentPaymentAddresses_BIP352",
+          "Mode": "load",
+          "ImportMilliseconds": 436.8618,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 921.429,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 261.823,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 1,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "07_SilentPaymentAddresses_BIP352",
+          "Mode": "embedded",
+          "ImportMilliseconds": 449.2956,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 877.7769,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 253.5127,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 1,
+          "Variant": "candidate"
+        },
+        {
+          "Example": "01_entropy2seed",
+          "Mode": "load",
+          "ImportMilliseconds": 458.4052,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 318.3277,
+              "TablePresent": false
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 39.9639,
+              "TablePresent": false
+            }
+          ],
+          "Trial": 2,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "01_entropy2seed",
+          "Mode": "embedded",
+          "ImportMilliseconds": 452.1737,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 318.7488,
+              "TablePresent": false
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 36.8401,
+              "TablePresent": false
+            }
+          ],
+          "Trial": 2,
+          "Variant": "candidate"
+        },
+        {
+          "Example": "01_entropy2seed",
+          "Mode": "generate",
+          "ImportMilliseconds": 440.1503,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 316.3738,
+              "TablePresent": false
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 35.5878,
+              "TablePresent": false
+            }
+          ],
+          "Trial": 2,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "02_seed2addresses",
+          "Mode": "load",
+          "ImportMilliseconds": 443.957,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 1210.5475,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 448.8584,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 2,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "02_seed2addresses",
+          "Mode": "embedded",
+          "ImportMilliseconds": 471.5394,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 1235.267,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 472.4527,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 2,
+          "Variant": "candidate"
+        },
+        {
+          "Example": "02_seed2addresses",
+          "Mode": "generate",
+          "ImportMilliseconds": 474.5755,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 1343.2519,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 444.4108,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 2,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "03_multisig",
+          "Mode": "load",
+          "ImportMilliseconds": 459.6793,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 1536.1878,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 682.4826,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 2,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "03_multisig",
+          "Mode": "embedded",
+          "ImportMilliseconds": 465.221,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 1675.0242,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 958.6927,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 2,
+          "Variant": "candidate"
+        },
+        {
+          "Example": "03_multisig",
+          "Mode": "generate",
+          "ImportMilliseconds": 466.1093,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 1597.4113,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 622.3638,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 2,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "04_BrainWallet",
+          "Mode": "load",
+          "ImportMilliseconds": 475.3833,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 313.4744,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 49.11,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 2,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "04_BrainWallet",
+          "Mode": "embedded",
+          "ImportMilliseconds": 457.8546,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 275.8675,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 26.5998,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 2,
+          "Variant": "candidate"
+        },
+        {
+          "Example": "04_BrainWallet",
+          "Mode": "generate",
+          "ImportMilliseconds": 449.4758,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 379.8249,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 31.6168,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 2,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "05_HD-BrainWallet",
+          "Mode": "load",
+          "ImportMilliseconds": 449.2017,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 828.2845,
+              "TablePresent": false
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 314.9788,
+              "TablePresent": false
+            }
+          ],
+          "Trial": 2,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "05_HD-BrainWallet",
+          "Mode": "embedded",
+          "ImportMilliseconds": 452.5319,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 854.6725,
+              "TablePresent": false
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 355.2185,
+              "TablePresent": false
+            }
+          ],
+          "Trial": 2,
+          "Variant": "candidate"
+        },
+        {
+          "Example": "05_HD-BrainWallet",
+          "Mode": "generate",
+          "ImportMilliseconds": 447.5456,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 828.7251,
+              "TablePresent": false
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 313.3614,
+              "TablePresent": false
+            }
+          ],
+          "Trial": 2,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "06_nested-BIP85",
+          "Mode": "load",
+          "ImportMilliseconds": 451.753,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 810.1696,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 343.6576,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 2,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "06_nested-BIP85",
+          "Mode": "embedded",
+          "ImportMilliseconds": 451.5442,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 788.8231,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 372.2892,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 2,
+          "Variant": "candidate"
+        },
+        {
+          "Example": "06_nested-BIP85",
+          "Mode": "generate",
+          "ImportMilliseconds": 452.4637,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 866.0875,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 337.2329,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 2,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "07_SilentPaymentAddresses_BIP352",
+          "Mode": "load",
+          "ImportMilliseconds": 447.9843,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 931.3831,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 258.8133,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 2,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "07_SilentPaymentAddresses_BIP352",
+          "Mode": "embedded",
+          "ImportMilliseconds": 460.8869,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 905.748,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 274.5281,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 2,
+          "Variant": "candidate"
+        },
+        {
+          "Example": "07_SilentPaymentAddresses_BIP352",
+          "Mode": "generate",
+          "ImportMilliseconds": 443.7979,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 981.5605,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 274.4038,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 2,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "01_entropy2seed",
+          "Mode": "embedded",
+          "ImportMilliseconds": 505.1608,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 352.3623,
+              "TablePresent": false
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 42.4373,
+              "TablePresent": false
+            }
+          ],
+          "Trial": 3,
+          "Variant": "candidate"
+        },
+        {
+          "Example": "01_entropy2seed",
+          "Mode": "generate",
+          "ImportMilliseconds": 501.2245,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 329.3764,
+              "TablePresent": false
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 42.9446,
+              "TablePresent": false
+            }
+          ],
+          "Trial": 3,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "01_entropy2seed",
+          "Mode": "load",
+          "ImportMilliseconds": 462.7159,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 321.2659,
+              "TablePresent": false
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 40.316,
+              "TablePresent": false
+            }
+          ],
+          "Trial": 3,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "02_seed2addresses",
+          "Mode": "embedded",
+          "ImportMilliseconds": 458.8211,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 1189.1942,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 447.458,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 3,
+          "Variant": "candidate"
+        },
+        {
+          "Example": "02_seed2addresses",
+          "Mode": "generate",
+          "ImportMilliseconds": 439.4301,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 1378.6096,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 485.1939,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 3,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "02_seed2addresses",
+          "Mode": "load",
+          "ImportMilliseconds": 491.1301,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 1335.7673,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 478.4746,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 3,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "03_multisig",
+          "Mode": "embedded",
+          "ImportMilliseconds": 496.6135,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 1529.5264,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 679.9364,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 3,
+          "Variant": "candidate"
+        },
+        {
+          "Example": "03_multisig",
+          "Mode": "generate",
+          "ImportMilliseconds": 471.5141,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 1632.4388,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 664.4534,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 3,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "03_multisig",
+          "Mode": "load",
+          "ImportMilliseconds": 460.7344,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 1512.0828,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 651.4008,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 3,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "04_BrainWallet",
+          "Mode": "embedded",
+          "ImportMilliseconds": 487.5858,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 305.1774,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 29.932,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 3,
+          "Variant": "candidate"
+        },
+        {
+          "Example": "04_BrainWallet",
+          "Mode": "generate",
+          "ImportMilliseconds": 510.7469,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 405.4844,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 44.2942,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 3,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "04_BrainWallet",
+          "Mode": "load",
+          "ImportMilliseconds": 1018.3173,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 617.7004,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 62.9199,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 3,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "05_HD-BrainWallet",
+          "Mode": "embedded",
+          "ImportMilliseconds": 762.9394,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 1327.6369,
+              "TablePresent": false
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 826.8952,
+              "TablePresent": false
+            }
+          ],
+          "Trial": 3,
+          "Variant": "candidate"
+        },
+        {
+          "Example": "05_HD-BrainWallet",
+          "Mode": "generate",
+          "ImportMilliseconds": 466.558,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 867.8776,
+              "TablePresent": false
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 285.2452,
+              "TablePresent": false
+            }
+          ],
+          "Trial": 3,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "05_HD-BrainWallet",
+          "Mode": "load",
+          "ImportMilliseconds": 459.5407,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 864.8031,
+              "TablePresent": false
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 331.0875,
+              "TablePresent": false
+            }
+          ],
+          "Trial": 3,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "06_nested-BIP85",
+          "Mode": "embedded",
+          "ImportMilliseconds": 475.9708,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 842.0006,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 350.8467,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 3,
+          "Variant": "candidate"
+        },
+        {
+          "Example": "06_nested-BIP85",
+          "Mode": "generate",
+          "ImportMilliseconds": 471.9188,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 884.8956,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 315.794,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 3,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "06_nested-BIP85",
+          "Mode": "load",
+          "ImportMilliseconds": 459.1764,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 813.8448,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 343.5608,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 3,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "07_SilentPaymentAddresses_BIP352",
+          "Mode": "embedded",
+          "ImportMilliseconds": 452.5166,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 889.5342,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 276.389,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 3,
+          "Variant": "candidate"
+        },
+        {
+          "Example": "07_SilentPaymentAddresses_BIP352",
+          "Mode": "generate",
+          "ImportMilliseconds": 452.0523,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 992.2769,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 277.2651,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 3,
+          "Variant": "baseline"
+        },
+        {
+          "Example": "07_SilentPaymentAddresses_BIP352",
+          "Mode": "load",
+          "ImportMilliseconds": 448.9914,
+          "PowerShell": "7.6.5",
+          "Measurements": [
+            {
+              "Phase": "first",
+              "Milliseconds": 943.4936,
+              "TablePresent": true
+            },
+            {
+              "Phase": "repeat",
+              "Milliseconds": 255.2221,
+              "TablePresent": true
+            }
+          ],
+          "Trial": 3,
+          "Variant": "baseline"
+        }
+      ]
+    }
+  ]
+}

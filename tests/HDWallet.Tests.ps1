@@ -87,7 +87,7 @@ foreach ($testnet in @($false,$true)) {
         }
     }
 }
-# Shallow SLIP-format exports previously failed to round-trip before account depth.
+# SLIP-format keys support export/import at depths before the account level.
 foreach ($testnet in @($false,$true)) {
     foreach ($purpose in @(0,49,84)) {
         foreach ($publicOnly in @($false,$true)) {

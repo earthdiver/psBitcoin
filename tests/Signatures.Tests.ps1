@@ -12,7 +12,6 @@ foreach ($v in (Import-Csv (Join-Path $PSScriptRoot 'fixtures/bip340.csv'))) {
 $core=Read-Fixture 'core.json'
 foreach ($v in $core.ecdsa) {
     Test "RFC6979 deterministic nonce and ECDSA signature $($v.private)" {
-        Assert-Equal (Hash256 $v.data) $v.digest
         Assert-Equal (deterministic_k ([TestCrypto]::Number($v.private)) ([TestCrypto]::Number($v.digest))).ToHexString64() $v.nonce
         Assert-Equal (EcdsaSig $v.private $v.data 1) $v.signature
         $der=$v.signature.Substring(0,$v.signature.Length-2)

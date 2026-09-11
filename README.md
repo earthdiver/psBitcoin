@@ -77,30 +77,24 @@ Please place the wordlists in the same folder.
 . ./SeedQR.ps1
 ```
 
-## Fixed-generator cache
+## Fixed-generator table
 
-`BitcoinWallet.ps1` includes a lazy secp256k1 fixed-generator multiplication table.
-Load it in a fresh session:
+`BitcoinWallet.ps1` embeds the 256 secp256k1 points G, 2G, ..., 2^255G
+as hexadecimal X/Y pairs, one pair per line. Load it in a fresh session:
 
 ```powershell
 . ./BitcoinWallet.ps1
 ```
 
-The first nontrivial multiplication of G loads or builds 256 points
-(G, 2G, ..., 2^255G). Scalars 0/1 and arbitrary-base multiplications do not initialize
-the table. Subsequent calls reuse the in-memory table; later processes load the
-saved binary file.
+The first nontrivial multiplication of G converts the coordinates into an in-memory
+table. Scalars 0/1 and arbitrary-base multiplications do not initialize it.
+Subsequent calls reuse the same table for the lifetime of the loaded class.
+No external cache file or configuration is required.
 
-The default file is `psBitcoin/secp256k1-generator-v1.bin` under .NET's per-user
-`LocalApplicationData` directory (normally `%LOCALAPPDATA%` on Windows and
-`~/.local/share` on Linux). Set `PSBITCOIN_GENERATOR_CACHE` to a file path before the
-first multiplication to override it. Existing valid v1 caches can be reused.
-
-The format is 16,392 bytes: `PSBG0001` followed by 256 pairs of unsigned 32-byte
-little-endian X/Y coordinates. A pinned independently generated SHA256 verifies
-the whole file. Missing or invalid files are regenerated and published atomically;
-unavailable storage falls back to an in-memory table. The experimental 503-point
-v2 cache is not used. The separate Fast wallet has been removed.
+The data is stored in `Secp256k1GeneratorData` at the end of the file. Its class comment
+contains standalone PowerShell code that prints all 256 pairs. The test suite checks every pair
+against independent affine doubling, including its order and initialized values.
+The same data can be printed with `python3 tests/reference/generate-generator-table.py`.
 
 ## Tests
 

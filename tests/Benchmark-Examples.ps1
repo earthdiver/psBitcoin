@@ -1,6 +1,7 @@
 # Serial, fresh-process measurements; this script is not part of the regression runner.
-param([string]$SourceRoot=(Split-Path -Parent $PSScriptRoot),[ValidateRange(1,20)][int]$Repetitions=3)
+param([string]$SourceRoot='',[ValidateRange(1,20)][int]$Repetitions=3)
 $ErrorActionPreference='Stop'
+if (-not $SourceRoot) { $SourceRoot=Split-Path -Parent $PSScriptRoot }
 $root=(Get-Item -LiteralPath $SourceRoot).FullName
 $runId='examples-benchmark-'+[guid]::NewGuid().ToString('N')
 $results=Join-Path $PSScriptRoot "results/$runId"
@@ -27,13 +28,14 @@ try {
     foreach ($file in @('BitcoinWallet.ps1','wordlist.txt','wordlist_jp.txt')) { Copy-Item -LiteralPath (Join-Path $root $file) -Destination $workspace }
     Copy-Item -LiteralPath (Join-Path $root 'examples') -Destination $workspace -Recurse
     $seedCache=Join-Path $workspace 'seed.bin'
-    Invoke-Worker '' 'seed' $seedCache ''
+    $diskCache=(Get-Content (Join-Path $workspace 'BitcoinWallet.ps1') -Raw) -match 'GetGeneratorCachePath\('
+    if ($diskCache) { Invoke-Worker '' 'seed' $seedCache '' }
     $records=@()
     $examples=@(Get-ChildItem (Join-Path $root 'examples') -Filter '*.ps1' | Where-Object { $_.BaseName -match '^0[1-7]_' } | Sort-Object Name)
     if ($examples.Count -ne 7) { throw 'Expected examples 01 through 07' }
     for ($trial=1;$trial -le $Repetitions;$trial++) {
         foreach ($example in $examples) {
-            $modes=if ($trial % 2) {@('generate','load')} else {@('load','generate')}
+            $modes=if (-not $diskCache) {@('embedded')} elseif ($trial % 2) {@('generate','load')} else {@('load','generate')}
             foreach ($mode in $modes) {
                 $cache=Join-Path $workspace ('cache-'+[guid]::NewGuid().ToString('N')+'.bin')
                 if ($mode -eq 'load') { Copy-Item -LiteralPath $seedCache -Destination $cache }
