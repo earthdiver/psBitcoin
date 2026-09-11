@@ -77,6 +77,21 @@ Please place the wordlists in the same folder.
 . ./SeedQR.ps1
 ```
 
+## Tests
+
+Run the offline regression suite in a fresh PowerShell session:
+
+```powershell
+./tests/Run-Tests.ps1
+# Also test BitcoinWalletFast.ps1, when available:
+./tests/Run-Tests.ps1 -IncludeFast
+```
+
+No Pester installation or network access is required. Each suite runs in its own
+process and writes JSON results under `tests/results/`. The runner returns a
+nonzero exit code on failures, timeouts, or incomplete execution.
+See [test coverage and usage](tests/README.md) and [known failures](tests/KNOWN-FAILURES.md).
+
 ## Donations
 
 Welcome at the following addresses (buy me a coffee).

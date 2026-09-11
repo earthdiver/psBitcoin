@@ -1,0 +1,1184 @@
+{
+  "addresses": [
+    {
+      "private": "0000000000000000000000000000000000000000000000000000000000000001",
+      "public": "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "uncompressed": "0479be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798483ada7726a3c4655da4fbfc0e1108a8fd17b448a68554199c47d08ffb10d4b8",
+      "testnet": false,
+      "wif": "KwDiBf89QgGbjEhKnhXJuH7LrciVrZi3qYjgd9M7rFU73sVHnoWn",
+      "wifUC": "5HpHagT65TZzG1PH3CSu63k8DbpvD8s5ip4nEB3kEsreAnchuDf",
+      "addresses": {
+        "P2PKH": {
+          "address": "1BgGZ9tcN4rm9KBzDn7KprQz87SZ26SAMH",
+          "script": "76a914751e76e8199196d454941c45d1b3a323f1433bd688ac"
+        },
+        "P2SH": {
+          "address": "34wjDxkCQrUPYwnCRtap5uib6XNcVaud9K",
+          "script": "a91423b0ad3477f2178bc0b3eed26e4e6316f4e83aa187"
+        },
+        "P2SH-P2WPKH": {
+          "address": "3JvL6Ymt8MVWiCNHC7oWU6nLeHNJKLZGLN",
+          "script": "a914bcfeb728b584253d5f3f70bcb780e9ef218a68f487"
+        },
+        "P2SH-P2WSH": {
+          "address": "3NVZWnhKt53ukKw4Qm217Zk57FE8VnKjH2",
+          "script": "a914e4300531190587e3880d4c3004f5355d88ff928d87"
+        },
+        "P2WPKH": {
+          "address": "bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4",
+          "script": "0014751e76e8199196d454941c45d1b3a323f1433bd6"
+        },
+        "P2WSH": {
+          "address": "bc1qrp33g0q5c5txsp9arysrx4k6zdkfs4nce4xj0gdcccefvpysxf3qccfmv3",
+          "script": "00201863143c14c5166804bd19203356da136c985678cd4d27a1b8c6329604903262"
+        },
+        "P2TR": {
+          "address": "bc1pmfr3p9j00pfxjh0zmgp99y8zftmd3s5pmedqhyptwy6lm87hf5sspknck9",
+          "script": "5120da4710964f7852695de2da025290e24af6d8c281de5a0b902b7135fd9fd74d21"
+        },
+        "P2TR-SP": {
+          "address": "bc1p3xcn780z6k78qp54syegxd3u3s6xfhv4j7v5cpev5hjd7q3v89rsssj7ha",
+          "script": "512089b13f1de2d5bc700695813283363c8c3464dd9597994c072ca5e4df022c3947"
+        }
+      },
+      "tapScript": "2079be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798ac",
+      "controlBlock": "c050929b74c1a04954b78b4b6035e97a5e078a5a0f28ec96d547bfee9ace803ac0"
+    },
+    {
+      "private": "0000000000000000000000000000000000000000000000000000000000000001",
+      "public": "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "uncompressed": "0479be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798483ada7726a3c4655da4fbfc0e1108a8fd17b448a68554199c47d08ffb10d4b8",
+      "testnet": true,
+      "wif": "cMahea7zqjxrtgAbB7LSGbcQUr1uX1ojuat9jZodMN87JcbXMTcA",
+      "wifUC": "91avARGdfge8E4tZfYLoxeJ5sGBdNJQH4kvjJoQFacbgwmaKkrx",
+      "addresses": {
+        "P2PKH": {
+          "address": "mrCDrCybB6J1vRfbwM5hemdJz73FwDBC8r",
+          "script": "76a914751e76e8199196d454941c45d1b3a323f1433bd688ac"
+        },
+        "P2SH": {
+          "address": "2MvVwHhgE2JyjkjQk72CghrhrJsanKfHfqe",
+          "script": "a91423b0ad3477f2178bc0b3eed26e4e6316f4e83aa187"
+        },
+        "P2SH-P2WPKH": {
+          "address": "2NAUYAHhujozruyzpsFRP63mbrdaU5wnEpN",
+          "script": "a914bcfeb728b584253d5f3f70bcb780e9ef218a68f487"
+        },
+        "P2SH-P2WSH": {
+          "address": "2NE3maXdMVXZFx7Zc5tdsjWjLKbSJHTyaoU",
+          "script": "a914e4300531190587e3880d4c3004f5355d88ff928d87"
+        },
+        "P2WPKH": {
+          "address": "tb1qw508d6qejxtdg4y5r3zarvary0c5xw7kxpjzsx",
+          "script": "0014751e76e8199196d454941c45d1b3a323f1433bd6"
+        },
+        "P2WSH": {
+          "address": "tb1qrp33g0q5c5txsp9arysrx4k6zdkfs4nce4xj0gdcccefvpysxf3q0sl5k7",
+          "script": "00201863143c14c5166804bd19203356da136c985678cd4d27a1b8c6329604903262"
+        },
+        "P2TR": {
+          "address": "tb1pmfr3p9j00pfxjh0zmgp99y8zftmd3s5pmedqhyptwy6lm87hf5ssk79hv2",
+          "script": "5120da4710964f7852695de2da025290e24af6d8c281de5a0b902b7135fd9fd74d21"
+        },
+        "P2TR-SP": {
+          "address": "tb1p3xcn780z6k78qp54syegxd3u3s6xfhv4j7v5cpev5hjd7q3v89rs8cy3dj",
+          "script": "512089b13f1de2d5bc700695813283363c8c3464dd9597994c072ca5e4df022c3947"
+        }
+      },
+      "tapScript": "2079be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798ac",
+      "controlBlock": "c050929b74c1a04954b78b4b6035e97a5e078a5a0f28ec96d547bfee9ace803ac0"
+    },
+    {
+      "private": "0000000000000000000000000000000000000000000000000000000000000002",
+      "public": "02c6047f9441ed7d6d3045406e95c07cd85c778e4b8cef3ca7abac09b95c709ee5",
+      "uncompressed": "04c6047f9441ed7d6d3045406e95c07cd85c778e4b8cef3ca7abac09b95c709ee51ae168fea63dc339a3c58419466ceaeef7f632653266d0e1236431a950cfe52a",
+      "testnet": false,
+      "wif": "KwDiBf89QgGbjEhKnhXJuH7LrciVrZi3qYjgd9M7rFU74NMTptX4",
+      "wifUC": "5HpHagT65TZzG1PH3CSu63k8DbpvD8s5ip4nEB3kEsreAvUcVfH",
+      "addresses": {
+        "P2PKH": {
+          "address": "1cMh228HTCiwS8ZsaakH8A8wze1JR5ZsP",
+          "script": "76a91406afd46bcdfd22ef94ac122aa11f241244a37ecc88ac"
+        },
+        "P2SH": {
+          "address": "3EuJgd52Tme58nZewZa39svoDtSUgL4Mgn",
+          "script": "a91490ec9e04add3f73f7b64df70b1d6f084a158b77a87"
+        },
+        "P2SH-P2WPKH": {
+          "address": "3FWHHE3RVgyv5vYmMrcoRdA25uugWvQbso",
+          "script": "a914978a0121f9a24de65a13bab0c43c3a48be074eae87"
+        },
+        "P2SH-P2WSH": {
+          "address": "39H82wDfFoWbzKPC63DJs6HN7M5vnzUoJY",
+          "script": "a914533c1facb64d975bdb02f44c03725af051542d0b87"
+        },
+        "P2WPKH": {
+          "address": "bc1qq6hag67dl53wl99vzg42z8eyzfz2xlkvxechjp",
+          "script": "001406afd46bcdfd22ef94ac122aa11f241244a37ecc"
+        },
+        "P2WSH": {
+          "address": "bc1qk27l3rd2jnmczfacshtwjmsyc2jr35zw9s7hmjent3tpetk2y3nskcf0jf",
+          "script": "0020b2bdf88daa94f78127b885d6e96e04c2a438d04e2c3d7dcb335c561caeca2467"
+        },
+        "P2TR": {
+          "address": "bc1pet7ep3czdu9k4wvdlz2fp5p8x2yp7t6ttyqg2c6cmh0lgeuu9lasmp9hsg",
+          "script": "5120cafd90c7026f0b6ab98df89490d02732881f2f4b5900856358dddff4679c2ffb"
+        },
+        "P2TR-SP": {
+          "address": "bc1p7604f2vs7trl2l7g5dgfhw7hu44kd5rzy7ryygd3luvq7g93t5pqnyl2qr",
+          "script": "5120f69f54a990f2c7f57fc8a3509bbbd7e56b66d06227864221b1ff180f20b15d02"
+        }
+      },
+      "tapScript": "20c6047f9441ed7d6d3045406e95c07cd85c778e4b8cef3ca7abac09b95c709ee5ac",
+      "controlBlock": "c150929b74c1a04954b78b4b6035e97a5e078a5a0f28ec96d547bfee9ace803ac0"
+    },
+    {
+      "private": "0000000000000000000000000000000000000000000000000000000000000002",
+      "public": "02c6047f9441ed7d6d3045406e95c07cd85c778e4b8cef3ca7abac09b95c709ee5",
+      "uncompressed": "04c6047f9441ed7d6d3045406e95c07cd85c778e4b8cef3ca7abac09b95c709ee51ae168fea63dc339a3c58419466ceaeef7f632653266d0e1236431a950cfe52a",
+      "testnet": true,
+      "wif": "cMahea7zqjxrtgAbB7LSGbcQUr1uX1ojuat9jZodMN87K7XCyj5v",
+      "wifUC": "91avARGdfge8E4tZfYLoxeJ5sGBdNJQH4kvjJoQFacbgww7vXtT",
+      "addresses": {
+        "P2PKH": {
+          "address": "mg8Jz5776UdyiYcBb9Z873NTozEiADRW5H",
+          "script": "76a91406afd46bcdfd22ef94ac122aa11f241244a37ecc88ac"
+        },
+        "P2SH": {
+          "address": "2N6TWkN145E9RLaCCchBumpv4SEeePy4aE8",
+          "script": "a91490ec9e04add3f73f7b64df70b1d6f084a158b77a87"
+        },
+        "P2SH-P2WPKH": {
+          "address": "2N74VLxyT79VGHiBK2zEg3a9HJG7rEc5F3o",
+          "script": "a914978a0121f9a24de65a13bab0c43c3a48be074eae87"
+        },
+        "P2SH-P2WSH": {
+          "address": "2MzqL6g9gsG1xC71jmAqBV3GdKhJ6b9bVQS",
+          "script": "a914533c1facb64d975bdb02f44c03725af051542d0b87"
+        },
+        "P2WPKH": {
+          "address": "tb1qq6hag67dl53wl99vzg42z8eyzfz2xlkvvlryfj",
+          "script": "001406afd46bcdfd22ef94ac122aa11f241244a37ecc"
+        },
+        "P2WSH": {
+          "address": "tb1qk27l3rd2jnmczfacshtwjmsyc2jr35zw9s7hmjent3tpetk2y3nspslqgx",
+          "script": "0020b2bdf88daa94f78127b885d6e96e04c2a438d04e2c3d7dcb335c561caeca2467"
+        },
+        "P2TR": {
+          "address": "tb1pet7ep3czdu9k4wvdlz2fp5p8x2yp7t6ttyqg2c6cmh0lgeuu9lasvfnc28",
+          "script": "5120cafd90c7026f0b6ab98df89490d02732881f2f4b5900856358dddff4679c2ffb"
+        },
+        "P2TR-SP": {
+          "address": "tb1p7604f2vs7trl2l7g5dgfhw7hu44kd5rzy7ryygd3luvq7g93t5pqyvf96v",
+          "script": "5120f69f54a990f2c7f57fc8a3509bbbd7e56b66d06227864221b1ff180f20b15d02"
+        }
+      },
+      "tapScript": "20c6047f9441ed7d6d3045406e95c07cd85c778e4b8cef3ca7abac09b95c709ee5ac",
+      "controlBlock": "c150929b74c1a04954b78b4b6035e97a5e078a5a0f28ec96d547bfee9ace803ac0"
+    },
+    {
+      "private": "0000000000000000000000000000000000000000000000000000000000000003",
+      "public": "02f9308a019258c31049344f85f89d5229b531c845836f99b08601f113bce036f9",
+      "uncompressed": "04f9308a019258c31049344f85f89d5229b531c845836f99b08601f113bce036f9388f7b0f632de8140fe337e62a37f3566500a99934c2231b6cb9fd7584b8e672",
+      "testnet": false,
+      "wif": "KwDiBf89QgGbjEhKnhXJuH7LrciVrZi3qYjgd9M7rFU74sHUHy8S",
+      "wifUC": "5HpHagT65TZzG1PH3CSu63k8DbpvD8s5ip4nEB3kEsreB1FQ8BZ",
+      "addresses": {
+        "P2PKH": {
+          "address": "1CUNEBjYrCn2y1SdiUMohaKUi4wpP326Lb",
+          "script": "76a9147dd65592d0ab2fe0d0257d571abf032cd9db93dc88ac"
+        },
+        "P2SH": {
+          "address": "3JvQ6YEnq7KVgXqSgp9SAD7opGMaKjzyAu",
+          "script": "a914bd020deac85a6518e3b4ca83d830b9ac259f7b5d87"
+        },
+        "P2SH-P2WPKH": {
+          "address": "3BM3eLQZbwubG3XwwxJmd9qxwMJn7yUTSn",
+          "script": "a91469ea5ff598a286f418ae77503ce85d83da4ae88e87"
+        },
+        "P2SH-P2WSH": {
+          "address": "3LRaASptSC8B4CXeTP15VvubZFyAsSGgys",
+          "script": "a914cd7ea597abaa38788457a98adbb3f2881202910887"
+        },
+        "P2WPKH": {
+          "address": "bc1q0ht9tyks4vh7p5p904t340cr9nvahy7u3re7zg",
+          "script": "00147dd65592d0ab2fe0d0257d571abf032cd9db93dc"
+        },
+        "P2WSH": {
+          "address": "bc1quxwuhgd97s95l6rcvm2uya25fsndvf8ru490vyahed6g2l9fx4jqt0xtq6",
+          "script": "0020e19dcba1a5f40b4fe87866d5c275544c26d624e3e54af613b7cb74857ca93564"
+        },
+        "P2TR": {
+          "address": "bc1pgxxyvcmdncdxs06cudd5yvmwwahaesaj6n3eu7st7x4sw9hrchaqjy33gs",
+          "script": "5120418c46636d9e1a683f58e35b42336e776fdcc3b2d4e39e7a0bf1ab0716e3c5fa"
+        },
+        "P2TR-SP": {
+          "address": "bc1pvzvg44rfkmhm3adks79vn5c5kf27leyw7a8vhjgandtzup2s9ngq04ff4q",
+          "script": "512060988ad469b6efb8f5b6878ac9d314b255efe48ef74ecbc91d9b562e05502cd0"
+        }
+      },
+      "tapScript": "20f9308a019258c31049344f85f89d5229b531c845836f99b08601f113bce036f9ac",
+      "controlBlock": "c050929b74c1a04954b78b4b6035e97a5e078a5a0f28ec96d547bfee9ace803ac0"
+    },
+    {
+      "private": "0000000000000000000000000000000000000000000000000000000000000003",
+      "public": "02f9308a019258c31049344f85f89d5229b531c845836f99b08601f113bce036f9",
+      "uncompressed": "04f9308a019258c31049344f85f89d5229b531c845836f99b08601f113bce036f9388f7b0f632de8140fe337e62a37f3566500a99934c2231b6cb9fd7584b8e672",
+      "testnet": true,
+      "wif": "cMahea7zqjxrtgAbB7LSGbcQUr1uX1ojuat9jZodMN87KcLPVfXz",
+      "wifUC": "91avARGdfge8E4tZfYLoxeJ5sGBdNJQH4kvjJoQFacbgx3cTMqe",
+      "addresses": {
+        "P2PKH": {
+          "address": "mrzKXEpXfEDHk7vFS3LBXVXoa4YXFcCkje",
+          "script": "76a9147dd65592d0ab2fe0d0257d571abf032cd9db93dc88ac"
+        },
+        "P2SH": {
+          "address": "2NAUcAHApSZpqtKTzMwmJnA752cZk714F56",
+          "script": "a914bd020deac85a6518e3b4ca83d830b9ac259f7b5d87"
+        },
+        "P2SH-P2WPKH": {
+          "address": "2N2uFi5LbDQQwTqAVd5veF6qE9hWww2DVzF",
+          "script": "a91469ea5ff598a286f418ae77503ce85d83da4ae88e87"
+        },
+        "P2SH-P2WSH": {
+          "address": "2NBynEBkv3edXFzAC8Wcx7strmcBLgfkN9p",
+          "script": "a914cd7ea597abaa38788457a98adbb3f2881202910887"
+        },
+        "P2WPKH": {
+          "address": "tb1q0ht9tyks4vh7p5p904t340cr9nvahy7um9zdem",
+          "script": "00147dd65592d0ab2fe0d0257d571abf032cd9db93dc"
+        },
+        "P2WSH": {
+          "address": "tb1quxwuhgd97s95l6rcvm2uya25fsndvf8ru490vyahed6g2l9fx4jqu8sy64",
+          "script": "0020e19dcba1a5f40b4fe87866d5c275544c26d624e3e54af613b7cb74857ca93564"
+        },
+        "P2TR": {
+          "address": "tb1pgxxyvcmdncdxs06cudd5yvmwwahaesaj6n3eu7st7x4sw9hrchaq9v87jl",
+          "script": "5120418c46636d9e1a683f58e35b42336e776fdcc3b2d4e39e7a0bf1ab0716e3c5fa"
+        },
+        "P2TR-SP": {
+          "address": "tb1pvzvg44rfkmhm3adks79vn5c5kf27leyw7a8vhjgandtzup2s9ngqcalx00",
+          "script": "512060988ad469b6efb8f5b6878ac9d314b255efe48ef74ecbc91d9b562e05502cd0"
+        }
+      },
+      "tapScript": "20f9308a019258c31049344f85f89d5229b531c845836f99b08601f113bce036f9ac",
+      "controlBlock": "c050929b74c1a04954b78b4b6035e97a5e078a5a0f28ec96d547bfee9ace803ac0"
+    },
+    {
+      "private": "0000000000000000000000000000000000000000000000000000000000000007",
+      "public": "025cbdf0646e5db4eaa398f365f2ea7a0e3d419b7e0330e39ce92bddedcac4f9bc",
+      "uncompressed": "045cbdf0646e5db4eaa398f365f2ea7a0e3d419b7e0330e39ce92bddedcac4f9bc6aebca40ba255960a3178d6d861a54dba813d0b813fde7b5a5082628087264da",
+      "testnet": false,
+      "wif": "KwDiBf89QgGbjEhKnhXJuH7LrciVrZi3qYjgd9M7rFU76rnZwVdz",
+      "wifUC": "5HpHagT65TZzG1PH3CSu63k8DbpvD8s5ip4nEB3kEsreBR6zCMU",
+      "addresses": {
+        "P2PKH": {
+          "address": "19ZewH8Kk1PDbSNdJ97FP4EiCjTRaZMZQA",
+          "script": "76a9145dedfbf9ea599dd4e3ca6a80b333c472fd0b3f6988ac"
+        },
+        "P2SH": {
+          "address": "3NGRD3MvzKc6yHS7yPUAsV2187xuanYaGb",
+          "script": "a914e1b3ade5f0608e1a8742ac380ce4780462064a1e87"
+        },
+        "P2SH-P2WPKH": {
+          "address": "3BW9kFfY5TGhjVoRtxoijfjJvfggZgfNDX",
+          "script": "a9146ba336543ab7de40a61b3b192cbc51449f9700b087"
+        },
+        "P2SH-P2WSH": {
+          "address": "3C13zxfQYCYDEyJFY8AqkuZp7DTrDQtaxZ",
+          "script": "a914711a7a6d831f7f908974c224d643403a0569cbed87"
+        },
+        "P2WPKH": {
+          "address": "bc1qthklh702txwafc72d2qtxv7ywt7sk0mfy3mw6y",
+          "script": "00145dedfbf9ea599dd4e3ca6a80b333c472fd0b3f69"
+        },
+        "P2WSH": {
+          "address": "bc1qw0pje63xj4kszpd872tknnwz6e45ps7ny79tcu3ncynwsp05q2pq3vcj3h",
+          "script": "002073c32cea26956d0105a7f29769cdc2d66b40c3d3278abc7233c126e805f40282"
+        },
+        "P2TR": {
+          "address": "bc1pr896td3mmjl5vc57mutumgfmeet8hyzy9w6zr6hg5vhrtppevlpsp3x3nm",
+          "script": "512019cba5b63bdcbf46629edf17cda13bce567b90442bb421eae8a32e35843967c3"
+        },
+        "P2TR-SP": {
+          "address": "bc1pm4k4d9509cpdplu5c9etrg753urv6enz8dnla540nre2g8qh4tcqlvyf3s",
+          "script": "5120dd6d56968f2e02d0ff94c172b1a3d48f06cd66623b67fed2af98f2a41c17aaf0"
+        }
+      },
+      "tapScript": "205cbdf0646e5db4eaa398f365f2ea7a0e3d419b7e0330e39ce92bddedcac4f9bcac",
+      "controlBlock": "c150929b74c1a04954b78b4b6035e97a5e078a5a0f28ec96d547bfee9ace803ac0"
+    },
+    {
+      "private": "0000000000000000000000000000000000000000000000000000000000000007",
+      "public": "025cbdf0646e5db4eaa398f365f2ea7a0e3d419b7e0330e39ce92bddedcac4f9bc",
+      "uncompressed": "045cbdf0646e5db4eaa398f365f2ea7a0e3d419b7e0330e39ce92bddedcac4f9bc6aebca40ba255960a3178d6d861a54dba813d0b813fde7b5a5082628087264da",
+      "testnet": true,
+      "wif": "cMahea7zqjxrtgAbB7LSGbcQUr1uX1ojuat9jZodMN87MbvFSpLf",
+      "wifUC": "91avARGdfge8E4tZfYLoxeJ5sGBdNJQH4kvjJoQFacbgxVDHN1P",
+      "addresses": {
+        "P2PKH": {
+          "address": "mp5cELDJZ2pUNYrF1i5dCyT34j48UzaKRU",
+          "script": "76a9145dedfbf9ea599dd4e3ca6a80b333c472fd0b3f6988ac"
+        },
+        "P2SH": {
+          "address": "2NDpdGnHxbn7TB54feX63VS1GLUB5JLWFuP",
+          "script": "a914e1b3ade5f0608e1a8742ac380ce4780462064a1e87"
+        },
+        "P2SH-P2WPKH": {
+          "address": "2N34MozbZgun3wHRya6RbMcia91trTTC9xY",
+          "script": "a9146ba336543ab7de40a61b3b192cbc51449f9700b087"
+        },
+        "P2SH-P2WSH": {
+          "address": "2N3ZG4hbS9f3ZSkvoDFniNrZ5KZg21Ex9aj",
+          "script": "a914711a7a6d831f7f908974c224d643403a0569cbed87"
+        },
+        "P2WPKH": {
+          "address": "tb1qthklh702txwafc72d2qtxv7ywt7sk0mfwhqaph",
+          "script": "00145dedfbf9ea599dd4e3ca6a80b333c472fd0b3f69"
+        },
+        "P2WSH": {
+          "address": "tb1qw0pje63xj4kszpd872tknnwz6e45ps7ny79tcu3ncynwsp05q2pqxywatc",
+          "script": "002073c32cea26956d0105a7f29769cdc2d66b40c3d3278abc7233c126e805f40282"
+        },
+        "P2TR": {
+          "address": "tb1pr896td3mmjl5vc57mutumgfmeet8hyzy9w6zr6hg5vhrtppevlpskes7f5",
+          "script": "512019cba5b63bdcbf46629edf17cda13bce567b90442bb421eae8a32e35843967c3"
+        },
+        "P2TR-SP": {
+          "address": "tb1pm4k4d9509cpdplu5c9etrg753urv6enz8dnla540nre2g8qh4tcqgyjxtl",
+          "script": "5120dd6d56968f2e02d0ff94c172b1a3d48f06cd66623b67fed2af98f2a41c17aaf0"
+        }
+      },
+      "tapScript": "205cbdf0646e5db4eaa398f365f2ea7a0e3d419b7e0330e39ce92bddedcac4f9bcac",
+      "controlBlock": "c150929b74c1a04954b78b4b6035e97a5e078a5a0f28ec96d547bfee9ace803ac0"
+    },
+    {
+      "private": "fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364140",
+      "public": "0379be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "uncompressed": "0479be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798b7c52588d95c3b9aa25b0403f1eef75702e84bb7597aabe663b82f6f04ef2777",
+      "testnet": false,
+      "wif": "L5oLkpV3aqBjhki6LmvChTCV6odsp4SXM6FfU2Gppt5kFLaHLuZ9",
+      "wifUC": "5Km2kuu7vtFDPpxywn4u3NLpbr5jKpTB3jsuDU2KYEqetqj84qw",
+      "addresses": {
+        "P2PKH": {
+          "address": "1GrLCmVQXoyJXaPJQdqssNqwxvha1eUo2E",
+          "script": "76a914adde4c73c7b9cee17da6c7b3e2b2eea1a0dcbe6788ac"
+        },
+        "P2SH": {
+          "address": "36bHCDPBuf8is35cby5Y3ChMhn4HByb55k",
+          "script": "a91435c2e14b3a7856b53f29b725180400ccc0ffda6087"
+        },
+        "P2SH-P2WPKH": {
+          "address": "38Kw57SDszoUEikRwJNBpypPSdpbAhToeD",
+          "script": "a91448cc1845ab9f5099d4b36f02e148f7459d439fee87"
+        },
+        "P2SH-P2WSH": {
+          "address": "3MVUA5w18hiMxrW6BeLvnXJn2GNb6E3t2s",
+          "script": "a914d9336c38f0efd5b090d777edbf8054b6019c3a6c87"
+        },
+        "P2WPKH": {
+          "address": "bc1q4h0ycu78h88wzldxc7e79vhw5xsde0n8jk4wl5",
+          "script": "0014adde4c73c7b9cee17da6c7b3e2b2eea1a0dcbe67"
+        },
+        "P2WSH": {
+          "address": "bc1qvusevxqcg928dx0yvuy0edrgwqhd7pz4azeapeuyq3evw2uu7unsdqzfhp",
+          "script": "0020672196181841547699e46708fcb468702edf0455e8b3d0e7840472c72b9cf727"
+        },
+        "P2TR": {
+          "address": "bc1pmfr3p9j00pfxjh0zmgp99y8zftmd3s5pmedqhyptwy6lm87hf5sspknck9",
+          "script": "5120da4710964f7852695de2da025290e24af6d8c281de5a0b902b7135fd9fd74d21"
+        },
+        "P2TR-SP": {
+          "address": "bc1p3xcn780z6k78qp54syegxd3u3s6xfhv4j7v5cpev5hjd7q3v89rsssj7ha",
+          "script": "512089b13f1de2d5bc700695813283363c8c3464dd9597994c072ca5e4df022c3947"
+        }
+      },
+      "tapScript": "2079be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798ac",
+      "controlBlock": "c050929b74c1a04954b78b4b6035e97a5e078a5a0f28ec96d547bfee9ace803ac0"
+    },
+    {
+      "private": "fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364140",
+      "public": "0379be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "uncompressed": "0479be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798b7c52588d95c3b9aa25b0403f1eef75702e84bb7597aabe663b82f6f04ef2777",
+      "testnet": true,
+      "wif": "cWALDjUu1tszsCBMjBjL4mhYj2wHUWYDR8Q8aSjLKzjkW5eBtpzu",
+      "wifUC": "93XfLeifX7KMMtUGa7xouxtnFWSSUyzNPgjrJ6Npsyahfqjy7oJ",
+      "addresses": {
+        "P2PKH": {
+          "address": "mwNHVpaPLqQZJgrv8CpFhJ4GpvJGumskXi",
+          "script": "76a914adde4c73c7b9cee17da6c7b3e2b2eea1a0dcbe6788ac"
+        },
+        "P2SH": {
+          "address": "2Mx9VFxKDX7e54piAH6hQf9gcv8GStoDu3J",
+          "script": "a91435c2e14b3a7856b53f29b725180400ccc0ffda6087"
+        },
+        "P2SH-P2WPKH": {
+          "address": "2Myt98rNFVTJpSWNycRz4Svoeez2kzgwFGP",
+          "script": "a91448cc1845ab9f5099d4b36f02e148f7459d439fee87"
+        },
+        "P2SH-P2WSH": {
+          "address": "2ND3gDps2kADiAe8drmxoQUJ3EcakwkmyTA",
+          "script": "a914d9336c38f0efd5b090d777edbf8054b6019c3a6c87"
+        },
+        "P2WPKH": {
+          "address": "tb1q4h0ycu78h88wzldxc7e79vhw5xsde0n8csway8",
+          "script": "0014adde4c73c7b9cee17da6c7b3e2b2eea1a0dcbe67"
+        },
+        "P2WSH": {
+          "address": "tb1qvusevxqcg928dx0yvuy0edrgwqhd7pz4azeapeuyq3evw2uu7uns6g5xdw",
+          "script": "0020672196181841547699e46708fcb468702edf0455e8b3d0e7840472c72b9cf727"
+        },
+        "P2TR": {
+          "address": "tb1pmfr3p9j00pfxjh0zmgp99y8zftmd3s5pmedqhyptwy6lm87hf5ssk79hv2",
+          "script": "5120da4710964f7852695de2da025290e24af6d8c281de5a0b902b7135fd9fd74d21"
+        },
+        "P2TR-SP": {
+          "address": "tb1p3xcn780z6k78qp54syegxd3u3s6xfhv4j7v5cpev5hjd7q3v89rs8cy3dj",
+          "script": "512089b13f1de2d5bc700695813283363c8c3464dd9597994c072ca5e4df022c3947"
+        }
+      },
+      "tapScript": "2079be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798ac",
+      "controlBlock": "c050929b74c1a04954b78b4b6035e97a5e078a5a0f28ec96d547bfee9ace803ac0"
+    }
+  ],
+  "ecdsa": [
+    {
+      "private": "0000000000000000000000000000000000000000000000000000000000000001",
+      "public": "0279be667ef9dcbbac55a06295ce870b07029bfcdb2dce28d959f2815b16f81798",
+      "data": "00",
+      "digest": "1406e05881e299367766d313e26c05564ec91bf721d31726bd6e46e60689539a",
+      "nonce": "7e33161b428b5d790460ec75149eda0ee5ffb1d74497c3c552a0f358338e5245",
+      "signature": "3045022100b9ac361aaf03f2dab504879d8016a79e8328582089372e289b405ce8879552f40220048d8554bbeac24ce181d53b1c538ac800542f9c51c1ca43d0032276dd7c035201"
+    },
+    {
+      "private": "0000000000000000000000000000000000000000000000000000000000000002",
+      "public": "02c6047f9441ed7d6d3045406e95c07cd85c778e4b8cef3ca7abac09b95c709ee5",
+      "data": "68656c6c6f",
+      "digest": "9595c9df90075148eb06860365df33584b75bff782a510c6cd4883a419833d50",
+      "nonce": "77823ff64751fb6cd5a5d780e2f1ca196b10d8e08f2d59681fd98c0a1190f13d",
+      "signature": "3045022100f0d25bd0670a4956e3166204edc7230c9ba6e62ce48350eaf57101e29bd44c6202201cc326b4de00d6c77b8020511710325ea1361ba81b634ab4117ce18cfd80418a01"
+    },
+    {
+      "private": "0000000000000000000000000000000000000000000000000000000000000003",
+      "public": "02f9308a019258c31049344f85f89d5229b531c845836f99b08601f113bce036f9",
+      "data": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f404142434445464748494a4b4c4d4e4f505152535455565758595a5b5c5d5e5f606162636465666768696a6b6c6d6e6f707172737475767778797a7b7c7d7e7f808182838485868788898a8b8c8d8e8f909192939495969798999a9b9c9d9e9fa0a1a2a3a4a5a6a7a8a9aaabacadaeafb0b1b2b3b4b5b6b7b8b9babbbcbdbebfc0c1c2c3c4c5c6c7c8c9cacbcccdcecfd0d1d2d3d4d5d6d7d8d9dadbdcdddedfe0e1e2e3e4e5e6e7e8e9eaebecedeeeff0f1f2f3f4f5f6f7f8f9fafbfcfdfeff",
+      "digest": "60bd11c69262f84ddfea5f0d116d40af862c4dd8c2a92fb90e368b132e8fa89c",
+      "nonce": "a604a8f423a3286b2861849504fe950da7e9bd1ff67d9c154c44735ada21f0d8",
+      "signature": "3044022074bad288b8c90cbb5dac77ccdbb83b9eed23becd78cfb8eba4ce9cd28473747402203c5ff003a60507f7fa2fd319073b6d2cdeaf8776667f0af8d522b8e2b676346501"
+    }
+  ],
+  "messages": [
+    {
+      "message": "",
+      "signature": "H/ekWyEiNs+vsqOX5k7LH3pPZfy9izgt6UYvcEGT9tf2FrGCBH9ZB1O0JtiULTJoDxEmmBJSI2FTGZQaBn83kbM="
+    },
+    {
+      "message": "hello",
+      "signature": "IH33YF6i6ooDT6dbZ8TA11L/ks3+zSV0Zxt0DCGNTadBdRSl78b8/9wME9jh+BBVhb5a9EjQ4hTu7nW3/Oa9bm8="
+    },
+    {
+      "message": "日本語 🔑",
+      "signature": "IIZI9d43h9tIibBzm0/lfscUeUrAniipI8JVn70X7qvKILf4uuAMrOms+pVjlchO3yySnugOQpHpZPZ7/D3neLI="
+    },
+    {
+      "message": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "signature": "IPJFLHKY/VrGeJKtwLqn7fekXddFoJ7KuQwUa+F6auUeQtIRUUxV3D/o37B+A1OVnacd6Hzh5XUob9OQvIMbE4A="
+    },
+    {
+      "message": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "signature": "H+7RupLqDEHck8lS96REA2t8Huc5BZ8TGYl9xwWxacdxO0K9apJ8nfSIRDy7mJLPitR82VjeaF8mLebF82P3i9Q="
+    },
+    {
+      "message": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "signature": "IFdT7RWSoOJrs2AkhhmlT+b3ghMY8tdC857R2mZtFADAL6F9RGtD9cAueB7iOeoBRKHT3T/hmCl6ibbgfsQDnP8="
+    }
+  ],
+  "sighashes": [
+    {
+      "kind": "segwit",
+      "index": 0,
+      "flag": 1,
+      "scriptCode": "1976a914111111111111111111111111111111111111111188ac",
+      "preimage": "0200000074cf5369a620ad6d3bd9426d6497cefbf26e0bb4c52c9747f761bc0c9846a98f264f7718b02537e08d54b56bd212b63aa7009f1ef07b3d71e7ac418c623302e71f1e1d1c1b1a191817161514131211100f0e0d0c0b0a09080706050403020100030000001976a914111111111111111111111111111111111111111188aca086010000000000fdfffffff0daf4ae38a08a65024ea4c1a696ee6def6d230e869c59fa2e241f943caad62ef401000001000000",
+      "digest": "a87fdcfa71e9152f5bc985ab72aa8053eadf2993c5984ff6421846c043187098"
+    },
+    {
+      "kind": "segwit",
+      "index": 0,
+      "flag": 2,
+      "scriptCode": "1976a914111111111111111111111111111111111111111188ac",
+      "preimage": "0200000074cf5369a620ad6d3bd9426d6497cefbf26e0bb4c52c9747f761bc0c9846a98f00000000000000000000000000000000000000000000000000000000000000001f1e1d1c1b1a191817161514131211100f0e0d0c0b0a09080706050403020100030000001976a914111111111111111111111111111111111111111188aca086010000000000fdffffff0000000000000000000000000000000000000000000000000000000000000000f401000002000000",
+      "digest": "b5492f44befff088cc2cd8b301a49e3f2ccc6895b1eb12e3d79b33549fa18297"
+    },
+    {
+      "kind": "segwit",
+      "index": 0,
+      "flag": 3,
+      "scriptCode": "1976a914111111111111111111111111111111111111111188ac",
+      "preimage": "0200000074cf5369a620ad6d3bd9426d6497cefbf26e0bb4c52c9747f761bc0c9846a98f00000000000000000000000000000000000000000000000000000000000000001f1e1d1c1b1a191817161514131211100f0e0d0c0b0a09080706050403020100030000001976a914111111111111111111111111111111111111111188aca086010000000000fdffffffd2b8a0230f385d29392f41df0e6d1e6be50f71a3c6b2c67ce7651969a79dc597f401000003000000",
+      "digest": "d0a954d0f5ce24bcc7054b959f144801309705d27925e17c893f9797b4c84eca"
+    },
+    {
+      "kind": "segwit",
+      "index": 0,
+      "flag": 129,
+      "scriptCode": "1976a914111111111111111111111111111111111111111188ac",
+      "preimage": "02000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001f1e1d1c1b1a191817161514131211100f0e0d0c0b0a09080706050403020100030000001976a914111111111111111111111111111111111111111188aca086010000000000fdfffffff0daf4ae38a08a65024ea4c1a696ee6def6d230e869c59fa2e241f943caad62ef401000081000000",
+      "digest": "1e4c0f93b85b5b47b4bfc385ab42f09fcd7a40a9ac9d742624ddc94c8b4e73ab"
+    },
+    {
+      "kind": "segwit",
+      "index": 0,
+      "flag": 130,
+      "scriptCode": "1976a914111111111111111111111111111111111111111188ac",
+      "preimage": "02000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001f1e1d1c1b1a191817161514131211100f0e0d0c0b0a09080706050403020100030000001976a914111111111111111111111111111111111111111188aca086010000000000fdffffff0000000000000000000000000000000000000000000000000000000000000000f401000082000000",
+      "digest": "f2373d2b60ef8308b3e29e48dcc8c815a09805ace489902e1957da0b118ef296"
+    },
+    {
+      "kind": "segwit",
+      "index": 0,
+      "flag": 131,
+      "scriptCode": "1976a914111111111111111111111111111111111111111188ac",
+      "preimage": "02000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000001f1e1d1c1b1a191817161514131211100f0e0d0c0b0a09080706050403020100030000001976a914111111111111111111111111111111111111111188aca086010000000000fdffffffd2b8a0230f385d29392f41df0e6d1e6be50f71a3c6b2c67ce7651969a79dc597f401000083000000",
+      "digest": "2ea75bad40a0757378a77b3f664c00a2634e82dda4be2e88987aeed20013f68f"
+    },
+    {
+      "kind": "taproot",
+      "index": 0,
+      "flag": 0,
+      "extension": 0,
+      "annex": "",
+      "leaf": "",
+      "preimage": "0002000000f4010000151a92b95b5786c99bb4a4e9e551cceadb8ac2fbcf89aa26dbbb9f90a7f35e16c6070bae36f51fbcb4696f735d6361a87bbe28fab4ccae243ab189a639e2a981c76099477ba0bba71a4a5a818ea784ee15f229d32a6bf6e603f5b8ea8b57335441a96f95e9ed40460f33b64c2cbb634b0f695e26e3598bfa260a56162977d9be566db9ccb6e90eafe085da78e0d4773fef9c0657bc8ef8b457c19ea480bdfe970000000000",
+      "digest": "f1d1dff4ffcc898b440717728a5eb94f8f9030c3930d5fe91028a1c87f122f52"
+    },
+    {
+      "kind": "taproot",
+      "index": 0,
+      "flag": 0,
+      "extension": 0,
+      "annex": "501234",
+      "leaf": "",
+      "preimage": "0002000000f4010000151a92b95b5786c99bb4a4e9e551cceadb8ac2fbcf89aa26dbbb9f90a7f35e16c6070bae36f51fbcb4696f735d6361a87bbe28fab4ccae243ab189a639e2a981c76099477ba0bba71a4a5a818ea784ee15f229d32a6bf6e603f5b8ea8b57335441a96f95e9ed40460f33b64c2cbb634b0f695e26e3598bfa260a56162977d9be566db9ccb6e90eafe085da78e0d4773fef9c0657bc8ef8b457c19ea480bdfe970100000000921d093786a1668f2403b8b8b8f795bc832a1388cdfb5db5db3b27547bf95f3b",
+      "digest": "a067d84dc959ddbb184d3451227451e3d2f3a13ef28977b05a19945b76d21ea3"
+    },
+    {
+      "kind": "taproot",
+      "index": 0,
+      "flag": 0,
+      "extension": 1,
+      "annex": "",
+      "leaf": "5555555555555555555555555555555555555555555555555555555555555555",
+      "preimage": "0002000000f4010000151a92b95b5786c99bb4a4e9e551cceadb8ac2fbcf89aa26dbbb9f90a7f35e16c6070bae36f51fbcb4696f735d6361a87bbe28fab4ccae243ab189a639e2a981c76099477ba0bba71a4a5a818ea784ee15f229d32a6bf6e603f5b8ea8b57335441a96f95e9ed40460f33b64c2cbb634b0f695e26e3598bfa260a56162977d9be566db9ccb6e90eafe085da78e0d4773fef9c0657bc8ef8b457c19ea480bdfe970200000000555555555555555555555555555555555555555555555555555555555555555500ffffffff",
+      "digest": "b4fdead2d4b9ea5a7c2abba9c688d78427e7ad152baa23799bebf441405032a3"
+    },
+    {
+      "kind": "taproot",
+      "index": 0,
+      "flag": 0,
+      "extension": 1,
+      "annex": "501234",
+      "leaf": "5555555555555555555555555555555555555555555555555555555555555555",
+      "preimage": "0002000000f4010000151a92b95b5786c99bb4a4e9e551cceadb8ac2fbcf89aa26dbbb9f90a7f35e16c6070bae36f51fbcb4696f735d6361a87bbe28fab4ccae243ab189a639e2a981c76099477ba0bba71a4a5a818ea784ee15f229d32a6bf6e603f5b8ea8b57335441a96f95e9ed40460f33b64c2cbb634b0f695e26e3598bfa260a56162977d9be566db9ccb6e90eafe085da78e0d4773fef9c0657bc8ef8b457c19ea480bdfe970300000000921d093786a1668f2403b8b8b8f795bc832a1388cdfb5db5db3b27547bf95f3b555555555555555555555555555555555555555555555555555555555555555500ffffffff",
+      "digest": "944b7d5af44f4fe3dde26cf6a2cb025e893feb0f2d49b52ed23ca9c2ec0f214f"
+    },
+    {
+      "kind": "taproot",
+      "index": 0,
+      "flag": 1,
+      "extension": 0,
+      "annex": "",
+      "leaf": "",
+      "preimage": "0102000000f4010000151a92b95b5786c99bb4a4e9e551cceadb8ac2fbcf89aa26dbbb9f90a7f35e16c6070bae36f51fbcb4696f735d6361a87bbe28fab4ccae243ab189a639e2a981c76099477ba0bba71a4a5a818ea784ee15f229d32a6bf6e603f5b8ea8b57335441a96f95e9ed40460f33b64c2cbb634b0f695e26e3598bfa260a56162977d9be566db9ccb6e90eafe085da78e0d4773fef9c0657bc8ef8b457c19ea480bdfe970000000000",
+      "digest": "fd8bcd209286af94ae0144e9dea9a5ee3167ae50cc7c5d0f335c181a65f41ea0"
+    },
+    {
+      "kind": "taproot",
+      "index": 0,
+      "flag": 1,
+      "extension": 0,
+      "annex": "501234",
+      "leaf": "",
+      "preimage": "0102000000f4010000151a92b95b5786c99bb4a4e9e551cceadb8ac2fbcf89aa26dbbb9f90a7f35e16c6070bae36f51fbcb4696f735d6361a87bbe28fab4ccae243ab189a639e2a981c76099477ba0bba71a4a5a818ea784ee15f229d32a6bf6e603f5b8ea8b57335441a96f95e9ed40460f33b64c2cbb634b0f695e26e3598bfa260a56162977d9be566db9ccb6e90eafe085da78e0d4773fef9c0657bc8ef8b457c19ea480bdfe970100000000921d093786a1668f2403b8b8b8f795bc832a1388cdfb5db5db3b27547bf95f3b",
+      "digest": "0d29ce3bd93b6a3b060c3021e7596099c0f6ea2cb5fffcbb3e5ae2994c528c5f"
+    },
+    {
+      "kind": "taproot",
+      "index": 0,
+      "flag": 1,
+      "extension": 1,
+      "annex": "",
+      "leaf": "5555555555555555555555555555555555555555555555555555555555555555",
+      "preimage": "0102000000f4010000151a92b95b5786c99bb4a4e9e551cceadb8ac2fbcf89aa26dbbb9f90a7f35e16c6070bae36f51fbcb4696f735d6361a87bbe28fab4ccae243ab189a639e2a981c76099477ba0bba71a4a5a818ea784ee15f229d32a6bf6e603f5b8ea8b57335441a96f95e9ed40460f33b64c2cbb634b0f695e26e3598bfa260a56162977d9be566db9ccb6e90eafe085da78e0d4773fef9c0657bc8ef8b457c19ea480bdfe970200000000555555555555555555555555555555555555555555555555555555555555555500ffffffff",
+      "digest": "ade92da00599451045ba7fcc18e79ae38a750da09c00f091243e8836115d909d"
+    },
+    {
+      "kind": "taproot",
+      "index": 0,
+      "flag": 1,
+      "extension": 1,
+      "annex": "501234",
+      "leaf": "5555555555555555555555555555555555555555555555555555555555555555",
+      "preimage": "0102000000f4010000151a92b95b5786c99bb4a4e9e551cceadb8ac2fbcf89aa26dbbb9f90a7f35e16c6070bae36f51fbcb4696f735d6361a87bbe28fab4ccae243ab189a639e2a981c76099477ba0bba71a4a5a818ea784ee15f229d32a6bf6e603f5b8ea8b57335441a96f95e9ed40460f33b64c2cbb634b0f695e26e3598bfa260a56162977d9be566db9ccb6e90eafe085da78e0d4773fef9c0657bc8ef8b457c19ea480bdfe970300000000921d093786a1668f2403b8b8b8f795bc832a1388cdfb5db5db3b27547bf95f3b555555555555555555555555555555555555555555555555555555555555555500ffffffff",
+      "digest": "12b9b21ef80f9626bab1e87b95339f45d20cbf250301d512b435d3e41953c0a6"
+    },
+    {
+      "kind": "taproot",
+      "index": 0,
+      "flag": 2,
+      "extension": 0,
+      "annex": "",
+      "leaf": "",
+      "preimage": "0202000000f4010000151a92b95b5786c99bb4a4e9e551cceadb8ac2fbcf89aa26dbbb9f90a7f35e16c6070bae36f51fbcb4696f735d6361a87bbe28fab4ccae243ab189a639e2a981c76099477ba0bba71a4a5a818ea784ee15f229d32a6bf6e603f5b8ea8b57335441a96f95e9ed40460f33b64c2cbb634b0f695e26e3598bfa260a56162977d9be0000000000",
+      "digest": "92ab4d6f571dadb6b48b086a4f0bc5388cdac65c09290afea94def8620131c86"
+    },
+    {
+      "kind": "taproot",
+      "index": 0,
+      "flag": 2,
+      "extension": 0,
+      "annex": "501234",
+      "leaf": "",
+      "preimage": "0202000000f4010000151a92b95b5786c99bb4a4e9e551cceadb8ac2fbcf89aa26dbbb9f90a7f35e16c6070bae36f51fbcb4696f735d6361a87bbe28fab4ccae243ab189a639e2a981c76099477ba0bba71a4a5a818ea784ee15f229d32a6bf6e603f5b8ea8b57335441a96f95e9ed40460f33b64c2cbb634b0f695e26e3598bfa260a56162977d9be0100000000921d093786a1668f2403b8b8b8f795bc832a1388cdfb5db5db3b27547bf95f3b",
+      "digest": "5845b53678f928db19b9525a3166f23fd148d810e1b7f600162e5a2c2360aef8"
+    },
+    {
+      "kind": "taproot",
+      "index": 0,
+      "flag": 2,
+      "extension": 1,
+      "annex": "",
+      "leaf": "5555555555555555555555555555555555555555555555555555555555555555",
+      "preimage": "0202000000f4010000151a92b95b5786c99bb4a4e9e551cceadb8ac2fbcf89aa26dbbb9f90a7f35e16c6070bae36f51fbcb4696f735d6361a87bbe28fab4ccae243ab189a639e2a981c76099477ba0bba71a4a5a818ea784ee15f229d32a6bf6e603f5b8ea8b57335441a96f95e9ed40460f33b64c2cbb634b0f695e26e3598bfa260a56162977d9be0200000000555555555555555555555555555555555555555555555555555555555555555500ffffffff",
+      "digest": "9ab8d618f1dc7f137a265d5c6f4171cbbf4e0ed794c4c63313b5ec3fef3db4a7"
+    },
+    {
+      "kind": "taproot",
+      "index": 0,
+      "flag": 2,
+      "extension": 1,
+      "annex": "501234",
+      "leaf": "5555555555555555555555555555555555555555555555555555555555555555",
+      "preimage": "0202000000f4010000151a92b95b5786c99bb4a4e9e551cceadb8ac2fbcf89aa26dbbb9f90a7f35e16c6070bae36f51fbcb4696f735d6361a87bbe28fab4ccae243ab189a639e2a981c76099477ba0bba71a4a5a818ea784ee15f229d32a6bf6e603f5b8ea8b57335441a96f95e9ed40460f33b64c2cbb634b0f695e26e3598bfa260a56162977d9be0300000000921d093786a1668f2403b8b8b8f795bc832a1388cdfb5db5db3b27547bf95f3b555555555555555555555555555555555555555555555555555555555555555500ffffffff",
+      "digest": "0e19a529a7b43d5ac23f26dd5e823bb457eba37fd303ca6435726b8a1a17a0d1"
+    },
+    {
+      "kind": "taproot",
+      "index": 0,
+      "flag": 3,
+      "extension": 0,
+      "annex": "",
+      "leaf": "",
+      "preimage": "0302000000f4010000151a92b95b5786c99bb4a4e9e551cceadb8ac2fbcf89aa26dbbb9f90a7f35e16c6070bae36f51fbcb4696f735d6361a87bbe28fab4ccae243ab189a639e2a981c76099477ba0bba71a4a5a818ea784ee15f229d32a6bf6e603f5b8ea8b57335441a96f95e9ed40460f33b64c2cbb634b0f695e26e3598bfa260a56162977d9be0000000000e2ec882ab26141b582a48f0e7623a0359ae7096e7b4d0d54bee652dc66bde874",
+      "digest": "6d55d4d42937b90921410397884e68ad5ceb310e0324b8807f9c4c7171afda51"
+    },
+    {
+      "kind": "taproot",
+      "index": 0,
+      "flag": 3,
+      "extension": 0,
+      "annex": "501234",
+      "leaf": "",
+      "preimage": "0302000000f4010000151a92b95b5786c99bb4a4e9e551cceadb8ac2fbcf89aa26dbbb9f90a7f35e16c6070bae36f51fbcb4696f735d6361a87bbe28fab4ccae243ab189a639e2a981c76099477ba0bba71a4a5a818ea784ee15f229d32a6bf6e603f5b8ea8b57335441a96f95e9ed40460f33b64c2cbb634b0f695e26e3598bfa260a56162977d9be0100000000921d093786a1668f2403b8b8b8f795bc832a1388cdfb5db5db3b27547bf95f3be2ec882ab26141b582a48f0e7623a0359ae7096e7b4d0d54bee652dc66bde874",
+      "digest": "feba0acb5bcf60cea62091bd2919d7d3a1d90f3acb60b25217e00038bee55307"
+    },
+    {
+      "kind": "taproot",
+      "index": 0,
+      "flag": 3,
+      "extension": 1,
+      "annex": "",
+      "leaf": "5555555555555555555555555555555555555555555555555555555555555555",
+      "preimage": "0302000000f4010000151a92b95b5786c99bb4a4e9e551cceadb8ac2fbcf89aa26dbbb9f90a7f35e16c6070bae36f51fbcb4696f735d6361a87bbe28fab4ccae243ab189a639e2a981c76099477ba0bba71a4a5a818ea784ee15f229d32a6bf6e603f5b8ea8b57335441a96f95e9ed40460f33b64c2cbb634b0f695e26e3598bfa260a56162977d9be0200000000e2ec882ab26141b582a48f0e7623a0359ae7096e7b4d0d54bee652dc66bde874555555555555555555555555555555555555555555555555555555555555555500ffffffff",
+      "digest": "1e666c5ff7ffe0057516cbb7a26193ba38274185b716ec158b9473fbf04e39ce"
+    },
+    {
+      "kind": "taproot",
+      "index": 0,
+      "flag": 3,
+      "extension": 1,
+      "annex": "501234",
+      "leaf": "5555555555555555555555555555555555555555555555555555555555555555",
+      "preimage": "0302000000f4010000151a92b95b5786c99bb4a4e9e551cceadb8ac2fbcf89aa26dbbb9f90a7f35e16c6070bae36f51fbcb4696f735d6361a87bbe28fab4ccae243ab189a639e2a981c76099477ba0bba71a4a5a818ea784ee15f229d32a6bf6e603f5b8ea8b57335441a96f95e9ed40460f33b64c2cbb634b0f695e26e3598bfa260a56162977d9be0300000000921d093786a1668f2403b8b8b8f795bc832a1388cdfb5db5db3b27547bf95f3be2ec882ab26141b582a48f0e7623a0359ae7096e7b4d0d54bee652dc66bde874555555555555555555555555555555555555555555555555555555555555555500ffffffff",
+      "digest": "55b4d05110a6e5550557573219eb7e741b91b9b40b7db89402802d6e6ec06947"
+    },
+    {
+      "kind": "taproot",
+      "index": 0,
+      "flag": 129,
+      "extension": 0,
+      "annex": "",
+      "leaf": "",
+      "preimage": "8102000000f4010000566db9ccb6e90eafe085da78e0d4773fef9c0657bc8ef8b457c19ea480bdfe97001f1e1d1c1b1a191817161514131211100f0e0d0c0b0a0908070605040302010003000000a0860100000000001600141111111111111111111111111111111111111111fdffffff",
+      "digest": "4302c5ee394c534c1c2d4191826f092e2c64a01942938cc13e8e372acadc10ad"
+    },
+    {
+      "kind": "taproot",
+      "index": 0,
+      "flag": 129,
+      "extension": 0,
+      "annex": "501234",
+      "leaf": "",
+      "preimage": "8102000000f4010000566db9ccb6e90eafe085da78e0d4773fef9c0657bc8ef8b457c19ea480bdfe97011f1e1d1c1b1a191817161514131211100f0e0d0c0b0a0908070605040302010003000000a0860100000000001600141111111111111111111111111111111111111111fdffffff921d093786a1668f2403b8b8b8f795bc832a1388cdfb5db5db3b27547bf95f3b",
+      "digest": "ef214844b1aeeb3610a5c4ab57b2610a9869a2190294e1b583f2a69264093cc7"
+    },
+    {
+      "kind": "taproot",
+      "index": 0,
+      "flag": 129,
+      "extension": 1,
+      "annex": "",
+      "leaf": "5555555555555555555555555555555555555555555555555555555555555555",
+      "preimage": "8102000000f4010000566db9ccb6e90eafe085da78e0d4773fef9c0657bc8ef8b457c19ea480bdfe97021f1e1d1c1b1a191817161514131211100f0e0d0c0b0a0908070605040302010003000000a0860100000000001600141111111111111111111111111111111111111111fdffffff555555555555555555555555555555555555555555555555555555555555555500ffffffff",
+      "digest": "eddb136ede50815ee1209ad1b212b50c2811e21044732b0bf3ceb934f46912c4"
+    },
+    {
+      "kind": "taproot",
+      "index": 0,
+      "flag": 129,
+      "extension": 1,
+      "annex": "501234",
+      "leaf": "5555555555555555555555555555555555555555555555555555555555555555",
+      "preimage": "8102000000f4010000566db9ccb6e90eafe085da78e0d4773fef9c0657bc8ef8b457c19ea480bdfe97031f1e1d1c1b1a191817161514131211100f0e0d0c0b0a0908070605040302010003000000a0860100000000001600141111111111111111111111111111111111111111fdffffff921d093786a1668f2403b8b8b8f795bc832a1388cdfb5db5db3b27547bf95f3b555555555555555555555555555555555555555555555555555555555555555500ffffffff",
+      "digest": "f659c275e57583ddb12ab535989dd1ab1487b4058c732cbc8ef026e1e730a510"
+    },
+    {
+      "kind": "taproot",
+      "index": 0,
+      "flag": 130,
+      "extension": 0,
+      "annex": "",
+      "leaf": "",
+      "preimage": "8202000000f4010000001f1e1d1c1b1a191817161514131211100f0e0d0c0b0a0908070605040302010003000000a0860100000000001600141111111111111111111111111111111111111111fdffffff",
+      "digest": "114239195c86a68b6d18d2bcb2d2eaf19c77563879d9e59dc836731923d9ede4"
+    },
+    {
+      "kind": "taproot",
+      "index": 0,
+      "flag": 130,
+      "extension": 0,
+      "annex": "501234",
+      "leaf": "",
+      "preimage": "8202000000f4010000011f1e1d1c1b1a191817161514131211100f0e0d0c0b0a0908070605040302010003000000a0860100000000001600141111111111111111111111111111111111111111fdffffff921d093786a1668f2403b8b8b8f795bc832a1388cdfb5db5db3b27547bf95f3b",
+      "digest": "778938772f1b5815413403298378249934dd548e8582a3b4b73669c3d7e911d4"
+    },
+    {
+      "kind": "taproot",
+      "index": 0,
+      "flag": 130,
+      "extension": 1,
+      "annex": "",
+      "leaf": "5555555555555555555555555555555555555555555555555555555555555555",
+      "preimage": "8202000000f4010000021f1e1d1c1b1a191817161514131211100f0e0d0c0b0a0908070605040302010003000000a0860100000000001600141111111111111111111111111111111111111111fdffffff555555555555555555555555555555555555555555555555555555555555555500ffffffff",
+      "digest": "8aad3cf90b27bede2597ca33340585a01cf51e4f47b1b0a63747db24a89af7b8"
+    },
+    {
+      "kind": "taproot",
+      "index": 0,
+      "flag": 130,
+      "extension": 1,
+      "annex": "501234",
+      "leaf": "5555555555555555555555555555555555555555555555555555555555555555",
+      "preimage": "8202000000f4010000031f1e1d1c1b1a191817161514131211100f0e0d0c0b0a0908070605040302010003000000a0860100000000001600141111111111111111111111111111111111111111fdffffff921d093786a1668f2403b8b8b8f795bc832a1388cdfb5db5db3b27547bf95f3b555555555555555555555555555555555555555555555555555555555555555500ffffffff",
+      "digest": "727b463338c29c7577fb861c742fc639b3fd0a2acabb6448afbe4fe7e449627a"
+    },
+    {
+      "kind": "taproot",
+      "index": 0,
+      "flag": 131,
+      "extension": 0,
+      "annex": "",
+      "leaf": "",
+      "preimage": "8302000000f4010000001f1e1d1c1b1a191817161514131211100f0e0d0c0b0a0908070605040302010003000000a0860100000000001600141111111111111111111111111111111111111111fdffffffe2ec882ab26141b582a48f0e7623a0359ae7096e7b4d0d54bee652dc66bde874",
+      "digest": "26499d41c19cb9b392d1ac9cb2856408ca7dffe8089f01109948322fb286de3b"
+    },
+    {
+      "kind": "taproot",
+      "index": 0,
+      "flag": 131,
+      "extension": 0,
+      "annex": "501234",
+      "leaf": "",
+      "preimage": "8302000000f4010000011f1e1d1c1b1a191817161514131211100f0e0d0c0b0a0908070605040302010003000000a0860100000000001600141111111111111111111111111111111111111111fdffffff921d093786a1668f2403b8b8b8f795bc832a1388cdfb5db5db3b27547bf95f3be2ec882ab26141b582a48f0e7623a0359ae7096e7b4d0d54bee652dc66bde874",
+      "digest": "0fc40c69cb05ec2d5e22f2af53a8cedf93c690eb0f81fdd5689d4915bb667534"
+    },
+    {
+      "kind": "taproot",
+      "index": 0,
+      "flag": 131,
+      "extension": 1,
+      "annex": "",
+      "leaf": "5555555555555555555555555555555555555555555555555555555555555555",
+      "preimage": "8302000000f4010000021f1e1d1c1b1a191817161514131211100f0e0d0c0b0a0908070605040302010003000000a0860100000000001600141111111111111111111111111111111111111111fdffffffe2ec882ab26141b582a48f0e7623a0359ae7096e7b4d0d54bee652dc66bde874555555555555555555555555555555555555555555555555555555555555555500ffffffff",
+      "digest": "b63178876efed3f256d4b02b88777a89e262bcfc61758a8b35cb0abc22656af4"
+    },
+    {
+      "kind": "taproot",
+      "index": 0,
+      "flag": 131,
+      "extension": 1,
+      "annex": "501234",
+      "leaf": "5555555555555555555555555555555555555555555555555555555555555555",
+      "preimage": "8302000000f4010000031f1e1d1c1b1a191817161514131211100f0e0d0c0b0a0908070605040302010003000000a0860100000000001600141111111111111111111111111111111111111111fdffffff921d093786a1668f2403b8b8b8f795bc832a1388cdfb5db5db3b27547bf95f3be2ec882ab26141b582a48f0e7623a0359ae7096e7b4d0d54bee652dc66bde874555555555555555555555555555555555555555555555555555555555555555500ffffffff",
+      "digest": "8a36c9efdd313482b56361c5690b45d52e1e6d9085456aa86e5289b84b9c2f7c"
+    },
+    {
+      "kind": "segwit",
+      "index": 1,
+      "flag": 1,
+      "scriptCode": "1976a914111111111111111111111111111111111111111188ac",
+      "preimage": "0200000074cf5369a620ad6d3bd9426d6497cefbf26e0bb4c52c9747f761bc0c9846a98f264f7718b02537e08d54b56bd212b63aa7009f1ef07b3d71e7ac418c623302e73f3e3d3c3b3a393837363534333231302f2e2d2c2b2a29282726252423222120070000001976a914111111111111111111111111111111111111111188ac400d030000000000fcfffffff0daf4ae38a08a65024ea4c1a696ee6def6d230e869c59fa2e241f943caad62ef401000001000000",
+      "digest": "947da85fd8827172af34b34743a1bc8bf75fd63827ba025c70712344ddd8298f"
+    },
+    {
+      "kind": "segwit",
+      "index": 1,
+      "flag": 2,
+      "scriptCode": "1976a914111111111111111111111111111111111111111188ac",
+      "preimage": "0200000074cf5369a620ad6d3bd9426d6497cefbf26e0bb4c52c9747f761bc0c9846a98f00000000000000000000000000000000000000000000000000000000000000003f3e3d3c3b3a393837363534333231302f2e2d2c2b2a29282726252423222120070000001976a914111111111111111111111111111111111111111188ac400d030000000000fcffffff0000000000000000000000000000000000000000000000000000000000000000f401000002000000",
+      "digest": "1b7afd682ece06c05b46b784b05dd53374f53bfe8fd99f993f8b289d3f2fb248"
+    },
+    {
+      "kind": "segwit",
+      "index": 1,
+      "flag": 3,
+      "scriptCode": "1976a914111111111111111111111111111111111111111188ac",
+      "preimage": "0200000074cf5369a620ad6d3bd9426d6497cefbf26e0bb4c52c9747f761bc0c9846a98f00000000000000000000000000000000000000000000000000000000000000003f3e3d3c3b3a393837363534333231302f2e2d2c2b2a29282726252423222120070000001976a914111111111111111111111111111111111111111188ac400d030000000000fcffffffef5c92feb094aa75a649ceb03431f34540acd8945c91a0291859d295f21723d6f401000003000000",
+      "digest": "7f82d9ff54f861754795239ec39b29010d7f06629f9407fc5bc83eb14a35f2f9"
+    },
+    {
+      "kind": "segwit",
+      "index": 1,
+      "flag": 129,
+      "scriptCode": "1976a914111111111111111111111111111111111111111188ac",
+      "preimage": "02000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000003f3e3d3c3b3a393837363534333231302f2e2d2c2b2a29282726252423222120070000001976a914111111111111111111111111111111111111111188ac400d030000000000fcfffffff0daf4ae38a08a65024ea4c1a696ee6def6d230e869c59fa2e241f943caad62ef401000081000000",
+      "digest": "edc211e5cd184c2c0c09a8d3c5ba242c00c8edd70b76310613a5faab2ed24a20"
+    },
+    {
+      "kind": "segwit",
+      "index": 1,
+      "flag": 130,
+      "scriptCode": "1976a914111111111111111111111111111111111111111188ac",
+      "preimage": "02000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000003f3e3d3c3b3a393837363534333231302f2e2d2c2b2a29282726252423222120070000001976a914111111111111111111111111111111111111111188ac400d030000000000fcffffff0000000000000000000000000000000000000000000000000000000000000000f401000082000000",
+      "digest": "15529d99fd1e0c9345ac64e6d966e84c5bc74282d650a19cd595a9dfa54c4e75"
+    },
+    {
+      "kind": "segwit",
+      "index": 1,
+      "flag": 131,
+      "scriptCode": "1976a914111111111111111111111111111111111111111188ac",
+      "preimage": "02000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000003f3e3d3c3b3a393837363534333231302f2e2d2c2b2a29282726252423222120070000001976a914111111111111111111111111111111111111111188ac400d030000000000fcffffffef5c92feb094aa75a649ceb03431f34540acd8945c91a0291859d295f21723d6f401000083000000",
+      "digest": "3d02fd8a473351ecb0a68b0b8e56010826d108449fad529ea716f261eabcd6ec"
+    },
+    {
+      "kind": "taproot",
+      "index": 1,
+      "flag": 0,
+      "extension": 0,
+      "annex": "",
+      "leaf": "",
+      "preimage": "0002000000f4010000151a92b95b5786c99bb4a4e9e551cceadb8ac2fbcf89aa26dbbb9f90a7f35e16c6070bae36f51fbcb4696f735d6361a87bbe28fab4ccae243ab189a639e2a981c76099477ba0bba71a4a5a818ea784ee15f229d32a6bf6e603f5b8ea8b57335441a96f95e9ed40460f33b64c2cbb634b0f695e26e3598bfa260a56162977d9be566db9ccb6e90eafe085da78e0d4773fef9c0657bc8ef8b457c19ea480bdfe970001000000",
+      "digest": "98c3f41bd8d0530a6d61a4f029a4ed430cbacec0900302762bab7d84cd4dfc8b"
+    },
+    {
+      "kind": "taproot",
+      "index": 1,
+      "flag": 0,
+      "extension": 0,
+      "annex": "501234",
+      "leaf": "",
+      "preimage": "0002000000f4010000151a92b95b5786c99bb4a4e9e551cceadb8ac2fbcf89aa26dbbb9f90a7f35e16c6070bae36f51fbcb4696f735d6361a87bbe28fab4ccae243ab189a639e2a981c76099477ba0bba71a4a5a818ea784ee15f229d32a6bf6e603f5b8ea8b57335441a96f95e9ed40460f33b64c2cbb634b0f695e26e3598bfa260a56162977d9be566db9ccb6e90eafe085da78e0d4773fef9c0657bc8ef8b457c19ea480bdfe970101000000921d093786a1668f2403b8b8b8f795bc832a1388cdfb5db5db3b27547bf95f3b",
+      "digest": "5860a0729836549ca049e631f1c2b5b0a3c3e2e4e31163d5794c2ba81d9c12fa"
+    },
+    {
+      "kind": "taproot",
+      "index": 1,
+      "flag": 0,
+      "extension": 1,
+      "annex": "",
+      "leaf": "5555555555555555555555555555555555555555555555555555555555555555",
+      "preimage": "0002000000f4010000151a92b95b5786c99bb4a4e9e551cceadb8ac2fbcf89aa26dbbb9f90a7f35e16c6070bae36f51fbcb4696f735d6361a87bbe28fab4ccae243ab189a639e2a981c76099477ba0bba71a4a5a818ea784ee15f229d32a6bf6e603f5b8ea8b57335441a96f95e9ed40460f33b64c2cbb634b0f695e26e3598bfa260a56162977d9be566db9ccb6e90eafe085da78e0d4773fef9c0657bc8ef8b457c19ea480bdfe970201000000555555555555555555555555555555555555555555555555555555555555555500ffffffff",
+      "digest": "e427ca7119672baf199ba2682c311e417aa8e4177a48106ca73308102bc86656"
+    },
+    {
+      "kind": "taproot",
+      "index": 1,
+      "flag": 0,
+      "extension": 1,
+      "annex": "501234",
+      "leaf": "5555555555555555555555555555555555555555555555555555555555555555",
+      "preimage": "0002000000f4010000151a92b95b5786c99bb4a4e9e551cceadb8ac2fbcf89aa26dbbb9f90a7f35e16c6070bae36f51fbcb4696f735d6361a87bbe28fab4ccae243ab189a639e2a981c76099477ba0bba71a4a5a818ea784ee15f229d32a6bf6e603f5b8ea8b57335441a96f95e9ed40460f33b64c2cbb634b0f695e26e3598bfa260a56162977d9be566db9ccb6e90eafe085da78e0d4773fef9c0657bc8ef8b457c19ea480bdfe970301000000921d093786a1668f2403b8b8b8f795bc832a1388cdfb5db5db3b27547bf95f3b555555555555555555555555555555555555555555555555555555555555555500ffffffff",
+      "digest": "982c281d4017802e99f797d26045fac958e4e25983dd9a65db5dda94020adfa2"
+    },
+    {
+      "kind": "taproot",
+      "index": 1,
+      "flag": 1,
+      "extension": 0,
+      "annex": "",
+      "leaf": "",
+      "preimage": "0102000000f4010000151a92b95b5786c99bb4a4e9e551cceadb8ac2fbcf89aa26dbbb9f90a7f35e16c6070bae36f51fbcb4696f735d6361a87bbe28fab4ccae243ab189a639e2a981c76099477ba0bba71a4a5a818ea784ee15f229d32a6bf6e603f5b8ea8b57335441a96f95e9ed40460f33b64c2cbb634b0f695e26e3598bfa260a56162977d9be566db9ccb6e90eafe085da78e0d4773fef9c0657bc8ef8b457c19ea480bdfe970001000000",
+      "digest": "f8bd476fd55a5661acadc0e6a1df13f389919ebeac9055474cc60c7e0b7a31ed"
+    },
+    {
+      "kind": "taproot",
+      "index": 1,
+      "flag": 1,
+      "extension": 0,
+      "annex": "501234",
+      "leaf": "",
+      "preimage": "0102000000f4010000151a92b95b5786c99bb4a4e9e551cceadb8ac2fbcf89aa26dbbb9f90a7f35e16c6070bae36f51fbcb4696f735d6361a87bbe28fab4ccae243ab189a639e2a981c76099477ba0bba71a4a5a818ea784ee15f229d32a6bf6e603f5b8ea8b57335441a96f95e9ed40460f33b64c2cbb634b0f695e26e3598bfa260a56162977d9be566db9ccb6e90eafe085da78e0d4773fef9c0657bc8ef8b457c19ea480bdfe970101000000921d093786a1668f2403b8b8b8f795bc832a1388cdfb5db5db3b27547bf95f3b",
+      "digest": "5ac38128b2397d79414e0d7e0d0e51f8858899146f9ee4930cedc4d09712a4dd"
+    },
+    {
+      "kind": "taproot",
+      "index": 1,
+      "flag": 1,
+      "extension": 1,
+      "annex": "",
+      "leaf": "5555555555555555555555555555555555555555555555555555555555555555",
+      "preimage": "0102000000f4010000151a92b95b5786c99bb4a4e9e551cceadb8ac2fbcf89aa26dbbb9f90a7f35e16c6070bae36f51fbcb4696f735d6361a87bbe28fab4ccae243ab189a639e2a981c76099477ba0bba71a4a5a818ea784ee15f229d32a6bf6e603f5b8ea8b57335441a96f95e9ed40460f33b64c2cbb634b0f695e26e3598bfa260a56162977d9be566db9ccb6e90eafe085da78e0d4773fef9c0657bc8ef8b457c19ea480bdfe970201000000555555555555555555555555555555555555555555555555555555555555555500ffffffff",
+      "digest": "1dd8215daaea418321e2992c8eb02abac286113c58f73c4c213a5a3ce2db9cbb"
+    },
+    {
+      "kind": "taproot",
+      "index": 1,
+      "flag": 1,
+      "extension": 1,
+      "annex": "501234",
+      "leaf": "5555555555555555555555555555555555555555555555555555555555555555",
+      "preimage": "0102000000f4010000151a92b95b5786c99bb4a4e9e551cceadb8ac2fbcf89aa26dbbb9f90a7f35e16c6070bae36f51fbcb4696f735d6361a87bbe28fab4ccae243ab189a639e2a981c76099477ba0bba71a4a5a818ea784ee15f229d32a6bf6e603f5b8ea8b57335441a96f95e9ed40460f33b64c2cbb634b0f695e26e3598bfa260a56162977d9be566db9ccb6e90eafe085da78e0d4773fef9c0657bc8ef8b457c19ea480bdfe970301000000921d093786a1668f2403b8b8b8f795bc832a1388cdfb5db5db3b27547bf95f3b555555555555555555555555555555555555555555555555555555555555555500ffffffff",
+      "digest": "c03c026db1a117ff8254c57c30d140fb73c4933f5611baf0d84b37f88664f808"
+    },
+    {
+      "kind": "taproot",
+      "index": 1,
+      "flag": 2,
+      "extension": 0,
+      "annex": "",
+      "leaf": "",
+      "preimage": "0202000000f4010000151a92b95b5786c99bb4a4e9e551cceadb8ac2fbcf89aa26dbbb9f90a7f35e16c6070bae36f51fbcb4696f735d6361a87bbe28fab4ccae243ab189a639e2a981c76099477ba0bba71a4a5a818ea784ee15f229d32a6bf6e603f5b8ea8b57335441a96f95e9ed40460f33b64c2cbb634b0f695e26e3598bfa260a56162977d9be0001000000",
+      "digest": "d07061f60545c3d905e122f9c2dcca558ab6d9f51f117bcaf42404adc8a65cb6"
+    },
+    {
+      "kind": "taproot",
+      "index": 1,
+      "flag": 2,
+      "extension": 0,
+      "annex": "501234",
+      "leaf": "",
+      "preimage": "0202000000f4010000151a92b95b5786c99bb4a4e9e551cceadb8ac2fbcf89aa26dbbb9f90a7f35e16c6070bae36f51fbcb4696f735d6361a87bbe28fab4ccae243ab189a639e2a981c76099477ba0bba71a4a5a818ea784ee15f229d32a6bf6e603f5b8ea8b57335441a96f95e9ed40460f33b64c2cbb634b0f695e26e3598bfa260a56162977d9be0101000000921d093786a1668f2403b8b8b8f795bc832a1388cdfb5db5db3b27547bf95f3b",
+      "digest": "439e452cb373cd0e161e78d29bf1191050b0d374d3448409956e4bd6f63bf086"
+    },
+    {
+      "kind": "taproot",
+      "index": 1,
+      "flag": 2,
+      "extension": 1,
+      "annex": "",
+      "leaf": "5555555555555555555555555555555555555555555555555555555555555555",
+      "preimage": "0202000000f4010000151a92b95b5786c99bb4a4e9e551cceadb8ac2fbcf89aa26dbbb9f90a7f35e16c6070bae36f51fbcb4696f735d6361a87bbe28fab4ccae243ab189a639e2a981c76099477ba0bba71a4a5a818ea784ee15f229d32a6bf6e603f5b8ea8b57335441a96f95e9ed40460f33b64c2cbb634b0f695e26e3598bfa260a56162977d9be0201000000555555555555555555555555555555555555555555555555555555555555555500ffffffff",
+      "digest": "92d42d9489f25acf54715d40a11c00e386e823bb306a93a745b76791bb6868bf"
+    },
+    {
+      "kind": "taproot",
+      "index": 1,
+      "flag": 2,
+      "extension": 1,
+      "annex": "501234",
+      "leaf": "5555555555555555555555555555555555555555555555555555555555555555",
+      "preimage": "0202000000f4010000151a92b95b5786c99bb4a4e9e551cceadb8ac2fbcf89aa26dbbb9f90a7f35e16c6070bae36f51fbcb4696f735d6361a87bbe28fab4ccae243ab189a639e2a981c76099477ba0bba71a4a5a818ea784ee15f229d32a6bf6e603f5b8ea8b57335441a96f95e9ed40460f33b64c2cbb634b0f695e26e3598bfa260a56162977d9be0301000000921d093786a1668f2403b8b8b8f795bc832a1388cdfb5db5db3b27547bf95f3b555555555555555555555555555555555555555555555555555555555555555500ffffffff",
+      "digest": "658c1af1ad350d7298c24685a3d57e0af0dace7f11eb503232165790a25692bb"
+    },
+    {
+      "kind": "taproot",
+      "index": 1,
+      "flag": 3,
+      "extension": 0,
+      "annex": "",
+      "leaf": "",
+      "preimage": "0302000000f4010000151a92b95b5786c99bb4a4e9e551cceadb8ac2fbcf89aa26dbbb9f90a7f35e16c6070bae36f51fbcb4696f735d6361a87bbe28fab4ccae243ab189a639e2a981c76099477ba0bba71a4a5a818ea784ee15f229d32a6bf6e603f5b8ea8b57335441a96f95e9ed40460f33b64c2cbb634b0f695e26e3598bfa260a56162977d9be0001000000829953c1038373cb9d90a36a5bfd9a47dbb99b1b6bc45e393e2946e122127e77",
+      "digest": "47ddfcc8f1ad9b8b9a3b44aaa135f4e699dbfcd9cdabcf363279f4a2f74e5fab"
+    },
+    {
+      "kind": "taproot",
+      "index": 1,
+      "flag": 3,
+      "extension": 0,
+      "annex": "501234",
+      "leaf": "",
+      "preimage": "0302000000f4010000151a92b95b5786c99bb4a4e9e551cceadb8ac2fbcf89aa26dbbb9f90a7f35e16c6070bae36f51fbcb4696f735d6361a87bbe28fab4ccae243ab189a639e2a981c76099477ba0bba71a4a5a818ea784ee15f229d32a6bf6e603f5b8ea8b57335441a96f95e9ed40460f33b64c2cbb634b0f695e26e3598bfa260a56162977d9be0101000000921d093786a1668f2403b8b8b8f795bc832a1388cdfb5db5db3b27547bf95f3b829953c1038373cb9d90a36a5bfd9a47dbb99b1b6bc45e393e2946e122127e77",
+      "digest": "3d65b08895bf434f0863afdc1127e15052aac2bbf30e0f7fae5d20a79b928880"
+    },
+    {
+      "kind": "taproot",
+      "index": 1,
+      "flag": 3,
+      "extension": 1,
+      "annex": "",
+      "leaf": "5555555555555555555555555555555555555555555555555555555555555555",
+      "preimage": "0302000000f4010000151a92b95b5786c99bb4a4e9e551cceadb8ac2fbcf89aa26dbbb9f90a7f35e16c6070bae36f51fbcb4696f735d6361a87bbe28fab4ccae243ab189a639e2a981c76099477ba0bba71a4a5a818ea784ee15f229d32a6bf6e603f5b8ea8b57335441a96f95e9ed40460f33b64c2cbb634b0f695e26e3598bfa260a56162977d9be0201000000829953c1038373cb9d90a36a5bfd9a47dbb99b1b6bc45e393e2946e122127e77555555555555555555555555555555555555555555555555555555555555555500ffffffff",
+      "digest": "a5af447064742ee48d0d4e8e195e5965f11289172a390ef2297423b6e385626e"
+    },
+    {
+      "kind": "taproot",
+      "index": 1,
+      "flag": 3,
+      "extension": 1,
+      "annex": "501234",
+      "leaf": "5555555555555555555555555555555555555555555555555555555555555555",
+      "preimage": "0302000000f4010000151a92b95b5786c99bb4a4e9e551cceadb8ac2fbcf89aa26dbbb9f90a7f35e16c6070bae36f51fbcb4696f735d6361a87bbe28fab4ccae243ab189a639e2a981c76099477ba0bba71a4a5a818ea784ee15f229d32a6bf6e603f5b8ea8b57335441a96f95e9ed40460f33b64c2cbb634b0f695e26e3598bfa260a56162977d9be0301000000921d093786a1668f2403b8b8b8f795bc832a1388cdfb5db5db3b27547bf95f3b829953c1038373cb9d90a36a5bfd9a47dbb99b1b6bc45e393e2946e122127e77555555555555555555555555555555555555555555555555555555555555555500ffffffff",
+      "digest": "5b9519a77b560537d5a10a9ff36155653a960ee47e2ee1981a7fe53df7ba1f3b"
+    },
+    {
+      "kind": "taproot",
+      "index": 1,
+      "flag": 129,
+      "extension": 0,
+      "annex": "",
+      "leaf": "",
+      "preimage": "8102000000f4010000566db9ccb6e90eafe085da78e0d4773fef9c0657bc8ef8b457c19ea480bdfe97003f3e3d3c3b3a393837363534333231302f2e2d2c2b2a2928272625242322212007000000400d0300000000002251202222222222222222222222222222222222222222222222222222222222222222fcffffff",
+      "digest": "d83d0bdd7eab56892392a7d369a00a1530cfd9400c8d44fe98a8bdfb98f4adf4"
+    },
+    {
+      "kind": "taproot",
+      "index": 1,
+      "flag": 129,
+      "extension": 0,
+      "annex": "501234",
+      "leaf": "",
+      "preimage": "8102000000f4010000566db9ccb6e90eafe085da78e0d4773fef9c0657bc8ef8b457c19ea480bdfe97013f3e3d3c3b3a393837363534333231302f2e2d2c2b2a2928272625242322212007000000400d0300000000002251202222222222222222222222222222222222222222222222222222222222222222fcffffff921d093786a1668f2403b8b8b8f795bc832a1388cdfb5db5db3b27547bf95f3b",
+      "digest": "30ff8dfea6c1fe2ccf55b665fc35a368306289de3d6d15cfc8b702b0107edd13"
+    },
+    {
+      "kind": "taproot",
+      "index": 1,
+      "flag": 129,
+      "extension": 1,
+      "annex": "",
+      "leaf": "5555555555555555555555555555555555555555555555555555555555555555",
+      "preimage": "8102000000f4010000566db9ccb6e90eafe085da78e0d4773fef9c0657bc8ef8b457c19ea480bdfe97023f3e3d3c3b3a393837363534333231302f2e2d2c2b2a2928272625242322212007000000400d0300000000002251202222222222222222222222222222222222222222222222222222222222222222fcffffff555555555555555555555555555555555555555555555555555555555555555500ffffffff",
+      "digest": "efbd52ef4a7a0bc8197af28678b6b6f95cb7076429e0def73d572608e74d5871"
+    },
+    {
+      "kind": "taproot",
+      "index": 1,
+      "flag": 129,
+      "extension": 1,
+      "annex": "501234",
+      "leaf": "5555555555555555555555555555555555555555555555555555555555555555",
+      "preimage": "8102000000f4010000566db9ccb6e90eafe085da78e0d4773fef9c0657bc8ef8b457c19ea480bdfe97033f3e3d3c3b3a393837363534333231302f2e2d2c2b2a2928272625242322212007000000400d0300000000002251202222222222222222222222222222222222222222222222222222222222222222fcffffff921d093786a1668f2403b8b8b8f795bc832a1388cdfb5db5db3b27547bf95f3b555555555555555555555555555555555555555555555555555555555555555500ffffffff",
+      "digest": "5ee02da8bf16db298266d29458a3487d57a06784986a8146468e58fe73a1a49c"
+    },
+    {
+      "kind": "taproot",
+      "index": 1,
+      "flag": 130,
+      "extension": 0,
+      "annex": "",
+      "leaf": "",
+      "preimage": "8202000000f4010000003f3e3d3c3b3a393837363534333231302f2e2d2c2b2a2928272625242322212007000000400d0300000000002251202222222222222222222222222222222222222222222222222222222222222222fcffffff",
+      "digest": "7dc51130da1fa75ce70c1c59e963cf7f6d9874865b6a1525373693e14b23e828"
+    },
+    {
+      "kind": "taproot",
+      "index": 1,
+      "flag": 130,
+      "extension": 0,
+      "annex": "501234",
+      "leaf": "",
+      "preimage": "8202000000f4010000013f3e3d3c3b3a393837363534333231302f2e2d2c2b2a2928272625242322212007000000400d0300000000002251202222222222222222222222222222222222222222222222222222222222222222fcffffff921d093786a1668f2403b8b8b8f795bc832a1388cdfb5db5db3b27547bf95f3b",
+      "digest": "29161006e7c5e62dbb7d20034e8f130f8ca09146ae7560c24248981aef34fb07"
+    },
+    {
+      "kind": "taproot",
+      "index": 1,
+      "flag": 130,
+      "extension": 1,
+      "annex": "",
+      "leaf": "5555555555555555555555555555555555555555555555555555555555555555",
+      "preimage": "8202000000f4010000023f3e3d3c3b3a393837363534333231302f2e2d2c2b2a2928272625242322212007000000400d0300000000002251202222222222222222222222222222222222222222222222222222222222222222fcffffff555555555555555555555555555555555555555555555555555555555555555500ffffffff",
+      "digest": "7b81a1b22645aab4199f06ace2a644573f914def0f85dd52c8c8cb125e23eb7c"
+    },
+    {
+      "kind": "taproot",
+      "index": 1,
+      "flag": 130,
+      "extension": 1,
+      "annex": "501234",
+      "leaf": "5555555555555555555555555555555555555555555555555555555555555555",
+      "preimage": "8202000000f4010000033f3e3d3c3b3a393837363534333231302f2e2d2c2b2a2928272625242322212007000000400d0300000000002251202222222222222222222222222222222222222222222222222222222222222222fcffffff921d093786a1668f2403b8b8b8f795bc832a1388cdfb5db5db3b27547bf95f3b555555555555555555555555555555555555555555555555555555555555555500ffffffff",
+      "digest": "415ba2261629f6a2b7234d623b4b77dae0870a305b25bc86bfc49b5e2d13b0a5"
+    },
+    {
+      "kind": "taproot",
+      "index": 1,
+      "flag": 131,
+      "extension": 0,
+      "annex": "",
+      "leaf": "",
+      "preimage": "8302000000f4010000003f3e3d3c3b3a393837363534333231302f2e2d2c2b2a2928272625242322212007000000400d0300000000002251202222222222222222222222222222222222222222222222222222222222222222fcffffff829953c1038373cb9d90a36a5bfd9a47dbb99b1b6bc45e393e2946e122127e77",
+      "digest": "3a62eeb6e25b277cc0ac584f94986b5ec29327b274e10f9c35a2b65ce5073be8"
+    },
+    {
+      "kind": "taproot",
+      "index": 1,
+      "flag": 131,
+      "extension": 0,
+      "annex": "501234",
+      "leaf": "",
+      "preimage": "8302000000f4010000013f3e3d3c3b3a393837363534333231302f2e2d2c2b2a2928272625242322212007000000400d0300000000002251202222222222222222222222222222222222222222222222222222222222222222fcffffff921d093786a1668f2403b8b8b8f795bc832a1388cdfb5db5db3b27547bf95f3b829953c1038373cb9d90a36a5bfd9a47dbb99b1b6bc45e393e2946e122127e77",
+      "digest": "855f6ea9e11bd18bb61e7672f4902c0b4e525496709ad07777277dd3aba5f892"
+    },
+    {
+      "kind": "taproot",
+      "index": 1,
+      "flag": 131,
+      "extension": 1,
+      "annex": "",
+      "leaf": "5555555555555555555555555555555555555555555555555555555555555555",
+      "preimage": "8302000000f4010000023f3e3d3c3b3a393837363534333231302f2e2d2c2b2a2928272625242322212007000000400d0300000000002251202222222222222222222222222222222222222222222222222222222222222222fcffffff829953c1038373cb9d90a36a5bfd9a47dbb99b1b6bc45e393e2946e122127e77555555555555555555555555555555555555555555555555555555555555555500ffffffff",
+      "digest": "b814690bdfae7e26afedee19f634a6085ddad488013f068fee0def45e61b2e4b"
+    },
+    {
+      "kind": "taproot",
+      "index": 1,
+      "flag": 131,
+      "extension": 1,
+      "annex": "501234",
+      "leaf": "5555555555555555555555555555555555555555555555555555555555555555",
+      "preimage": "8302000000f4010000033f3e3d3c3b3a393837363534333231302f2e2d2c2b2a2928272625242322212007000000400d0300000000002251202222222222222222222222222222222222222222222222222222222222222222fcffffff921d093786a1668f2403b8b8b8f795bc832a1388cdfb5db5db3b27547bf95f3b829953c1038373cb9d90a36a5bfd9a47dbb99b1b6bc45e393e2946e122127e77555555555555555555555555555555555555555555555555555555555555555500ffffffff",
+      "digest": "3ac766d19f50ab2419a2cee9a7705970dc6865d79af057dca01d34066608dfb9"
+    }
+  ],
+  "transaction": {
+    "version": 2,
+    "locktime": 500,
+    "inputs": [
+      {
+        "txid": "000102030405060708090a0b0c0d0e0f101112131415161718191a1b1c1d1e1f",
+        "index": 3,
+        "sequence": 4294967293,
+        "value": 100000,
+        "script": "00141111111111111111111111111111111111111111"
+      },
+      {
+        "txid": "202122232425262728292a2b2c2d2e2f303132333435363738393a3b3c3d3e3f",
+        "index": 7,
+        "sequence": 4294967292,
+        "value": 200000,
+        "script": "51202222222222222222222222222222222222222222222222222222222222222222"
+      }
+    ],
+    "outputs": [
+      {
+        "value": 120000,
+        "script": "76a914333333333333333333333333333333333333333388ac"
+      },
+      {
+        "value": 179000,
+        "script": "00144444444444444444444444444444444444444444"
+      }
+    ]
+  }
+}

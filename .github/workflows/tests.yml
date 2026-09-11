@@ -1,0 +1,33 @@
+name: Offline tests
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: windows-latest
+            shell: powershell
+          - os: windows-latest
+            shell: pwsh
+          - os: ubuntu-latest
+            shell: pwsh
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run complete offline suite
+        shell: ${{ matrix.shell }}
+        run: ./tests/Run-Tests.ps1
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tests-${{ matrix.os }}-${{ matrix.shell }}
+          path: tests/results/
+          if-no-files-found: error

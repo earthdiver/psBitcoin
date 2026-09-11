@@ -1,0 +1,7 @@
+# Keep fixture hashes identical on Windows and Unix checkouts.
+tests/fixtures/* -text
+# Example snapshots preserve output spaces and use LF on every platform.
+examples/*.out text eol=lf whitespace=-blank-at-eol
+
+# The published BIP340 CSV uses CRLF; preserve its original bytes and hash.
+tests/fixtures/bip340.csv whitespace=cr-at-eol

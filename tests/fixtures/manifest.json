@@ -1,0 +1,66 @@
+[
+  {
+    "file": "bip32.json",
+    "source": "https://github.com/bitcoin/bips/blob/master/bip-0032.mediawiki",
+    "sourceSha256": "e5e00a8289db2f681052cf24a745320afc225e66b25d1e489a7c884d2fc7f11f",
+    "sha256": "b30868c612a8ca0238cf781aab436d010b7b16e962bcc0a9a03cb46a853836fd",
+    "retrieved": "2026-09-11",
+    "transformation": "All 17 valid nodes in vectors 1-4 and all 16 invalid keys in vector 5; hardened markers converted to apostrophes."
+  },
+  {
+    "file": "bip39.json",
+    "source": "https://github.com/trezor/python-mnemonic/blob/master/vectors.json",
+    "sourceSha256": "fa3b937b7cff9c9b8ecd3aa011faeb8d6dd67993174b72326e83f4de8fdb30f8",
+    "sha256": "98291d146aec851eba607586640be526967a7bc40ae4564741e3976a6fc65a21",
+    "retrieved": "2026-09-11",
+    "transformation": "All 24 English and 24 Japanese vectors; other unsupported languages omitted. Passphrase TREZOR."
+  },
+  {
+    "file": "bip350.json",
+    "source": "https://github.com/bitcoin/bips/blob/master/bip-0350.mediawiki",
+    "sourceSha256": "63634b06aa8bae88b31929674736e74964c4598684269ac2b0b140c43a7a0dec",
+    "sha256": "0772d5a5e45f9f5f2b5b08410bfaffc7419dfb5dfd68c0ee5a3b6de6aacf4a74",
+    "retrieved": "2026-09-11",
+    "transformation": "All 8 valid and 15 invalid native witness address vectors; generic non-address checksums are outside the decoder API."
+  },
+  {
+    "file": "bip86.json",
+    "source": "https://github.com/bitcoin/bips/blob/master/bip-0086.mediawiki",
+    "sourceSha256": "d8d01dee331da07c2562615bc1f064c1868ec3fce61184973da76d1196c7f5b0",
+    "sha256": "756c344af12800404c1600b43978955762b6f4a1bca4efce86757ee0e32440a8",
+    "retrieved": "2026-09-11",
+    "transformation": "Account and receiving/change derivation vectors."
+  },
+  {
+    "file": "bip143.json",
+    "source": "https://github.com/bitcoin/bips/blob/master/bip-0143.mediawiki",
+    "sourceSha256": "62bc71351563e68baeb12643c68355d217953ae9eb6a6e68b2b0323275b6beec",
+    "sha256": "a31d352fb8898fe4e2aa172fc3f399bd4cde62ffba99098a5a839b879834eeb1",
+    "retrieved": "2026-09-11",
+    "transformation": "All 14 published preimages and matching transactions, including OP_CODESEPARATOR and FindAndDelete examples."
+  },
+  {
+    "file": "bip341-wallet.json",
+    "source": "https://github.com/bitcoin/bips/blob/master/bip-0341/wallet-test-vectors.json",
+    "sourceSha256": "403e19fb81dd1f31e745699216308f61fb403774b2aafa87b631b8f7c042d37f",
+    "sha256": "403e19fb81dd1f31e745699216308f61fb403774b2aafa87b631b8f7c042d37f",
+    "retrieved": "2026-09-11",
+    "transformation": "Unmodified official wallet vectors; keyPathSpending is exercised."
+  },
+  {
+    "file": "bip340.csv",
+    "source": "https://github.com/bitcoin/bips/blob/master/bip-0340/test-vectors.csv",
+    "sourceSha256": "34c9d1d9c3a88d524bc80778540dc43f8306ec249a7485293063c376db851c2d",
+    "sha256": "34c9d1d9c3a88d524bc80778540dc43f8306ec249a7485293063c376db851c2d",
+    "retrieved": "2026-09-11",
+    "transformation": "Unmodified official valid/invalid vectors, including variable message lengths; verifies the independent test oracle."
+  },
+  {
+    "file": "core.json",
+    "source": "tests/reference/generate-core-vectors.py",
+    "sourceSha256": "1d8fe6ffb0ce2be02971989ef65e3df759c70226842d006da875f4d6b5046530",
+    "sha256": "8955a6e19fe912dba70b1c5da9879cbdc6278ceb0c4be9ad30c43ca6757d56e1",
+    "retrieved": "2026-09-11",
+    "transformation": "Generated offline with Python stdlib; independent affine EC arithmetic, RFC6979, address encoding, BIP143 and BIP341 byte serialization."
+  }
+]
