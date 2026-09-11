@@ -98,10 +98,14 @@ Test 'Balance primary response and fallback fields' {
 Test 'GetUTXO pipeline handles both addresses' {
     Reset-Http
     $script:Response=@([pscustomobject]@{txid='one';vout=0;value=1;status=@{confirmed=$true;block_time=1}})
-    $addresses=@($core.addresses[0].addresses.P2WPKH.address,$core.addresses[2].addresses.P2WPKH.address)
+    $addresses=@($core.addresses[0].addresses.P2WPKH.address,$core.addresses[3].addresses.P2WPKH.address)
     $actual=@($addresses | GetUTXO)
     Assert-Equal $actual.Count 2 'One UTXO result for each address'
     Assert-Equal $script:Requests.Count 2
+    Assert-Equal $actual[0].script $core.addresses[0].addresses.P2WPKH.script
+    Assert-Equal $actual[1].script $core.addresses[3].addresses.P2WPKH.script
+    Assert-Equal $script:Requests[0].Uri ("https://mempool.space/api/address/$($addresses[0])/utxo")
+    Assert-Equal $script:Requests[1].Uri ("https://mempool.space/testnet/api/address/$($addresses[1])/utxo")
 }
 Test 'GetBalance pipeline handles both addresses' {
     Reset-Http
@@ -111,5 +115,11 @@ Test 'GetBalance pipeline handles both addresses' {
     $actual=@($addresses | GetBalance)
     Assert-Equal $actual.Count 2 'One balance result for each address'
     Assert-Equal $script:Requests.Count 2
+}
+Test 'Empty network pipelines do not issue requests' {
+    Reset-Http
+    Assert-Equal @(@() | GetUTXO).Count 0
+    Assert-Equal @(@() | GetBalance).Count 0
+    Assert-Equal $script:Requests.Count 0
 }
 Complete-TestSuite

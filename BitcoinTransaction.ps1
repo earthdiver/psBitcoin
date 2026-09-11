@@ -596,55 +596,59 @@ function SchnorrSig ( [string]$privateKey, [string]$serializedTX, [byte]$sighash
 
 function GetAddressP2TR-SP {
     param( [Parameter(ValueFromPipeline=$True)][string]$publicKey, [Alias("t")][switch]$Testnet )
-# Taproot address for a single-key script path spend.
-# Internal key 0x50929b74c1a04954b78b4b6035e97a5e078a5a0f28ec96d547bfee9ace803ac0 ( = SHA256( G ) ) is used as an unspendable key path.
-    AssertCompressedPublicKey $publicKey
-    $internalKey = "50929b74c1a04954b78b4b6035e97a5e078a5a0f28ec96d547bfee9ace803ac0"
-    $x           = [bigint]::Parse( "0" + $internalKey, "AllowHexSpecifier" )
-    $H           = [ECDSA]::new( $x )  # lift_x( x )
-    $G           = [ECDSA]::new()
-    $leafVersion = "c0"
-    $script      = "20" + $publicKey.Substring( 2 ) + "ac"  # PUSH(32byte publickey) + OP_CHECKSIG
-    $tapLeaf     = HashTR "TapLeaf"  ( $leafVersion + ( ConvertTo-CompactSizeHex $script ) )
-    $tapTweak    = HashTR "TapTweak" ( $internalKey + $tapLeaf )
-    $t           = [bigint]::Parse( "0" + $tapTweak, "AllowHexSpecifier" )
-    if ( $t -ge [ECDSA]::Order ) { throw "You are unlucky!" }
-    $Q           = $H + $G * $t
-    if ( $Q -eq $null -or $Q.Err ) { throw "The resulting address is invalid." }
-    $outputKey   = $Q.X.ToHexString64()
-    $hrp = if ( -not $Testnet ) { "bc" } else { "tb" }
-    return ( Bech32_Encode $outputKey $hrp $true 1 )
+    process {
+    # Taproot address for a single-key script path spend.
+    # Internal key 0x50929b74c1a04954b78b4b6035e97a5e078a5a0f28ec96d547bfee9ace803ac0 ( = SHA256( G ) ) is used as an unspendable key path.
+        AssertCompressedPublicKey $publicKey
+        $internalKey = "50929b74c1a04954b78b4b6035e97a5e078a5a0f28ec96d547bfee9ace803ac0"
+        $x           = [bigint]::Parse( "0" + $internalKey, "AllowHexSpecifier" )
+        $H           = [ECDSA]::new( $x )  # lift_x( x )
+        $G           = [ECDSA]::new()
+        $leafVersion = "c0"
+        $script      = "20" + $publicKey.Substring( 2 ) + "ac"  # PUSH(32byte publickey) + OP_CHECKSIG
+        $tapLeaf     = HashTR "TapLeaf"  ( $leafVersion + ( ConvertTo-CompactSizeHex $script ) )
+        $tapTweak    = HashTR "TapTweak" ( $internalKey + $tapLeaf )
+        $t           = [bigint]::Parse( "0" + $tapTweak, "AllowHexSpecifier" )
+        if ( $t -ge [ECDSA]::Order ) { throw "You are unlucky!" }
+        $Q           = $H + $G * $t
+        if ( $Q -eq $null -or $Q.Err ) { throw "The resulting address is invalid." }
+        $outputKey   = $Q.X.ToHexString64()
+        $hrp = if ( -not $Testnet ) { "bc" } else { "tb" }
+        return ( Bech32_Encode $outputKey $hrp $true 1 )
+    }
 }
 
 function GetBalance {
     param( [Parameter(ValueFromPipeline=$True)][string]$addr )
-    $addr = NormalizeBitcoinAddress $addr
-    if ( $addr -cmatch '^[xyztuvYZUV]prv' ) {
-        throw "extended private keys must not be supplied to an online balance service"
-    }
-    if ( $addr -cmatch '^([13]|bc1)' ) {
-        $addr = AssertBitcoinAddress $addr
-        $chain   = "main"
-    } elseif ( $addr -cmatch '^([2mn]|tb1)' ) {
-        $addr = AssertBitcoinAddress $addr
-        $chain   = "test3"
-    } elseif ( $addr -cmatch '^[xyzYZtuvUV]pub' ) {
-        $serialized = Base58Check_Decode $addr
-        $version = if ( $serialized.Length -ge 8 ) { $serialized.Substring( 0, 8 ) } else { "" }
-        $mainnetVersions = @("0295b43f","02aa7ed3","0488b21e","049d7cb2","04b24746")
-        $testnetVersions = @("024289ef","02575483","043587cf","044a5262","045f1cf6")
-        if ( $serialized.Length -ne 156 -or $version -cnotin ( $mainnetVersions + $testnetVersions ) ) {
-            throw "invalid extended public key"
+    process {
+        $addr = NormalizeBitcoinAddress $addr
+        if ( $addr -cmatch '^[xyztuvYZUV]prv' ) {
+            throw "extended private keys must not be supplied to an online balance service"
         }
-        $chain = if ( $version -cin $mainnetVersions ) { "main" } else { "test3" }
-    } else {
-        throw "invalid address"
+        if ( $addr -cmatch '^([13]|bc1)' ) {
+            $addr = AssertBitcoinAddress $addr
+            $chain   = "main"
+        } elseif ( $addr -cmatch '^([2mn]|tb1)' ) {
+            $addr = AssertBitcoinAddress $addr
+            $chain   = "test3"
+        } elseif ( $addr -cmatch '^[xyzYZtuvUV]pub' ) {
+            $serialized = Base58Check_Decode $addr
+            $version = if ( $serialized.Length -ge 8 ) { $serialized.Substring( 0, 8 ) } else { "" }
+            $mainnetVersions = @("0295b43f","02aa7ed3","0488b21e","049d7cb2","04b24746")
+            $testnetVersions = @("024289ef","02575483","043587cf","044a5262","045f1cf6")
+            if ( $serialized.Length -ne 156 -or $version -cnotin ( $mainnetVersions + $testnetVersions ) ) {
+                throw "invalid extended public key"
+            }
+            $chain = if ( $version -cin $mainnetVersions ) { "main" } else { "test3" }
+        } else {
+            throw "invalid address"
+        }
+        $uri1 = "https://blockchain.info/balance?active=" + $addr
+        $uri2 = "https://api.blockcypher.com/v1/btc/$chain/addrs/$addr/balance"
+        try { return ( Invoke-RestMethod -Uri $uri1 -TimeoutSec 15 -ErrorAction Stop )."$addr"                                             } catch {}
+        try { return ( Invoke-RestMethod -Uri $uri2 -TimeoutSec 15 -ErrorAction Stop | Select-Object final_balance, n_tx, total_received ) } catch {}
+        throw "failed to get the balance"
     }
-    $uri1 = "https://blockchain.info/balance?active=" + $addr
-    $uri2 = "https://api.blockcypher.com/v1/btc/$chain/addrs/$addr/balance"
-    try { return ( Invoke-RestMethod -Uri $uri1 -TimeoutSec 15 -ErrorAction Stop )."$addr"                                             } catch {}
-    try { return ( Invoke-RestMethod -Uri $uri2 -TimeoutSec 15 -ErrorAction Stop | Select-Object final_balance, n_tx, total_received ) } catch {}
-    throw "failed to get the balance"
 }
 
 function Invoke-RestMethodWithRetry {
@@ -666,32 +670,34 @@ function Invoke-RestMethodWithRetry {
 
 function GetUTXO {
     param ( [Parameter(ValueFromPipeline=$True)][string]$addr )
-    $addr = AssertBitcoinAddress $addr
-    if ( $addr -cmatch '^([13]|bc1)' ) {
-        $network = ""
-    } elseif ( $addr -cmatch '^([2mn]|tb1)' ) {
-        $network = "testnet"
-    } else {
-        throw "invalid address"
+    process {
+        $addr = AssertBitcoinAddress $addr
+        if ( $addr -cmatch '^([13]|bc1)' ) {
+            $network = ""
+        } elseif ( $addr -cmatch '^([2mn]|tb1)' ) {
+            $network = "testnet"
+        } else {
+            throw "invalid address"
+        }
+        if ( $network ) {
+            $uri = "https://mempool.space/$network/api/address/$addr/utxo"
+        } else {
+            $uri = "https://mempool.space/api/address/$addr/utxo"
+        }
+        $result = Invoke-RestMethodWithRetry $uri
+        if ( -not $result.Succeeded ) { throw "failed to get utxo info from mempool.space." }
+        $response = @( $result.Value )
+        $scriptPubKey = ConvertAddressToScriptPubKey $addr
+        $value = @{ Expression = { $_.value             }; Descending = $true  }
+        $btime = @{ Expression = { $_.status.block_time }; Descending = $false }
+        $utxo  = @(
+            $response | Where-Object { $_.status.confirmed }            `
+                      | Sort-Object $value, $btime                      `
+                      | Select-Object txid, vout, value, script
+        )
+        $utxo | % { $_.script = $scriptPubKey }
+        return $utxo
     }
-    if ( $network ) {
-        $uri = "https://mempool.space/$network/api/address/$addr/utxo"
-    } else {
-        $uri = "https://mempool.space/api/address/$addr/utxo"
-    }
-    $result = Invoke-RestMethodWithRetry $uri
-    if ( -not $result.Succeeded ) { throw "failed to get utxo info from mempool.space." }
-    $response = @( $result.Value )
-    $scriptPubKey = ConvertAddressToScriptPubKey $addr
-    $value = @{ Expression = { $_.value             }; Descending = $true  }
-    $btime = @{ Expression = { $_.status.block_time }; Descending = $false }
-    $utxo  = @( 
-        $response | Where-Object { $_.status.confirmed }            `
-                  | Sort-Object $value, $btime                      `
-                  | Select-Object txid, vout, value, script
-    )
-    $utxo | % { $_.script = $scriptPubKey }
-    return $utxo
 }
 
 function AssertLegacySource {
@@ -748,7 +754,7 @@ function AssertTaprootKeySource {
 }
 
 function ConvertAddressToScriptPubKey {
-    param( [Parameter(ValueFromPipeline=$True)][string]$address )
+    param( [string]$address )
     $address = AssertBitcoinAddress $address
     if ( $address -cmatch '^[123mn]' ) {
         $decoded = Base58Address_Decode $address

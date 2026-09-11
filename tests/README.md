@@ -1,12 +1,11 @@
-# テスト
+# Tests
 
-最近のバグ再現だけでなく、正常系・境界値・異常系・公開仕様との一致を検証します。
-テストはオフラインで動作し、Pester・Python・Goのインストールは不要です。
-Python/Goは参照データを再生成するときにだけ使います。
+The suites cover normal behavior, boundary conditions, invalid inputs, and conformance to published specifications.
+They run offline without Pester, Python, or Go. Python and Go are only needed to regenerate reference data.
 
-## 実行
+## Running tests
 
-リポジトリのルートから、新しいPowerShellセッションで実行します。
+Run from the repository root in a fresh PowerShell session:
 
 ```powershell
 ./tests/Run-Tests.ps1
@@ -14,116 +13,121 @@ Python/Goは参照データを再生成するときにだけ使います。
 ./tests/Run-Tests.ps1 -PowerShellPath 'C:\Program Files\PowerShell\7\pwsh.exe'
 ```
 
-通常は実行中のPowerShellと同じ実行ファイルで子プロセスを起動します。
-各 `*.Tests.ps1` は別プロセスで実行するため、PowerShellクラス、Add-Type、関数の差し替え、
-固定基点テーブルのキャッシュが別スイートに持ち越されません。実行対象は `BitcoinWallet.ps1` の単一版です。
+By default, the runner uses the current PowerShell executable for child processes.
+Each `*.Tests.ps1` suite runs in a separate process to isolate PowerShell classes, `Add-Type`,
+function replacements, and the fixed-base multiplication cache. The wallet under test is `BitcoinWallet.ps1`.
 
-全結果は `tests/results/<実行ID>/` に保存します。`summary.json` が全体結果、
-各スイートのJSONがケース別の名前・成否・所要時間・エラー、`.log` が標準出力・標準エラーです。
-このディレクトリだけをGit管理から除外します。
+Results are written to `tests/results/<run-id>/`. `summary.json` contains the overall results;
+each suite's JSON contains test names, outcomes, durations, and errors. `.log` files capture standard output and standard error.
+The results directory is excluded from Git.
 
-失敗、タイムアウト、読み込みエラー、結果ファイル未生成、空のスイートは終了コード1になります。
-失敗したスイートがあっても残りを実行します。既定のタイムアウトはスイートごとに300秒です。
-低速環境では `-TimeoutSeconds 600` などで変更できます。
+Failures, timeouts, loading errors, missing result files, and empty suites produce exit code 1.
+The runner continues with the remaining suites after a failure. The default timeout is 300 seconds per suite;
+use an option such as `-TimeoutSeconds 600` for slower environments.
 
-**現在は新規検出した本体の問題により失敗するケースがあります。**
-期待値を現状の誤動作に合わせたり、失敗をスキップしたりしていません。
-詳細は [KNOWN-FAILURES.md](KNOWN-FAILURES.md) を参照してください。
-
-## 例01〜07の速度計測
+## Benchmarking examples 01–07
 
 ```powershell
 ./tests/Benchmark-Examples.ps1 -Repetitions 3
 ```
 
-単一版の初回生成・保存済みテーブル読込を別プロセスで直列に測定します。
-各プロセスで2回目の実行も測り、メモリ再利用時の時間を比較します。
-例の実行だけを計測し、全出力を.outと照合します。生の測定値は `tests/results/` に保存します。
-[2026-09-11の比較結果](benchmarks/examples-2026-09-11.md)には条件・中央値を、
-[JSON](benchmarks/examples-2026-09-11.json)には全測定値とソースのSHA256を記録しています。
+The benchmark measures initial table generation and loading a saved table in separate processes, run sequentially.
+It also measures a second execution in each process to compare memory cache reuse.
+Only example execution is timed, and all output is checked against the `.out` snapshots.
+Raw measurements are saved under `tests/results/`.
 
-異なる実装の比較には、比較元のソース一式を保存したディレクトリを指定します。
-両ディレクトリのウォレットを `BitcoinWallet.ps1` という名前で配置してください。
+To compare implementations, specify a directory containing the baseline source files.
+The wallet must be named `BitcoinWallet.ps1` in both source directories.
 
 ```powershell
-./tests/Benchmark-GeneratorVariants.ps1 -BaselineRoot <比較元のディレクトリ> -Repetitions 3
+./tests/Benchmark-GeneratorVariants.ps1 -BaselineRoot 'C:\path\to\baseline' -Repetitions 3
 ```
 
-[下位8ビット版の比較結果](benchmarks/generator-low8-2026-09-11.md)に新旧の測定値と実装差分を記録しています。これらはFast版を分離していた当時の記録で、現在は256点方式を単一版へ採用しています。
+## Coverage
 
-## 検証範囲
-
-| 分野 | 主な検証内容 | スイート |
+| Area | Checks | Suite |
 |---|---|---|
-| バイト・整数・符号化 | 全256バイト、パイプラインの集約、i2hオプション、32/64bit境界、CompactSize、PUSHDATA、ScriptNum、記述子チェックサム | Encoding |
-| BIP39・PBKDF2 | 英語24・日本語24の公開ベクトル、エントロピー全5長、チェックサム・未知語・語数、NFKD・空白、TREZORシード・拡張鍵、RFC6070 | Mnemonic |
-| BIP32・HDWallet | 公開ベクトル1〜4の全17ノード、ベクトル5の無効鍵16件、公開鍵のみの派生、最大インデックス・深さ、ネットワーク、SLIP形式、キャッシュ・Dispose | HDWallet |
-| 稀な派生条件 | HMACを差し替え、IL=0、IL>=n、子鍵0/無限遠点、候補スキップ、末尾インデックス枯渇を検証 | DerivationFaults |
-| 楕円曲線・ハッシュ | 点加算・倍算・任意基点・負のスカラー・無限遠点・Jacobian正規化・逆元、独立したハッシュ期待値 | CurveAndHash |
-| 鍵・アドレス | 5種類の秘密スカラー×両ネットワーク、圧縮/非圧縮WIF、8種のアドレス・出力スクリプト、BIP350全23アドレス例、BIP86、Taproot tweak、URI | Addresses |
-| トランザクション | TXin/TXout/Witness/TX/TXS/DERのバイト列、別パーサーでの読出し、不正構造、MAX_MONEY・dust境界 | Transactions |
-| 署名ハッシュ | BIP143公開プリイメージ14件、BIP341公開key-path例、独立生成した68ケース（Segwit全6フラグ、Taproot全7フラグ×入力×annex×拡張） | Transactions |
-| 署名 | 独立RFC6979/ECDSA期待値、乱数ECDSA・Schnorr署名を別実装で検証、その検証器をBIP340の正常/異常ベクトルで検証 | Signatures |
-| メッセージ | 固定署名、空文字・日本語・252/253/65536バイト、改変、両ネットワーク・各アドレス形式、Electrum・独自Taproot拡張 | Signatures |
-| 送金生成 | Legacy/P2SH/各Segwit/Taproot key-path/script-path×両ネットワーク、複数入力、選択順、金額、お釣り、メモ、locktime、生成署名の検証、残高不足、dust、誤った鍵、Nulldata、CLTV | Builders |
-| 通信境界 | HTTP差し替え、UTXOの確認済みフィルター・順序・スクリプト、ネットワーク別URL、空/単一応答、再試行・打ち切り、残高サービスのフォールバック | Network |
-| パイプライン | 入力を複数渡したとき、各公開関数が件数・順序を保持するか。単一呼出しとの比較 | Pipeline / Network |
-| SeedQR | 英語・日本語の全48ベクトルから通常/Compactペイロードを検証、エントロピー・チェックサム・ECC指定、無効ニーモニック | SeedQR |
-| aezeed | 既存のLND/btcd参照データ、パスフレーズ・認証・Unicode・バージョン・破損・BIP39との取り違え | Aezeed |
-| 使用例 | 08以外の全例（01〜07・09・99）の記録済み出力を空白・空行・最終改行まで照合。99は参照行・IL定数・復元鍵も検査 | Examples |
-| 固定基点キャッシュ |遅延生成、バイナリ形式、別プロセスで生成せず読込、メモリ再利用、破損再生成、書込不可時の継続 | GeneratorCache |
-| テスト基盤 | アサーションの失敗判定、フィクスチャのSHA256・公式ベクトル件数 | Harness |
+| Bytes, integers, and encoding | All 256 byte values, pipeline aggregation, `i2h` options, 32/64-bit boundaries, CompactSize, PUSHDATA, ScriptNum, descriptor checksums | Encoding |
+| BIP39 and PBKDF2 | 24 English and 24 Japanese published vectors, all five entropy lengths, checksums, unknown words, word counts, NFKD, whitespace, TREZOR seeds and extended keys, RFC6070 | Mnemonic |
+| BIP32 and HDWallet | All 17 nodes in published vectors 1–4, 16 invalid keys in vector 5, public-only derivation, maximum index and depth, networks, SLIP formats, caching, disposal | HDWallet |
+| Rare derivation conditions | HMAC substitution for IL=0, IL>=n, zero child keys, points at infinity, candidate skipping, and index exhaustion | DerivationFaults |
+| Elliptic curves and hashes | Point addition and doubling, arbitrary base points, negative scalars, points at infinity, Jacobian normalization, inverses, independent hash expectations | CurveAndHash |
+| Keys and addresses | Five private scalars on both networks, compressed/uncompressed WIF, eight address and output script types, all 23 BIP350 address examples, BIP86, Taproot tweaks, URIs | Addresses |
+| Transactions | TXin/TXout/Witness/TX/TXS/DER serialization, independent parsing, invalid structures, MAX_MONEY and dust boundaries | Transactions |
+| Signature hashes | 14 published BIP143 preimages, published BIP341 key-path examples, 68 independently generated cases covering six Segwit flags and seven Taproot flags with input, annex, and extension variations | Transactions |
+| Signatures | Independent RFC6979/ECDSA expectations, independent verification of randomized ECDSA and Schnorr signatures, verifier checks against valid and invalid BIP340 vectors | Signatures |
+| Messages | Fixed signatures, empty and Japanese messages, 252/253/65536-byte boundaries, tampering, both networks, address types, Electrum and custom Taproot extensions | Signatures |
+| Transaction builders | Legacy/P2SH/Segwit/Taproot key-path and script-path spending on both networks, multiple inputs, selection order, amounts, change, memos, locktime, signature verification, insufficient funds, dust, incorrect keys, Nulldata, CLTV | Builders |
+| Network boundaries | Mocked HTTP, confirmed UTXO filtering, ordering and scripts, network-specific URLs, empty/single responses, retries, exhaustion, balance service fallback | Network |
+| Pipelines | Multiple and repeated inputs, output count and order, empty pipelines, early returns, chained conversions, mixed address formats and networks, URI options | Pipeline / Network |
+| SeedQR | Standard and compact payloads for all 48 English/Japanese vectors, entropy, checksums, ECC options, invalid mnemonics | SeedQR |
+| aezeed | LND/btcd reference data, passphrases, authentication, Unicode, versions, corruption, BIP39 confusion and coexistence | Aezeed |
+| Examples | Output snapshots for all examples except 08, including spaces, blank lines, and final newlines; example 99 source references, IL constants, and recovered keys | Examples |
+| Fixed-base cache | Lazy generation, binary format, loading in another process without generation, memory reuse, regeneration after corruption, continued operation when writes fail | GeneratorCache |
+| Test harness | Assertion failure handling, fixture SHA256 values, official vector counts | Harness |
 
-既存の回帰テストは機能別スイートへ統合し、すべて `Test` と共通の `Assert-*` を使います。
-`CompactSize` は `Encoding`、`DerivationNetwork`・`ExtendedKeyRoundtrip`・再インポート時のキャッシュ検査は
-`HDWallet`、`ZeroIL` は `DerivationFaults`、ニーモニックの複数入力は `Pipeline` に移しました。
-初期化前の公開鍵インポートはBIP32公開ベクトルのインポート検査と重複するため一本化しました。
-aezeedのBIP39検査は同じセッションでの共存を検証するため残しています。
+Suites use the shared `Test` and `Assert-*` helpers in `TestSupport.ps1`.
+`AssertBitcoinAddress`, `GetTweak`, `Base58Address_Decode`, and `ConvertAddressToScriptPubKey`
+accept explicit arguments only; their behavior is covered by the functional suites.
 
-### 例の出力スナップショット
+### Example snapshots
 
-`Examples.Tests.ps1` は08以外の `examples/*.ps1` を自動検出します。
-標準出力と `Write-Host` の出力を合わせ、改行コードをLFへ揃えて `.out` と厳密に比較します。
-スペース・タブ・空行・最終改行は除去しません。`.out` はUTF-8（BOMなし）・LFで保存します。
-99はウォレットの一時コピーに条件付き `Write-Host $il` を挿入して実行します。
-コメントの参照行が通常版の `HDWallet.Derive()` 内の指定コードであること、
-`$i`・`$ii` の定数と出力順の説明が実際の5番目・4番目の値に一致すること、復元鍵も検査します。
-ウォレットの一時コピーを使い、元の本体は変更しません。
+`Examples.Tests.ps1` automatically discovers `examples/*.ps1`, excluding example 08.
+It combines standard output with `Write-Host` output, normalizes line endings to LF, and compares the result strictly with `.out`.
+Spaces, tabs, blank lines, and final newlines are preserved. Snapshots use UTF-8 without a BOM and LF line endings.
 
-出力変更を意図した場合だけ、次を実行して差分をレビューしてください。テストやCIは自動更新しません。
+For example 99, the suite inserts a conditional `Write-Host $il` into a temporary wallet copy.
+It checks that the line referenced in the comment points to the specified code inside `HDWallet.Derive()`,
+that the `$i` and `$ii` constants and output-order descriptions match the actual fifth and fourth values,
+and that the recovered keys are correct. The source wallet is not modified.
+
+When an output change is intentional, regenerate the snapshots and review the diff:
 
 ```powershell
 ./tests/Update-ExampleSnapshots.ps1
 ```
 
-## 期待値と独立性
+Tests and CI do not update snapshots automatically.
 
-- `fixtures/manifest.json` に出典URL、取得日、元データ/保存データのSHA256、抽出範囲を記録しています。
-- 公式データはローカルに同梱し、毎回ネットワークから取得しません。
-- `reference/generate-core-vectors.py` はPowerShell本体を呼ばず、Python標準ライブラリと独立したaffine座標演算で期待値を生成します。
-- `ReferenceCrypto.cs` はテスト専用の独立した署名検証器です。製品用暗号ライブラリとして使用しないでください。
-- `TransactionSupport.ps1` はバイト列を別途解析します。送金生成の署名検証では本体の署名ハッシュ作成器も使用しますが、その作成器自体を別の公式/独立ベクトルで検証しています。
-- `examples/*.out` は既存動作の回帰用記録で、仕様準拠の根拠とは区別します。`02_seed2addresses.out` 末尾の、スクリプトに出力処理が存在しない単独の `P` は記録ミスとして除去しました。
+## Expected values and independence
 
-公式ベクトルを更新する場合は出典からファイルを取得し、
-`python3 tests/reference/import-official-vectors.py <取得先ディレクトリ>` を実行します。
-独立生成データは `python3 tests/reference/generate-core-vectors.py` で再生成できます。
-その際、manifestの対応するSHA256もレビューの上で更新してください。
-実装本体の出力をコピーして正解データを更新しないでください。
+- `fixtures/manifest.json` records source URLs, retrieval dates, source and fixture SHA256 values, and extraction scope.
+- Official vectors are bundled locally; test runs do not download them.
+- `reference/generate-core-vectors.py` generates expected values using the Python standard library and independent affine coordinate arithmetic, without calling the PowerShell implementation.
+- `ReferenceCrypto.cs` is an independent signature verifier for tests. It is not intended as a production cryptographic library.
+- `TransactionSupport.ps1` independently parses serialized bytes. Builder signature checks also use the production signature hash functions, which are separately checked against official and independent vectors.
+- `examples/*.out` captures behavior for regression checks; these snapshots do not establish specification conformance.
 
-固定基点テーブルの独立したSHA256は `python3 tests/reference/generate-generator-table.py` で確認できます。
+To update official vectors, download the source files and run:
 
-## 自動テストの限界
+```sh
+python3 tests/reference/import-official-vectors.py <download-directory>
+```
 
-全入力・全分岐の完全性や、暗号実装の安全性を証明するものではありません。
-行/分岐カバレッジの割合は測定していません。
-以下は別途確認が必要です。
+Regenerate independent data with:
 
-- 実サービスの稼働・応答仕様変更、実ノードの受理/ブロードキャスト、実SATSCARD。
-- QR画像の実際の描画・読み取り、Windows Formsの画面操作。
-- 任意のカスタムスクリプトの実行可能性。生成APIは単一署名で充足できるスクリプトに限定され、汎用Scriptインタープリターではありません。
-- 乱数源の品質、タイミング攻撃、メモリーからの秘密消去、性能上限。
-- examples/08は実SATSCARDが必要なため、出力照合の対象外です。
+```sh
+python3 tests/reference/generate-core-vectors.py
+```
 
-CIはWindows PowerShell 5.1、Windows PowerShell 7、Linux PowerShell 7を設定しています。
-ローカルで実行できた環境と実測値は [VALIDATION.md](VALIDATION.md) に記録します。
+Review and update the corresponding manifest SHA256 values as well.
+Do not replace expected values by copying production implementation output.
+
+Check the independent fixed-base table SHA256 with:
+
+```sh
+python3 tests/reference/generate-generator-table.py
+```
+
+## Limits
+
+The tests do not prove coverage of every input or branch, or the security of the cryptographic implementation.
+Line and branch coverage percentages are not measured. The following require separate validation:
+
+- Live service availability and response changes, transaction acceptance and broadcasting by real nodes, and physical SATSCARD devices.
+- QR image rendering and decoding, and Windows Forms interaction. The QR display function's pipeline processing is checked structurally.
+- Arbitrary custom script execution. Builder APIs support scripts satisfied by a single signature and do not provide a general script interpreter.
+- Randomness quality, timing attacks, secret erasure from memory, and performance limits.
+
+Example 08 requires a physical SATSCARD and is excluded from output comparisons.
+CI is configured for Windows PowerShell 5.1, Windows PowerShell 7, and Linux PowerShell 7.
