@@ -10,15 +10,13 @@ Python/Goは参照データを再生成するときにだけ使います。
 
 ```powershell
 ./tests/Run-Tests.ps1
-./tests/Run-Tests.ps1 -IncludeFast
 ./tests/Run-Tests.ps1 -Suite 'Transactions*'
 ./tests/Run-Tests.ps1 -PowerShellPath 'C:\Program Files\PowerShell\7\pwsh.exe'
 ```
 
 通常は実行中のPowerShellと同じ実行ファイルで子プロセスを起動します。
 各 `*.Tests.ps1` は別プロセスで実行するため、PowerShellクラス、Add-Type、関数の差し替え、
-Fast版のキャッシュが別スイートに持ち越されません。Fast版は明示指定した場合のみ実行し、
-ファイルがなければエラーにします。
+固定基点テーブルのキャッシュが別スイートに持ち越されません。実行対象は `BitcoinWallet.ps1` の単一版です。
 
 全結果は `tests/results/<実行ID>/` に保存します。`summary.json` が全体結果、
 各スイートのJSONがケース別の名前・成否・所要時間・エラー、`.log` が標準出力・標準エラーです。
@@ -31,6 +29,27 @@ Fast版のキャッシュが別スイートに持ち越されません。Fast版
 **現在は新規検出した本体の問題により失敗するケースがあります。**
 期待値を現状の誤動作に合わせたり、失敗をスキップしたりしていません。
 詳細は [KNOWN-FAILURES.md](KNOWN-FAILURES.md) を参照してください。
+
+## 例01〜07の速度計測
+
+```powershell
+./tests/Benchmark-Examples.ps1 -Repetitions 3
+```
+
+単一版の初回生成・保存済みテーブル読込を別プロセスで直列に測定します。
+各プロセスで2回目の実行も測り、メモリ再利用時の時間を比較します。
+例の実行だけを計測し、全出力を.outと照合します。生の測定値は `tests/results/` に保存します。
+[2026-09-11の比較結果](benchmarks/examples-2026-09-11.md)には条件・中央値を、
+[JSON](benchmarks/examples-2026-09-11.json)には全測定値とソースのSHA256を記録しています。
+
+異なる実装の比較には、比較元のソース一式を保存したディレクトリを指定します。
+両ディレクトリのウォレットを `BitcoinWallet.ps1` という名前で配置してください。
+
+```powershell
+./tests/Benchmark-GeneratorVariants.ps1 -BaselineRoot <比較元のディレクトリ> -Repetitions 3
+```
+
+[下位8ビット版の比較結果](benchmarks/generator-low8-2026-09-11.md)に新旧の測定値と実装差分を記録しています。これらはFast版を分離していた当時の記録で、現在は256点方式を単一版へ採用しています。
 
 ## 検証範囲
 
@@ -52,6 +71,7 @@ Fast版のキャッシュが別スイートに持ち越されません。Fast版
 | SeedQR | 英語・日本語の全48ベクトルから通常/Compactペイロードを検証、エントロピー・チェックサム・ECC指定、無効ニーモニック | SeedQR |
 | aezeed | 既存のLND/btcd参照データ、パスフレーズ・認証・Unicode・バージョン・破損・BIP39との取り違え | Aezeed |
 | 使用例 | 08以外の全例（01〜07・09・99）の記録済み出力を空白・空行・最終改行まで照合。99は参照行・IL定数・復元鍵も検査 | Examples |
+| 固定基点キャッシュ |遅延生成、バイナリ形式、別プロセスで生成せず読込、メモリ再利用、破損再生成、書込不可時の継続 | GeneratorCache |
 | テスト基盤 | アサーションの失敗判定、フィクスチャのSHA256・公式ベクトル件数 | Harness |
 
 既存の回帰テストは機能別スイートへ統合し、すべて `Test` と共通の `Assert-*` を使います。
@@ -68,7 +88,7 @@ aezeedのBIP39検査は同じセッションでの共存を検証するため残
 99はウォレットの一時コピーに条件付き `Write-Host $il` を挿入して実行します。
 コメントの参照行が通常版の `HDWallet.Derive()` 内の指定コードであること、
 `$i`・`$ii` の定数と出力順の説明が実際の5番目・4番目の値に一致すること、復元鍵も検査します。
-通常版・Fast版とも一時コピーを使い、元の本体は変更しません。
+ウォレットの一時コピーを使い、元の本体は変更しません。
 
 出力変更を意図した場合だけ、次を実行して差分をレビューしてください。テストやCIは自動更新しません。
 
@@ -90,6 +110,8 @@ aezeedのBIP39検査は同じセッションでの共存を検証するため残
 独立生成データは `python3 tests/reference/generate-core-vectors.py` で再生成できます。
 その際、manifestの対応するSHA256もレビューの上で更新してください。
 実装本体の出力をコピーして正解データを更新しないでください。
+
+固定基点テーブルの独立したSHA256は `python3 tests/reference/generate-generator-table.py` で確認できます。
 
 ## 自動テストの限界
 

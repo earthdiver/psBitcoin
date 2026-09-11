@@ -2,7 +2,6 @@
 param(
     [string]$SourceRoot = '',
     [string]$PowerShellPath = '',
-    [switch]$IncludeFast,
     [string]$Suite = '*',
     [string]$OutputDirectory = '',
     [ValidateRange(1,3600)][int]$TimeoutSeconds = 300
@@ -15,10 +14,6 @@ $SourceRoot = (Resolve-Path -LiteralPath $SourceRoot).Path
 $files = @(Get-ChildItem -LiteralPath $PSScriptRoot -Filter '*.Tests.ps1' | Where-Object { $_.BaseName -like $Suite } | Sort-Object Name)
 if (-not $files.Count) { throw "No test suites matched: $Suite" }
 $wallets = @('BitcoinWallet.ps1')
-if ($IncludeFast) {
-    if (-not (Test-Path -LiteralPath (Join-Path $SourceRoot 'BitcoinWalletFast.ps1'))) { throw 'Fast wallet requested but missing' }
-    $wallets += 'BitcoinWalletFast.ps1'
-}
 $runId = [Guid]::NewGuid().ToString('N')
 $runDirectory = Join-Path $OutputDirectory $runId
 $null = New-Item -ItemType Directory -Path $runDirectory -Force

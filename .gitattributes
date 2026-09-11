@@ -5,3 +5,6 @@ examples/*.out text eol=lf whitespace=-blank-at-eol
 
 # The published BIP340 CSV uses CRLF; preserve its original bytes and hash.
 tests/fixtures/bip340.csv whitespace=cr-at-eol
+
+# Unified diff context preserves the original whitespace.
+tests/benchmarks/*.patch whitespace=-blank-at-eol

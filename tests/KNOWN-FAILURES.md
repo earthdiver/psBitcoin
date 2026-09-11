@@ -1,6 +1,6 @@
 # 新しいテストで検出した問題
 
-2026-09-11。今回の変更はテスト整備を対象としており、ウォレット/トランザクション本体は変更していません。
+2026-09-11。256点の固定基点テーブルを採用した単一版でも、パイプライン問題は未修正です。
 次のテストは本体の修正が入るまで失敗することを意図しています。
 既知失敗の除外・skip・成功扱いは設けておらず、実行器とCIも非ゼロで終了します。
 
@@ -16,7 +16,7 @@
 ```
 
 `Pipeline.Tests.ps1` の30ケースと `Network.Tests.ps1` の2ケースで検出します。
-通常版・Fast版、Windows PowerShell 5.1・PowerShell 7で確認します。
+Windows PowerShell 5.1・PowerShell 7で確認します。
 
 - `h2i`, `b2i`, `Hash160`, `Hash256`
 - `GetPublicKey`, `GetPublicKeyFromWIF`, `DecompressPublicKey`, `GetWIF`

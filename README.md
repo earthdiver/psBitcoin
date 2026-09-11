@@ -77,14 +77,37 @@ Please place the wordlists in the same folder.
 . ./SeedQR.ps1
 ```
 
+## Fixed-generator cache
+
+`BitcoinWallet.ps1` includes a lazy secp256k1 fixed-generator multiplication table.
+Load it in a fresh session:
+
+```powershell
+. ./BitcoinWallet.ps1
+```
+
+The first nontrivial multiplication of G loads or builds 256 points
+(G, 2G, ..., 2^255G). Scalars 0/1 and arbitrary-base multiplications do not initialize
+the table. Subsequent calls reuse the in-memory table; later processes load the
+saved binary file.
+
+The default file is `psBitcoin/secp256k1-generator-v1.bin` under .NET's per-user
+`LocalApplicationData` directory (normally `%LOCALAPPDATA%` on Windows and
+`~/.local/share` on Linux). Set `PSBITCOIN_GENERATOR_CACHE` to a file path before the
+first multiplication to override it. Existing valid v1 caches can be reused.
+
+The format is 16,392 bytes: `PSBG0001` followed by 256 pairs of unsigned 32-byte
+little-endian X/Y coordinates. A pinned independently generated SHA256 verifies
+the whole file. Missing or invalid files are regenerated and published atomically;
+unavailable storage falls back to an in-memory table. The experimental 503-point
+v2 cache is not used. The separate Fast wallet has been removed.
+
 ## Tests
 
 Run the offline regression suite in a fresh PowerShell session:
 
 ```powershell
 ./tests/Run-Tests.ps1
-# Also test BitcoinWalletFast.ps1, when available:
-./tests/Run-Tests.ps1 -IncludeFast
 ```
 
 No Pester installation or network access is required. Each suite runs in its own
