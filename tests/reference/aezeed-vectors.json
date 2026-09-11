@@ -1,0 +1,74 @@
+[
+  {
+    "Name": "empty passphrase",
+    "Mnemonic": "ability broccoli ritual pony acoustic shiver ignore train vault surge miracle mutual reason swamp warm head youth pool able yellow avocado vast face already",
+    "Passphrase": "",
+    "Entropy": "81b637d86359e6960de795e41e0b4cfd",
+    "InternalVersion": 0,
+    "MasterXprv": "xprv9s21ZrQH143K32s72NGwMHKpvriWu4nK2n9rFmzqKe3sLuFBpG4pMkhDG3QUVzLj5QdS8oJpAscZ9YYsuDKwDZPyuSDdaycVTjEoLi6d6zm",
+    "MasterTprv": "tprv8ZgxMBicQKsPdr6dgw8SWvwpEz8j8apKNL4y8CRHocYM8VzGodQZsW4fBDa8WMj3SrAD8tvaLECMcQ6d2Rft2cfaS5RwFLLYNpzDnPmX8Nv"
+  },
+  {
+    "Name": "ASCII passphrase",
+    "Mnemonic": "able type beauty before worth chase market pass save wife object doctor during below ladder leaf ask chimney doctor yellow avocado plate cluster leisure",
+    "Passphrase": "!very_safe_55345_password*",
+    "Entropy": "81b637d86359e6960de795e41e0b4cfd",
+    "InternalVersion": 0,
+    "MasterXprv": "xprv9s21ZrQH143K32s72NGwMHKpvriWu4nK2n9rFmzqKe3sLuFBpG4pMkhDG3QUVzLj5QdS8oJpAscZ9YYsuDKwDZPyuSDdaycVTjEoLi6d6zm",
+    "MasterTprv": "tprv8ZgxMBicQKsPdr6dgw8SWvwpEz8j8apKNL4y8CRHocYM8VzGodQZsW4fBDa8WMj3SrAD8tvaLECMcQ6d2Rft2cfaS5RwFLLYNpzDnPmX8Nv"
+  },
+  {
+    "Name": "Unicode and whitespace passphrase",
+    "Mnemonic": "about pony claw nominee parrot benefit educate ball nephew lounge rigid intact master tunnel husband warrior dove gas leopard yellow avocado together inmate icon",
+    "Passphrase": "  秘密 café 🗝  ",
+    "Entropy": "000102030405060708090a0b0c0d0e0f",
+    "InternalVersion": 0,
+    "MasterXprv": "xprv9s21ZrQH143K3QTDL4LXw2F7HEK3wJUD2nW2nRk4stbPy6cq3jPPqjiChkVvvNKmPGJxWUtg6LnF5kejMRNNU3TGtRBeJgk33yuGBxrMPHi",
+    "MasterTprv": "tprv8ZgxMBicQKsPeDgjzdC36fs6bMjGApWDNLR9erAXMs5skhMv36j9MV5ecvfavji5khqjWaWSFhN3YcCUUdiKH6isR4Pwy3U5y5egddBr16m"
+  },
+  {
+    "Name": "zero entropy",
+    "Mnemonic": "abstract wealth tooth loop sword muffin when crunch scan salute board wheel someone afraid people valve giant marine scare yellow avocado tenant aunt happy",
+    "Passphrase": "aezeed",
+    "Entropy": "00000000000000000000000000000000",
+    "InternalVersion": 0,
+    "MasterXprv": "xprv9s21ZrQH143K2JbpEjGU94NcdKSASB7LuXvJCTsxuENcGN1nVG7QjMnBZ6zZNcJaiJogsRaLaYFFjs48qt4Fg7y1GnmrchQt1zFNu6QVnta",
+    "MasterTprv": "tprv8ZgxMBicQKsPd7qLuJ7yJhzbwSrNfh9MF5qR4tJRPCs63xksUdTAF79dUHADNygu5kLTsXC6jtq4Cibsy6QCVBEboRzAH48vw5zoLkJTuso"
+  },
+  {
+    "Name": "Taproot version 1",
+    "Mnemonic": "about auto scrap gym absurd tackle warm actress pledge diamond evoke random noodle ritual travel concert opera deal able yellow avocado rhythm supply already",
+    "Passphrase": "",
+    "Entropy": "81b637d86359e6960de795e41e0b4cfd",
+    "InternalVersion": 1,
+    "MasterXprv": "xprv9s21ZrQH143K32s72NGwMHKpvriWu4nK2n9rFmzqKe3sLuFBpG4pMkhDG3QUVzLj5QdS8oJpAscZ9YYsuDKwDZPyuSDdaycVTjEoLi6d6zm",
+    "MasterTprv": "tprv8ZgxMBicQKsPdr6dgw8SWvwpEz8j8apKNL4y8CRHocYM8VzGodQZsW4fBDa8WMj3SrAD8tvaLECMcQ6d2Rft2cfaS5RwFLLYNpzDnPmX8Nv"
+  },
+  {
+    "Name": "Taproot version 1 with passphrase",
+    "Mnemonic": "abstract chair mind witness first raccoon protect rebel tissue nurse general claim forum lady voyage punch april habit doctor yellow avocado pretty mushroom brother",
+    "Passphrase": "  秘密 café 🗝  ",
+    "Entropy": "000102030405060708090a0b0c0d0e0f",
+    "InternalVersion": 1,
+    "MasterXprv": "xprv9s21ZrQH143K3QTDL4LXw2F7HEK3wJUD2nW2nRk4stbPy6cq3jPPqjiChkVvvNKmPGJxWUtg6LnF5kejMRNNU3TGtRBeJgk33yuGBxrMPHi",
+    "MasterTprv": "tprv8ZgxMBicQKsPeDgjzdC36fs6bMjGApWDNLR9erAXMs5skhMv36j9MV5ecvfavji5khqjWaWSFhN3YcCUUdiKH6isR4Pwy3U5y5egddBr16m"
+  },
+  {
+    "Name": "internal metadata version 2",
+    "Mnemonic": "abstract suspect reform once anchor give pledge unknown kingdom invite column cat force animal warfare crucial autumn blouse leopard yellow avocado race bonus cricket",
+    "Passphrase": "",
+    "Entropy": "ffffffffffffffffffffffffffffffff",
+    "InternalVersion": 2,
+    "MasterXprv": "xprv9s21ZrQH143K4QPkuYJSfBgCeAp1QAfdjrncnwaxixCaDVHtRXN54iV7zfpHTRWGgGCVgun35Jgq2BwoAboDrvyMU1YEmd4LPawcbJiHJ2G",
+    "MasterTprv": "tprv8ZgxMBicQKsPfDdHa79wpqJBxJEDdghe5QhjfN1RCvh4162yQthpaTrZuqywTntb3hjGh1PoEfGdV3VYHp9AfzEwzekYRynPJgh32uh936D"
+  },
+  {
+    "Name": "internal metadata version 255",
+    "Mnemonic": "abandon nuclear tobacco dawn unable alone can candy cable toy uniform teach ignore float shiver middle fatal subway scare yellow avocado thumb bird focus",
+    "Passphrase": "",
+    "Entropy": "ffffffffffffffffffffffffffffffff",
+    "InternalVersion": 255,
+    "MasterXprv": "xprv9s21ZrQH143K4QPkuYJSfBgCeAp1QAfdjrncnwaxixCaDVHtRXN54iV7zfpHTRWGgGCVgun35Jgq2BwoAboDrvyMU1YEmd4LPawcbJiHJ2G",
+    "MasterTprv": "tprv8ZgxMBicQKsPfDdHa79wpqJBxJEDdghe5QhjfN1RCvh4162yQthpaTrZuqywTntb3hjGh1PoEfGdV3VYHp9AfzEwzekYRynPJgh32uh936D"
+  }
+]

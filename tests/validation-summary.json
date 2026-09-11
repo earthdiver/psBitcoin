@@ -1,0 +1,1081 @@
+{
+  "date": "2026-09-11",
+  "platform": "Windows",
+  "method": "Full run of 15 consolidated suites, followed by reruns of Examples and Aezeed after strict example snapshot integration. Latest result per suite and configuration is used. No known failure is excluded.",
+  "sourceSHA256": {
+    "BitcoinWallet.ps1": "44a02474aeb5979bc3a81e41736a881788b4435ef466b51f1ffe032bf1ca22ce",
+    "BitcoinWalletFast.ps1": "259ea61c080aec14533d4a575f5296221023717540d79ccc82ab4268b71e7760",
+    "BitcoinTransaction.ps1": "28cbe92fa2594f62271603b8a01d3cce4bf6ef2f706b6f873616fd1d39dbd433",
+    "SeedQR.ps1": "9dfa4471f54261dd8c52bfd5c836f42660c3a8e31a26028977341da18dec6f1b"
+  },
+  "configurations": [
+    {
+      "powershell": "5.1.26100.9444",
+      "wallet": "BitcoinWallet.ps1",
+      "total": 945,
+      "passed": 913,
+      "failed": 32,
+      "suites": [
+        {
+          "name": "Addresses.Tests.ps1",
+          "total": 139,
+          "failed": 0,
+          "run": "d9b4dfec284d4df5b23e0333c544ac1d"
+        },
+        {
+          "name": "Aezeed.Tests.ps1",
+          "total": 32,
+          "failed": 0,
+          "run": "a363f9a06a094c61beec7340db2d49e8"
+        },
+        {
+          "name": "Builders.Tests.ps1",
+          "total": 68,
+          "failed": 0,
+          "run": "d9b4dfec284d4df5b23e0333c544ac1d"
+        },
+        {
+          "name": "CurveAndHash.Tests.ps1",
+          "total": 20,
+          "failed": 0,
+          "run": "d9b4dfec284d4df5b23e0333c544ac1d"
+        },
+        {
+          "name": "DerivationFaults.Tests.ps1",
+          "total": 9,
+          "failed": 0,
+          "run": "d9b4dfec284d4df5b23e0333c544ac1d"
+        },
+        {
+          "name": "Encoding.Tests.ps1",
+          "total": 58,
+          "failed": 0,
+          "run": "d9b4dfec284d4df5b23e0333c544ac1d"
+        },
+        {
+          "name": "Examples.Tests.ps1",
+          "total": 14,
+          "failed": 0,
+          "run": "855945f22f774ad38567467e1982f76c"
+        },
+        {
+          "name": "Harness.Tests.ps1",
+          "total": 13,
+          "failed": 0,
+          "run": "d9b4dfec284d4df5b23e0333c544ac1d"
+        },
+        {
+          "name": "HDWallet.Tests.ps1",
+          "total": 108,
+          "failed": 0,
+          "run": "d9b4dfec284d4df5b23e0333c544ac1d"
+        },
+        {
+          "name": "Mnemonic.Tests.ps1",
+          "total": 181,
+          "failed": 0,
+          "run": "d9b4dfec284d4df5b23e0333c544ac1d"
+        },
+        {
+          "name": "Network.Tests.ps1",
+          "total": 17,
+          "failed": 2,
+          "run": "d9b4dfec284d4df5b23e0333c544ac1d"
+        },
+        {
+          "name": "Pipeline.Tests.ps1",
+          "total": 33,
+          "failed": 30,
+          "run": "d9b4dfec284d4df5b23e0333c544ac1d"
+        },
+        {
+          "name": "SeedQR.Tests.ps1",
+          "total": 99,
+          "failed": 0,
+          "run": "d9b4dfec284d4df5b23e0333c544ac1d"
+        },
+        {
+          "name": "Signatures.Tests.ps1",
+          "total": 50,
+          "failed": 0,
+          "run": "d9b4dfec284d4df5b23e0333c544ac1d"
+        },
+        {
+          "name": "Transactions.Tests.ps1",
+          "total": 104,
+          "failed": 0,
+          "run": "d9b4dfec284d4df5b23e0333c544ac1d"
+        }
+      ],
+      "failures": [
+        {
+          "suite": "Network.Tests.ps1",
+          "test": "GetUTXO pipeline handles both addresses",
+          "error": "Expected <2>, got <1>. One UTXO result for each address"
+        },
+        {
+          "suite": "Network.Tests.ps1",
+          "test": "GetBalance pipeline handles both addresses",
+          "error": "Expected <2>, got <1>. One balance result for each address"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: h2i",
+          "error": "Expected <3>, got <2>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: b2i",
+          "error": "Expected <3>, got <2>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: Hash160",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: Hash256",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetPublicKey",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetPublicKeyFromWIF",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: DecompressPublicKey",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetWIF",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: Base58Check_Encode",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: Base58Check_Decode",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: Base58Address_Decode",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: Bech32_Encode",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: Bech32_Decode",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: AssertBitcoinAddress",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetTweak",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetTweakedWIF",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetURI",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: ConvertAddressToScriptPubKey",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: descsum_create",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: descsum_check",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: Mnemonic2QRCode",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: Mnemonic2CompactQRCode",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetAddressP2PKH",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetAddressP2SH",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetAddressP2WPKH",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetAddressP2WSH",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetAddressP2SH-P2WPKH",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetAddressP2SH-P2WSH",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetAddressP2TR",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetAddressP2TR-SP",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        }
+      ]
+    },
+    {
+      "powershell": "5.1.26100.9444",
+      "wallet": "BitcoinWalletFast.ps1",
+      "total": 945,
+      "passed": 913,
+      "failed": 32,
+      "suites": [
+        {
+          "name": "Addresses.Tests.ps1",
+          "total": 139,
+          "failed": 0,
+          "run": "d9b4dfec284d4df5b23e0333c544ac1d"
+        },
+        {
+          "name": "Aezeed.Tests.ps1",
+          "total": 32,
+          "failed": 0,
+          "run": "a363f9a06a094c61beec7340db2d49e8"
+        },
+        {
+          "name": "Builders.Tests.ps1",
+          "total": 68,
+          "failed": 0,
+          "run": "d9b4dfec284d4df5b23e0333c544ac1d"
+        },
+        {
+          "name": "CurveAndHash.Tests.ps1",
+          "total": 20,
+          "failed": 0,
+          "run": "d9b4dfec284d4df5b23e0333c544ac1d"
+        },
+        {
+          "name": "DerivationFaults.Tests.ps1",
+          "total": 9,
+          "failed": 0,
+          "run": "d9b4dfec284d4df5b23e0333c544ac1d"
+        },
+        {
+          "name": "Encoding.Tests.ps1",
+          "total": 58,
+          "failed": 0,
+          "run": "d9b4dfec284d4df5b23e0333c544ac1d"
+        },
+        {
+          "name": "Examples.Tests.ps1",
+          "total": 14,
+          "failed": 0,
+          "run": "855945f22f774ad38567467e1982f76c"
+        },
+        {
+          "name": "Harness.Tests.ps1",
+          "total": 13,
+          "failed": 0,
+          "run": "d9b4dfec284d4df5b23e0333c544ac1d"
+        },
+        {
+          "name": "HDWallet.Tests.ps1",
+          "total": 108,
+          "failed": 0,
+          "run": "d9b4dfec284d4df5b23e0333c544ac1d"
+        },
+        {
+          "name": "Mnemonic.Tests.ps1",
+          "total": 181,
+          "failed": 0,
+          "run": "d9b4dfec284d4df5b23e0333c544ac1d"
+        },
+        {
+          "name": "Network.Tests.ps1",
+          "total": 17,
+          "failed": 2,
+          "run": "d9b4dfec284d4df5b23e0333c544ac1d"
+        },
+        {
+          "name": "Pipeline.Tests.ps1",
+          "total": 33,
+          "failed": 30,
+          "run": "d9b4dfec284d4df5b23e0333c544ac1d"
+        },
+        {
+          "name": "SeedQR.Tests.ps1",
+          "total": 99,
+          "failed": 0,
+          "run": "d9b4dfec284d4df5b23e0333c544ac1d"
+        },
+        {
+          "name": "Signatures.Tests.ps1",
+          "total": 50,
+          "failed": 0,
+          "run": "d9b4dfec284d4df5b23e0333c544ac1d"
+        },
+        {
+          "name": "Transactions.Tests.ps1",
+          "total": 104,
+          "failed": 0,
+          "run": "d9b4dfec284d4df5b23e0333c544ac1d"
+        }
+      ],
+      "failures": [
+        {
+          "suite": "Network.Tests.ps1",
+          "test": "GetUTXO pipeline handles both addresses",
+          "error": "Expected <2>, got <1>. One UTXO result for each address"
+        },
+        {
+          "suite": "Network.Tests.ps1",
+          "test": "GetBalance pipeline handles both addresses",
+          "error": "Expected <2>, got <1>. One balance result for each address"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: h2i",
+          "error": "Expected <3>, got <2>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: b2i",
+          "error": "Expected <3>, got <2>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: Hash160",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: Hash256",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetPublicKey",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetPublicKeyFromWIF",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: DecompressPublicKey",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetWIF",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: Base58Check_Encode",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: Base58Check_Decode",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: Base58Address_Decode",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: Bech32_Encode",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: Bech32_Decode",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: AssertBitcoinAddress",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetTweak",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetTweakedWIF",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetURI",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: ConvertAddressToScriptPubKey",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: descsum_create",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: descsum_check",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: Mnemonic2QRCode",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: Mnemonic2CompactQRCode",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetAddressP2PKH",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetAddressP2SH",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetAddressP2WPKH",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetAddressP2WSH",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetAddressP2SH-P2WPKH",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetAddressP2SH-P2WSH",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetAddressP2TR",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetAddressP2TR-SP",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        }
+      ]
+    },
+    {
+      "powershell": "7.6.5",
+      "wallet": "BitcoinWallet.ps1",
+      "total": 945,
+      "passed": 913,
+      "failed": 32,
+      "suites": [
+        {
+          "name": "Addresses.Tests.ps1",
+          "total": 139,
+          "failed": 0,
+          "run": "edc6c54f2bb444d28cdcac55e19a4320"
+        },
+        {
+          "name": "Aezeed.Tests.ps1",
+          "total": 32,
+          "failed": 0,
+          "run": "c8928cd6333a42b78f2f00e1c23a4503"
+        },
+        {
+          "name": "Builders.Tests.ps1",
+          "total": 68,
+          "failed": 0,
+          "run": "edc6c54f2bb444d28cdcac55e19a4320"
+        },
+        {
+          "name": "CurveAndHash.Tests.ps1",
+          "total": 20,
+          "failed": 0,
+          "run": "edc6c54f2bb444d28cdcac55e19a4320"
+        },
+        {
+          "name": "DerivationFaults.Tests.ps1",
+          "total": 9,
+          "failed": 0,
+          "run": "edc6c54f2bb444d28cdcac55e19a4320"
+        },
+        {
+          "name": "Encoding.Tests.ps1",
+          "total": 58,
+          "failed": 0,
+          "run": "edc6c54f2bb444d28cdcac55e19a4320"
+        },
+        {
+          "name": "Examples.Tests.ps1",
+          "total": 14,
+          "failed": 0,
+          "run": "88f07a01b74141b984633fbef24c07d6"
+        },
+        {
+          "name": "Harness.Tests.ps1",
+          "total": 13,
+          "failed": 0,
+          "run": "edc6c54f2bb444d28cdcac55e19a4320"
+        },
+        {
+          "name": "HDWallet.Tests.ps1",
+          "total": 108,
+          "failed": 0,
+          "run": "edc6c54f2bb444d28cdcac55e19a4320"
+        },
+        {
+          "name": "Mnemonic.Tests.ps1",
+          "total": 181,
+          "failed": 0,
+          "run": "edc6c54f2bb444d28cdcac55e19a4320"
+        },
+        {
+          "name": "Network.Tests.ps1",
+          "total": 17,
+          "failed": 2,
+          "run": "edc6c54f2bb444d28cdcac55e19a4320"
+        },
+        {
+          "name": "Pipeline.Tests.ps1",
+          "total": 33,
+          "failed": 30,
+          "run": "edc6c54f2bb444d28cdcac55e19a4320"
+        },
+        {
+          "name": "SeedQR.Tests.ps1",
+          "total": 99,
+          "failed": 0,
+          "run": "edc6c54f2bb444d28cdcac55e19a4320"
+        },
+        {
+          "name": "Signatures.Tests.ps1",
+          "total": 50,
+          "failed": 0,
+          "run": "edc6c54f2bb444d28cdcac55e19a4320"
+        },
+        {
+          "name": "Transactions.Tests.ps1",
+          "total": 104,
+          "failed": 0,
+          "run": "edc6c54f2bb444d28cdcac55e19a4320"
+        }
+      ],
+      "failures": [
+        {
+          "suite": "Network.Tests.ps1",
+          "test": "GetUTXO pipeline handles both addresses",
+          "error": "Expected <2>, got <1>. One UTXO result for each address"
+        },
+        {
+          "suite": "Network.Tests.ps1",
+          "test": "GetBalance pipeline handles both addresses",
+          "error": "Expected <2>, got <1>. One balance result for each address"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: h2i",
+          "error": "Expected <3>, got <2>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: b2i",
+          "error": "Expected <3>, got <2>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: Hash160",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: Hash256",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetPublicKey",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetPublicKeyFromWIF",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: DecompressPublicKey",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetWIF",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: Base58Check_Encode",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: Base58Check_Decode",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: Base58Address_Decode",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: Bech32_Encode",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: Bech32_Decode",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: AssertBitcoinAddress",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetTweak",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetTweakedWIF",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetURI",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: ConvertAddressToScriptPubKey",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: descsum_create",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: descsum_check",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: Mnemonic2QRCode",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: Mnemonic2CompactQRCode",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetAddressP2PKH",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetAddressP2SH",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetAddressP2WPKH",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetAddressP2WSH",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetAddressP2SH-P2WPKH",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetAddressP2SH-P2WSH",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetAddressP2TR",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetAddressP2TR-SP",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        }
+      ]
+    },
+    {
+      "powershell": "7.6.5",
+      "wallet": "BitcoinWalletFast.ps1",
+      "total": 945,
+      "passed": 913,
+      "failed": 32,
+      "suites": [
+        {
+          "name": "Addresses.Tests.ps1",
+          "total": 139,
+          "failed": 0,
+          "run": "edc6c54f2bb444d28cdcac55e19a4320"
+        },
+        {
+          "name": "Aezeed.Tests.ps1",
+          "total": 32,
+          "failed": 0,
+          "run": "c8928cd6333a42b78f2f00e1c23a4503"
+        },
+        {
+          "name": "Builders.Tests.ps1",
+          "total": 68,
+          "failed": 0,
+          "run": "edc6c54f2bb444d28cdcac55e19a4320"
+        },
+        {
+          "name": "CurveAndHash.Tests.ps1",
+          "total": 20,
+          "failed": 0,
+          "run": "edc6c54f2bb444d28cdcac55e19a4320"
+        },
+        {
+          "name": "DerivationFaults.Tests.ps1",
+          "total": 9,
+          "failed": 0,
+          "run": "edc6c54f2bb444d28cdcac55e19a4320"
+        },
+        {
+          "name": "Encoding.Tests.ps1",
+          "total": 58,
+          "failed": 0,
+          "run": "edc6c54f2bb444d28cdcac55e19a4320"
+        },
+        {
+          "name": "Examples.Tests.ps1",
+          "total": 14,
+          "failed": 0,
+          "run": "88f07a01b74141b984633fbef24c07d6"
+        },
+        {
+          "name": "Harness.Tests.ps1",
+          "total": 13,
+          "failed": 0,
+          "run": "edc6c54f2bb444d28cdcac55e19a4320"
+        },
+        {
+          "name": "HDWallet.Tests.ps1",
+          "total": 108,
+          "failed": 0,
+          "run": "edc6c54f2bb444d28cdcac55e19a4320"
+        },
+        {
+          "name": "Mnemonic.Tests.ps1",
+          "total": 181,
+          "failed": 0,
+          "run": "edc6c54f2bb444d28cdcac55e19a4320"
+        },
+        {
+          "name": "Network.Tests.ps1",
+          "total": 17,
+          "failed": 2,
+          "run": "edc6c54f2bb444d28cdcac55e19a4320"
+        },
+        {
+          "name": "Pipeline.Tests.ps1",
+          "total": 33,
+          "failed": 30,
+          "run": "edc6c54f2bb444d28cdcac55e19a4320"
+        },
+        {
+          "name": "SeedQR.Tests.ps1",
+          "total": 99,
+          "failed": 0,
+          "run": "edc6c54f2bb444d28cdcac55e19a4320"
+        },
+        {
+          "name": "Signatures.Tests.ps1",
+          "total": 50,
+          "failed": 0,
+          "run": "edc6c54f2bb444d28cdcac55e19a4320"
+        },
+        {
+          "name": "Transactions.Tests.ps1",
+          "total": 104,
+          "failed": 0,
+          "run": "edc6c54f2bb444d28cdcac55e19a4320"
+        }
+      ],
+      "failures": [
+        {
+          "suite": "Network.Tests.ps1",
+          "test": "GetUTXO pipeline handles both addresses",
+          "error": "Expected <2>, got <1>. One UTXO result for each address"
+        },
+        {
+          "suite": "Network.Tests.ps1",
+          "test": "GetBalance pipeline handles both addresses",
+          "error": "Expected <2>, got <1>. One balance result for each address"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: h2i",
+          "error": "Expected <3>, got <2>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: b2i",
+          "error": "Expected <3>, got <2>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: Hash160",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: Hash256",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetPublicKey",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetPublicKeyFromWIF",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: DecompressPublicKey",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetWIF",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: Base58Check_Encode",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: Base58Check_Decode",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: Base58Address_Decode",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: Bech32_Encode",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: Bech32_Decode",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: AssertBitcoinAddress",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetTweak",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetTweakedWIF",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetURI",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: ConvertAddressToScriptPubKey",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: descsum_create",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: descsum_check",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: Mnemonic2QRCode",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: Mnemonic2CompactQRCode",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetAddressP2PKH",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetAddressP2SH",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetAddressP2WPKH",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetAddressP2WSH",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetAddressP2SH-P2WPKH",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetAddressP2SH-P2WSH",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetAddressP2TR",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        },
+        {
+          "suite": "Pipeline.Tests.ps1",
+          "test": "Advertised pipeline preserves every input: GetAddressP2TR-SP",
+          "error": "Expected <2>, got <1>. Pipeline must not silently discard earlier items"
+        }
+      ]
+    }
+  ],
+  "sensitivity": [
+    {
+      "mutation": "CompactSize 32-bit prefix fe -> ff",
+      "run": "5bc23d8ef6dd4723a3f2491fa13c5234",
+      "total": 7,
+      "failed": 2,
+      "exitCode": 1,
+      "note": "Historical run before CompactSize cases were merged into Encoding.Tests.ps1."
+    },
+    {
+      "mutation": "Taproot sighash locktime forced to zero",
+      "run": "2b45e2680dc3459bb9026607e6cffcb3",
+      "total": 104,
+      "failed": 63,
+      "exitCode": 1
+    },
+    {
+      "mutation": "Temporary example copy: trailing space in 01 snapshot, incorrect 99 wallet line, incremented IL constant, incorrect IL ordinal",
+      "run": "514b8d8107844469956059d70d88ab6c",
+      "total": 14,
+      "failed": 6,
+      "exitCode": 1
+    }
+  ]
+}
