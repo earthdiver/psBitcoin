@@ -611,34 +611,34 @@ function Bech32_Encode {
     process {
         if ( $hex_string -notmatch '^(?:[0-9a-f]{2})+$' ) { throw "invalid hex string" }
         if ( -not $hrp -or $hrp -cne $hrp.ToLowerInvariant() ) { throw "HRP must be lowercase" }
-        $validLengths = @{
-            "bc"       = @( 40, 64 )
-            "tb"       = @( 40, 64 )
+        $allowedLengths = @{
             "sp"       = @( 132 )
             "tsp"      = @( 132 )
             "spspend"  = @( 128 )
             "tspspend" = @( 128 )
             "spscan"   = @( 130 )
             "tspscan"  = @( 130 )
+            "nsec"     = @( 64 )
+            "npub"     = @( 64 )
         }
-        if ( -not $validLengths.ContainsKey( $hrp ) -or $hex_string.Length -notin $validLengths[$hrp] ) {
-            if ( $hrp -cnotin @( "bc", "tb" ) ) { throw "invalid HRP or data length" }
+        if ( $hrp -cnotin @( "bc", "tb" ) -and -not $allowedLengths.ContainsKey( $hrp ) ) {
+            throw "invalid HRP"
         }
         if ( $hrp -cin @( "bc", "tb" ) ) {
             if ( $v -lt 0 -or $v -gt 16 ) { throw "invalid witness version" }
             if ( $hex_string.Length -lt 4 -or $hex_string.Length -gt 80 ) { throw "invalid witness program length" }
             if ( $v -eq 0 -and $hex_string.Length -notin @( 40, 64 ) ) { throw "invalid version 0 witness program length" }
-        } elseif ( $v -ne 0 ) {
-            throw "unsupported silent payment version"
+        } elseif ( $v -ne 0 -or $hex_string.Length -notin $allowedLengths[$hrp] ) {
+            throw $( if ( $hrp -cin @( "nsec", "npub" ) ) { "invalid nostr data" } else { "invalid silent payment data" } )
         }
-        $useBech32m = if ( $hrp -cin @( "bc", "tb" ) ) { $v -ne 0 } else { $true }
+        $useBech32m = if ( $hrp -cin @( "bc", "tb" ) ) { $v -ne 0 } else { $hrp -cnotin @( "nsec", "npub") }
         if ( $m -ne $useBech32m ) {
             throw "checksum encoding does not match address version"
         }
         $charset = "qpzry9x8gf2tvdw0s3jn54khce6mua7l"
         $separator = "1"
         $data = ( $hex_string | h2i | i2b ) -split '(.{5})' -ne "" | % { b2i $_.PadRight( 5, "0" ) }
-        $data = @( $v ) + $data  # prepend the witness version
+        if ( $hrp -cnotin @( "nsec", "npub") ) { $data = @( $v ) + $data } # prepend the witness version
         $str  = ( $data | % { $charset[$_] } ) -join ""
         $hrp_expanded = ( ( $hrp.ToCharArray() | % { [byte][char]$_ -shr 5 } ) + @( 0 ) +
                           ( $hrp.ToCharArray() | % { [byte][char]$_ -band 0x1f } )       )
@@ -680,6 +680,8 @@ function Bech32_Decode {
             "tspspend" = @( 128 )
             "spscan"   = @( 130 )
             "tspscan"  = @( 130 )
+            "nsec"     = @( 64 )
+            "npub"     = @( 64 )
         }
         if ( $hrp -cnotin @( "bc", "tb" ) -and -not $allowedLengths.ContainsKey( $hrp ) ) {
             throw "invalid Bech32 address"
@@ -698,7 +700,7 @@ function Bech32_Decode {
         )
         $b_string = $b_string.ToString()
         if ( $b_string.Length -le 5 ) { throw "invalid data length" }
-        $programBits = $b_string.Substring( 5 )
+        $programBits = if ( $hrp -cin @( "nsec", "npub" ) ) { $b_string } else { $b_string.Substring( 5 ) }
         $paddingLength = $programBits.Length % 8
         if ( $paddingLength -gt 4 ) { throw "invalid padding length" }
         if ( $paddingLength -gt 0 -and
@@ -707,7 +709,7 @@ function Bech32_Decode {
         }
         $programBits = $programBits.Substring( 0, $programBits.Length - $paddingLength )
         $h_string = $programBits | b2i | i2h
-        $witnessVersion = $data[0]
+        $witnessVersion = if ( $hrp -cnotin @( "nsec", "npub") ) {  $data[0] } else { 0 }
         if ( $hrp -cin @( "bc", "tb" ) ) {
             if ( $witnessVersion -lt 0 -or $witnessVersion -gt 16 ) { throw "invalid witness version" }
             if ( $h_string.Length -lt 4 -or $h_string.Length -gt 80 ) { throw "invalid witness program length" }
@@ -715,7 +717,7 @@ function Bech32_Decode {
                 throw "invalid version 0 witness program length"
             }
         } elseif ( $witnessVersion -ne 0 -or $h_string.Length -notin $allowedLengths[$hrp] ) {
-            throw "invalid silent payment data"
+            throw $( if ( $hrp -cin @( "nsec", "npub" ) ) { "invalid nostr data" } else { "invalid silent payment data" } )
         }
         $hrp_expanded =           $hrp.ToCharArray() | % { [byte][char]$_ -shr 5 }
         $hrp_expanded += @( 0 ) + $hrp.ToCharArray() | % { [byte][char]$_ -band 0x1f }
@@ -727,7 +729,7 @@ function Bech32_Decode {
             $chk = ( ( $chk -band 0x01ffffff ) -shl 5 ) -bxor $_
             0..4 | % { $chk = $chk -bxor ( $gen[$_] * (( $b -shr $_ ) -band 0x00000001 ) ) }
         }
-        $useBech32m = if ( $hrp -cin @( "bc", "tb" ) ) { $data[0] -ne 0 } else { $true }
+        $useBech32m = if ( $hrp -cin @( "bc", "tb" ) ) { $data[0] -ne 0 } else { $hrp -cnotin @( "nsec", "npub") }
         if ( $PSBoundParameters.ContainsKey( "m" ) -and $m -ne $useBech32m ) {
             throw "checksum encoding does not match address version"
         }
