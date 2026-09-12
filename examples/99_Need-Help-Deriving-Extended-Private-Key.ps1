@@ -2,7 +2,7 @@
 #
 # Loading a library
 # 
-#  Please insert "Write-Host $il" immediately after line 1153 of BitcoinWallet.ps1.
+#  Please insert "Write-Host $il" immediately after line 1155 of BitcoinWallet.ps1.
 #  In HDWallet.Derive(), locate: $il = [bigint]::new( $extendedKey[31..0] + @(0x00) )
 . ./BitcoinWallet.ps1
 #

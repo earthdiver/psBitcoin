@@ -95,4 +95,32 @@ Test 'URI formatting is invariant and escapes query values' {
         Assert-Throws { GetURI $address -amount ([decimal]1/1000000000) } 'decimal'
     } finally { [Threading.Thread]::CurrentThread.CurrentCulture=$culture }
 }
+Test 'Bech32 encoder witness lengths agree with decoder' {
+    foreach ($hrp in @('bc','tb')) {
+        foreach ($version in @(0,1,2,16)) {
+            $lengths = if ($version -eq 0) { @(20,32) } else { @(2,21,40) }
+            foreach ($length in $lengths) {
+                $hex = 'ab' * $length
+                Assert-Equal (Bech32_Decode (Bech32_Encode $hex $hrp ($version -ne 0) $version)) $hex
+            }
+        }
+        foreach ($length in @(1,41)) { Assert-Throws { Bech32_Encode ('ab' * $length) $hrp $true 1 } 'program length' }
+        foreach ($length in @(2,21,40)) { Assert-Throws { Bech32_Encode ('ab' * $length) $hrp $false 0 } 'version 0' }
+        foreach ($version in @(-1,17)) { Assert-Throws { Bech32_Encode ('ab' * 20) $hrp $true $version } 'witness version' }
+        Assert-Throws { Bech32_Encode ('ab' * 20) $hrp $true 0 } 'checksum encoding'
+        Assert-Throws { Bech32_Encode ('ab' * 32) $hrp $false 1 } 'checksum encoding'
+    }
+}
+Test 'Bech32 encoder silent payment lengths agree with decoder' {
+    foreach ($case in @(@('sp',66),@('tsp',66),@('spspend',64),@('tspspend',64),@('spscan',65),@('tspscan',65))) {
+        $hrp = $case[0]; $length = $case[1]; $hex = 'ab' * $length
+        Assert-Equal (Bech32_Decode (Bech32_Encode $hex $hrp $true 0) $true) $hex
+        foreach ($badLength in @(($length-1),($length+1))) {
+            Assert-Throws { Bech32_Encode ('ab' * $badLength) $hrp $true 0 } 'silent payment data'
+        }
+        Assert-Throws { Bech32_Encode $hex $hrp $true 1 } 'silent payment data'
+        Assert-Throws { Bech32_Encode $hex $hrp $false 0 } 'checksum encoding'
+    }
+    Assert-Throws { Bech32_Encode ('ab' * 20) 'zz' $true 1 } 'invalid HRP'
+}
 Complete-TestSuite

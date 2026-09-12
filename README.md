@@ -65,6 +65,7 @@ Please place the wordlists in the same folder.
 ./examples/07_SilentPaymentAddresses_BIP352.ps1
 ./examples/08_satscard.ps1
 ./examples/09_aezeed2seed.ps1
+./examples/10_NostrKeys.ps1
 ```
 
 ## Other Tools
