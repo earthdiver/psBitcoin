@@ -376,7 +376,16 @@ class ECDSA {
         [Threading.Monitor]::Enter( [ECDSA]::GeneratorTableLock )
         try {
             if ( $null -ne [ECDSA]::GeneratorTable ) { return }
-            $coordinates = [Secp256k1GeneratorData]::Coordinates -split '\s+'
+            $coordinates = [Secp256k1GeneratorData]::Coordinates.Trim() -split '\s+'
+            # SHA-256 of UTF-8 coordinate tokens joined by one space (no trailing newline).
+            $sha256 = [Cryptography.SHA256]::Create()
+            try {
+                $digest = $sha256.ComputeHash( [Text.Encoding]::UTF8.GetBytes( $coordinates -join ' ' ) )
+                $hash = [BitConverter]::ToString( $digest ).Replace( '-', '' ).ToLowerInvariant()
+                if ( $hash -cne 'c20a6c48cea6f9e5d836e6adec03dda6a01f443969cb44c5a8ac914619da50f5' ) {
+                    throw 'generator table coordinates SHA-256 mismatch'
+                }
+            } finally { $sha256.Dispose() }
             [ECDSAJ[]]$table = [ECDSAJ[]]::new( 256 )
             for ( [int]$i = 0; $i -lt 256; $i++ ) {
                 # Prefix zero to prevent signed hexadecimal parsing of high-bit coordinates.

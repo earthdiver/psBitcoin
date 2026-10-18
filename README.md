@@ -89,6 +89,7 @@ as hexadecimal X/Y pairs, one pair per line. Load it in a fresh session:
 
 The first nontrivial multiplication of G converts the coordinates into an in-memory
 table. Scalars 0/1 and arbitrary-base multiplications do not initialize it.
+Initialization verifies the embedded coordinates against an expected SHA-256 hash after normalizing whitespace, and throws on a mismatch.
 Subsequent calls reuse the same table for the lifetime of the loaded class.
 No external cache file or configuration is required.
 

@@ -3,6 +3,7 @@ param([string]$SourceRoot = (Split-Path -Parent $PSScriptRoot), [string]$WalletF
 . (Join-Path $SourceRoot $WalletFile)
 $g=[ECDSA]::new()
 $core=Read-Fixture 'core.json'
+$originalCoordinates=[Secp256k1GeneratorData]::Coordinates
 try {
     Test 'Import, trivial scalars and arbitrary bases do not initialize the table' {
         Assert-True ($null -eq [ECDSA]::GeneratorTable)
@@ -60,5 +61,43 @@ try {
         Assert-Equal (GetPublicKey ('0'*63+'3')) $core.addresses[4].public
         Assert-True ([object]::ReferenceEquals($table,[ECDSA]::GeneratorTable))
     }
-} finally { [ECDSA]::GeneratorTable=$null }
+    Test 'Initialized table is reused without rechecking source coordinates' {
+        $table=[ECDSA]::GeneratorTable
+        try {
+            [Secp256k1GeneratorData]::Coordinates='invalid'
+            Assert-Equal (GetPublicKey ('0'*63+'3')) $core.addresses[4].public
+            Assert-True ([object]::ReferenceEquals($table,[ECDSA]::GeneratorTable))
+        } finally { [Secp256k1GeneratorData]::Coordinates=$originalCoordinates }
+    }
+    Test 'Coordinate hash accepts LF, CRLF, tabs and surrounding whitespace' {
+        foreach ($separator in @("`n", "`r`n", " `t ")) {
+            try {
+                [ECDSA]::GeneratorTable=$null
+                [Secp256k1GeneratorData]::Coordinates=" `t`r`n" + (($originalCoordinates -split '\s+') -join $separator) + "`r`n "
+                Assert-Equal (GetPublicKey ('0'*63+'2')) $core.addresses[2].public
+                Assert-Equal ([ECDSA]::GeneratorTable.Count) 256
+            } finally { [Secp256k1GeneratorData]::Coordinates=$originalCoordinates }
+        }
+    }
+    foreach ($case in @(
+        @{Name='one changed hex digit'; Data=('0'+$originalCoordinates.Substring(1))},
+        @{Name='one missing coordinate'; Data=(($originalCoordinates -split '\s+' | Select-Object -Skip 1) -join ' ')},
+        @{Name='one extra coordinate'; Data=($originalCoordinates+' 00')},
+        @{Name='empty coordinates'; Data=''}
+    )) {
+        Test "Coordinate hash rejects $($case.Name) before publishing a table" {
+            try {
+                [ECDSA]::GeneratorTable=$null
+                [Secp256k1GeneratorData]::Coordinates=$case.Data
+                Assert-Throws { GetPublicKey ('0'*63+'2') } 'generator table coordinates SHA-256 mismatch'
+                Assert-True ($null -eq [ECDSA]::GeneratorTable)
+            } finally { [Secp256k1GeneratorData]::Coordinates=$originalCoordinates }
+            Assert-False ([Threading.Monitor]::IsEntered([ECDSA]::GeneratorTableLock)) 'Failed initialization must release the lock'
+            Assert-Equal (GetPublicKey ('0'*63+'2')) $core.addresses[2].public 'Initialization can be retried with intact data'
+        }
+    }
+} finally {
+    [Secp256k1GeneratorData]::Coordinates=$originalCoordinates
+    [ECDSA]::GeneratorTable=$null
+}
 Complete-TestSuite
