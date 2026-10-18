@@ -98,6 +98,25 @@ contains standalone PowerShell code that prints all 256 pairs. The test suite ch
 against independent affine doubling, including its order and initialized values.
 The same data can be printed with `python3 tests/reference/generate-generator-table.py`.
 
+### Transaction input verification and fee limits
+
+`GetUTXO` fetches each confirmed candidate's complete previous transaction and
+checks its transaction ID, output index, amount and locking script before returning
+any inputs. Duplicate outpoints and inconsistent or malformed responses fail
+closed. Transaction IDs use the non-witness serialization defined in
+[BIP 141](https://bips.dev/141/). Raw transactions may come from the same service:
+changing an output amount changes the transaction ID, so it cannot describe the
+same spendable outpoint. This authenticates output contents, not chain inclusion
+or current unspent status; a full node must still validate the final transaction.
+
+All four transaction builders accept `-MaxFee` (default 100000 satoshis) and
+`-MaxFeeRate` (default 100 sat/vB). They check the effective fee, including dust
+explicitly added with `-AllowDustToFee`, before signing. The rate check uses the
+unsigned stripped size, a conservative lower bound on final virtual size; it can
+reject transactions whose final rate would fit the limit. Increase limits
+explicitly only when the intended fee requires it. Existing positional arguments
+are unchanged. These experimental builders remain recommended for Testnet only.
+
 ## Tests
 
 Run the offline regression suite in a fresh PowerShell session:

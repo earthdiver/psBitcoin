@@ -668,36 +668,139 @@ function Invoke-RestMethodWithRetry {
     return [pscustomobject]@{ Succeeded = $false; Value = $null }
 }
 
+# Parse complete previous transactions; txid excludes marker, flag and witness (BIP141).
+# Hash verification binds amounts/scripts to the outpoint even if the index service lies.
+function ReadPreviousTransaction {
+    param( [string]$raw )
+    if ( $raw.Length -gt 8000000 -or $raw -notmatch '^(?:[0-9a-f]{2})+$' ) {
+        throw "invalid previous transaction hex"
+    }
+    $raw = $raw.ToLowerInvariant()
+    $reader = @{ Position = 0 }
+    function ReadPreviousBytes( [int]$count ) {
+        if ( $count -lt 0 -or $count -gt ( $raw.Length - $reader.Position ) / 2 ) {
+            throw "truncated previous transaction"
+        }
+        $part = $raw.Substring( $reader.Position, $count * 2 )
+        $reader.Position += $count * 2
+        return $part
+    }
+    function ReadPreviousInteger( [int]$count ) {
+        $hex = ReadPreviousBytes $count
+        [UInt64]$value = 0
+        for ( $j = $count - 1; $j -ge 0; $j-- ) {
+            $value = ( $value -shl 8 ) -bor [Convert]::ToByte( $hex.Substring( $j * 2, 2 ), 16 )
+        }
+        return $value
+    }
+    function ReadPreviousSize {
+        $prefix = ReadPreviousInteger 1
+        $value = $prefix
+        if ( $prefix -eq 253 ) {
+            $value = ReadPreviousInteger 2
+            if ( $value -lt 253 ) { throw "noncanonical previous transaction size" }
+        } elseif ( $prefix -eq 254 ) {
+            $value = ReadPreviousInteger 4
+            if ( $value -le 65535 ) { throw "noncanonical previous transaction size" }
+        } elseif ( $prefix -eq 255 ) {
+            $value = ReadPreviousInteger 8
+            if ( $value -le 4294967295 ) { throw "noncanonical previous transaction size" }
+        }
+        if ( $value -gt ( $raw.Length - $reader.Position ) / 2 ) { throw "invalid previous transaction size" }
+        return [int]$value
+    }
+    $version = ReadPreviousBytes 4
+    $segwit = $raw.Substring( $reader.Position, 2 ) -eq '00'
+    if ( $segwit -and ( ReadPreviousBytes 2 ) -ne '0001' ) { throw "invalid previous transaction witness flag" }
+    $bodyStart = $reader.Position
+    $inputCount = ReadPreviousSize
+    if ( $inputCount -eq 0 ) { throw "previous transaction has no inputs" }
+    for ( $i = 0; $i -lt $inputCount; $i++ ) {
+        $null = ReadPreviousBytes 36
+        $null = ReadPreviousBytes ( ReadPreviousSize )
+        $null = ReadPreviousBytes 4
+    }
+    $outputCount = ReadPreviousSize
+    if ( $outputCount -eq 0 ) { throw "previous transaction has no outputs" }
+    [decimal]$total = 0
+    $outputs = @( for ( $i = 0; $i -lt $outputCount; $i++ ) {
+        $value = ReadPreviousInteger 8
+        $total += $value
+        if ( $total -gt 2100000000000000 ) { throw "previous transaction exceeds MAX_MONEY" }
+        $script = ReadPreviousBytes ( ReadPreviousSize )
+        [pscustomobject]@{ value = $value; script = $script }
+    } )
+    $body = $raw.Substring( $bodyStart, $reader.Position - $bodyStart )
+    if ( $segwit ) {
+        $hasWitness = $false
+        for ( $i = 0; $i -lt $inputCount; $i++ ) {
+            $items = ReadPreviousSize
+            if ( $items -gt 0 ) { $hasWitness = $true }
+            for ( $j = 0; $j -lt $items; $j++ ) { $null = ReadPreviousBytes ( ReadPreviousSize ) }
+        }
+        if ( -not $hasWitness ) { throw "superfluous previous transaction witness" }
+    }
+    $locktime = ReadPreviousBytes 4
+    if ( $reader.Position -ne $raw.Length ) { throw "trailing previous transaction data" }
+    $sha = [Security.Cryptography.SHA256]::Create()
+    try { $hash = $sha.ComputeHash( $sha.ComputeHash( ( h2i ( $version + $body + $locktime ) ) ) ) }
+    finally { $sha.Dispose() }
+    [Array]::Reverse( $hash )
+    return [pscustomobject]@{ txid = ( i2h $hash ); outputs = $outputs }
+}
+
 function GetUTXO {
     param ( [Parameter(ValueFromPipeline=$True)][string]$addr )
     process {
         $addr = AssertBitcoinAddress $addr
-        if ( $addr -cmatch '^([13]|bc1)' ) {
-            $network = ""
-        } elseif ( $addr -cmatch '^([2mn]|tb1)' ) {
-            $network = "testnet"
-        } else {
-            throw "invalid address"
-        }
-        if ( $network ) {
-            $uri = "https://mempool.space/$network/api/address/$addr/utxo"
-        } else {
-            $uri = "https://mempool.space/api/address/$addr/utxo"
-        }
-        $result = Invoke-RestMethodWithRetry $uri
+        $api = if ( $addr -cmatch '^([2mn]|tb1)' ) { 'https://mempool.space/testnet/api' } else { 'https://mempool.space/api' }
+        $result = Invoke-RestMethodWithRetry "$api/address/$addr/utxo"
         if ( -not $result.Succeeded ) { throw "failed to get utxo info from mempool.space." }
-        $response = @( $result.Value )
         $scriptPubKey = ConvertAddressToScriptPubKey $addr
-        $value = @{ Expression = { $_.value             }; Descending = $true  }
-        $btime = @{ Expression = { $_.status.block_time }; Descending = $false }
-        $utxo  = @(
-            $response | Where-Object { $_.status.confirmed }            `
-                      | Sort-Object $value, $btime                      `
-                      | Select-Object txid, vout, value, script
-        )
-        $utxo | % { $_.script = $scriptPubKey }
-        return $utxo
+        $seen = @{}
+        $transactions = @{}
+        # Buffer all results: a later bad entry must not leave partially verified output.
+        $utxo = @( foreach ( $entry in @( $result.Value ) ) {
+            if ( -not $entry.status.confirmed ) { continue }
+            if ( $entry.txid -isnot [string] -or $entry.txid -notmatch '^[0-9a-f]{64}$' -or
+                 [string]$entry.vout -notmatch '^(0|[1-9][0-9]{0,9})$' -or [decimal]$entry.vout -gt 4294967295 -or
+                 [string]$entry.value -notmatch '^(0|[1-9][0-9]{0,15})$' -or [decimal]$entry.value -gt 2100000000000000 ) {
+                throw "invalid UTXO metadata"
+            }
+            $txid = $entry.txid.ToLowerInvariant()
+            $outpoint = "$($txid):$($entry.vout)"
+            if ( $seen.ContainsKey( $outpoint ) ) { throw "duplicate UTXO outpoint" }
+            $seen[$outpoint] = $true
+            if ( -not $transactions.ContainsKey( $txid ) ) {
+                $previous = Invoke-RestMethodWithRetry "$api/tx/$txid/hex"
+                if ( -not $previous.Succeeded -or $previous.Value -isnot [string] ) { throw "failed to get previous transaction" }
+                $parsed = ReadPreviousTransaction $previous.Value
+                if ( $parsed.txid -cne $txid ) { throw "previous transaction txid mismatch" }
+                $transactions[$txid] = $parsed
+            }
+            $outputs = $transactions[$txid].outputs
+            if ( [UInt64]$entry.vout -ge $outputs.Count ) { throw "UTXO vout out of range" }
+            $output = $outputs[[int]$entry.vout]
+            if ( $output.script -cne $scriptPubKey ) { throw "UTXO script mismatch" }
+            if ( $output.value -ne [UInt64]$entry.value ) { throw "UTXO amount mismatch" }
+            [pscustomobject]@{ txid = $txid; vout = [UInt32]$entry.vout; value = $output.value; script = $output.script; block_time = $entry.status.block_time }
+        } )
+        $value = @{ Expression = { $_.value }; Descending = $true }
+        $btime = @{ Expression = { $_.block_time }; Descending = $false }
+        return $utxo | Sort-Object $value, $btime | Select-Object txid, vout, value, script
     }
+}
+
+# Unsigned stripped size is a lower bound on final vsize. This intentionally
+# conservative check runs before signing and includes any dust added to the fee.
+function AssertTransactionFee {
+    param( [UInt64]$inputValue, $inputs, $outputs, [UInt64]$maxFee, [decimal]$maxFeeRate )
+    [decimal]$outputValue = 0
+    foreach ( $output in $outputs ) { $outputValue += [bigint]::new( ( h2i $output.value ) + [byte]0 ) }
+    $effectiveFee = [decimal]$inputValue - $outputValue
+    $minimumVsize = [TX]::new( 2, $inputs, $outputs, 0 ).ToString().Length / 2
+    if ( $effectiveFee -lt 0 -or $effectiveFee -gt $maxFee ) { throw "effective fee exceeds MaxFee or is negative" }
+    if ( $effectiveFee -gt $maxFeeRate * $minimumVsize ) { throw "effective fee rate exceeds MaxFeeRate (conservative unsigned size)" }
 }
 
 function AssertLegacySource {
@@ -784,7 +887,9 @@ function RawTXfromLegacyAddress {
             [string]$addressChange = "",
             [string]$memo          = "",
             [switch]$AllowDustToFee,
-            [UInt32]$lockTime      = 0
+            [UInt32]$lockTime      = 0,
+            [ValidateRange(0,2100000000000000)][UInt64]$MaxFee = 100000,
+            [ValidateRange(0,2100000000000000)][decimal]$MaxFeeRate = 100
           )
 
     $addressFrom = NormalizeBitcoinAddress $addressFrom
@@ -884,6 +989,8 @@ function RawTXfromLegacyAddress {
         $txouts += $txout2
     }
 
+    AssertTransactionFee $sum $txins_e $txouts $MaxFee $MaxFeeRate
+
     $sighashType = 0x01       # SIGHASH_ALL
 
     $txins = @(
@@ -919,7 +1026,9 @@ function RawTXfromSegwitAddress {
             [string]$addressChange = "",
             [string]$memo          = "",
             [switch]$AllowDustToFee,
-            [UInt32]$lockTime      = 0
+            [UInt32]$lockTime      = 0,
+            [ValidateRange(0,2100000000000000)][UInt64]$MaxFee = 100000,
+            [ValidateRange(0,2100000000000000)][decimal]$MaxFeeRate = 100
           )
 
     $addressFrom = NormalizeBitcoinAddress $addressFrom
@@ -1038,6 +1147,8 @@ function RawTXfromSegwitAddress {
         $txouts += $txout2
     }
 
+    AssertTransactionFee $sum $txins $txouts $MaxFee $MaxFeeRate
+
     $sighashType = 0x01       # SIGHASH_ALL
 
     $emptyWitnesses = [Witness[]]::new( $txins.Length )
@@ -1074,7 +1185,9 @@ function RawTXfromTaprootAddress {
             [string]$addressChange = "",
             [string]$memo          = "",
             [switch]$AllowDustToFee,
-            [UInt32]$lockTime      = 0
+            [UInt32]$lockTime      = 0,
+            [ValidateRange(0,2100000000000000)][UInt64]$MaxFee = 100000,
+            [ValidateRange(0,2100000000000000)][decimal]$MaxFeeRate = 100
           )
 
     $addressFrom = NormalizeBitcoinAddress $addressFrom
@@ -1201,6 +1314,8 @@ function RawTXfromTaprootAddress {
         $privateKey_in = ( Base58Check_Decode $twif ).Substring( 2, 64 )
     }
 
+    AssertTransactionFee $sum $txins $txouts $MaxFee $MaxFeeRate
+
     $sighashType = 0x00       # SIGHASH_DEFAULT
 
     $emptyWitnesses = [Witness[]]::new( $txins.Length )
@@ -1238,7 +1353,9 @@ function NulldataTX {
             [string]$witnessScript = "",
             [string]$addressChange = "",
             [switch]$AllowDustToFee,
-            [UInt32]$lockTime      = 0
+            [UInt32]$lockTime      = 0,
+            [ValidateRange(0,2100000000000000)][UInt64]$MaxFee = 100000,
+            [ValidateRange(0,2100000000000000)][decimal]$MaxFeeRate = 100
           )
     $addressFrom = NormalizeBitcoinAddress $addressFrom
     if ( $addressChange ) { $addressChange = NormalizeBitcoinAddress $addressChange }
@@ -1335,6 +1452,8 @@ function NulldataTX {
         $txout0 = [TXout]::new( 0, $scriptPubKey_out0 )
         $txouts = @( $txout0 )
     }
+
+    AssertTransactionFee $sum $txins $txouts $MaxFee $MaxFeeRate
 
     $sighashType = 0x01       # SIGHASH_ALL
 

@@ -109,6 +109,25 @@ foreach ($testnet in @($false,$true)) {
             Assert-Equal $parsed.Outputs.Count 1
             Assert-Equal $parsed.Outputs[0].Value 60000
         }
+        Test "Fee limits reject before signing $kind testnet=$testnet" {
+            function EcdsaSig { $script:SignCalls++; throw 'unexpected signing' }
+            function SchnorrSig { $script:SignCalls++; throw 'unexpected signing' }
+            $script:SignCalls=0
+            Set-BuilderUTXO $source.address $source.script @(61000)
+            Assert-Throws { & $command @arguments -MaxFee 999 } 'exceeds MaxFee'
+            Assert-Throws { & $command @arguments -MaxFeeRate 1 } 'exceeds MaxFeeRate'
+            Set-BuilderUTXO $source.address $source.script @(61100)
+            Assert-Throws { & $command @arguments -AllowDustToFee -MaxFee 1000 } 'exceeds MaxFee'
+            $high=$arguments.Clone(); $high.fee=100001
+            Set-BuilderUTXO $source.address $source.script @(160001)
+            Assert-Throws { & $command @high } 'exceeds MaxFee'
+            Assert-Equal $script:SignCalls 0
+        }
+        Test "Explicit fee limits accept boundary $kind testnet=$testnet" {
+            Set-BuilderUTXO $source.address $source.script @(61000)
+            $parsed=Read-TestTransaction (& $command @arguments -MaxFee 1000 -MaxFeeRate 100)
+            Assert-BuilderSignatures $parsed $kind $v
+        }
         Test "Builder invalid destination, wrong key and memo $kind testnet=$testnet" {
             Set-BuilderUTXO $source.address $source.script @(100000)
             $bad=$arguments.Clone(); $bad.addressTo='invalid'
@@ -122,6 +141,17 @@ foreach ($testnet in @($false,$true)) {
             $bad=$arguments.Clone(); $bad.amount=1
             Assert-Throws { & $command @bad } 'dust'
         }
+    }
+    Test "Nulldata fee limits reject before signing testnet=$testnet" {
+        function EcdsaSig { $script:SignCalls++; throw 'unexpected signing' }
+        $script:SignCalls=0
+        $source=$v.addresses.P2WPKH
+        Set-BuilderUTXO $source.address $source.script @(1000)
+        Assert-Throws { NulldataTX $v.wif $source.address 'hello' 1000 -MaxFee 999 } 'exceeds MaxFee'
+        Assert-Throws { NulldataTX $v.wif $source.address 'hello' 1000 -MaxFeeRate 1 } 'exceeds MaxFeeRate'
+        Set-BuilderUTXO $source.address $source.script @(1100)
+        Assert-Throws { NulldataTX $v.wif $source.address 'hello' 1000 -AllowDustToFee -MaxFee 1000 } 'exceeds MaxFee'
+        Assert-Equal $script:SignCalls 0
     }
     Test "Nulldata funding and script output testnet=$testnet" {
         $source=$v.addresses.P2WPKH
